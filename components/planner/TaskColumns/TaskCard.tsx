@@ -5,7 +5,7 @@ import { Draggable } from '@hello-pangea/dnd'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { PlannerContext } from './TaskColumns'
-import { SubTask } from './SubTask'
+import { SubTasks } from './SubTasks'
 
 type TaskCardProps = {
   index: number
@@ -21,7 +21,9 @@ export const TaskCard = ({ index, id }: TaskCardProps) => {
       {(provided, snapshot) => (
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
           <Card
-            className={`border-stone-400 mb-2 ${snapshot.isDragging ? 'border-4 border-dashed border-teal-400' : ''}`}
+            className={`border-stone-400 mb-2 ${
+              snapshot.isDragging ? 'border-4 border-dashed border-emerald-400' : ''
+            }`}
           >
             <CardHeader>
               <div className='flex flex-row justify-between'>
@@ -31,9 +33,7 @@ export const TaskCard = ({ index, id }: TaskCardProps) => {
             </CardHeader>
             {task.subTasks.length > 0 && (
               <CardContent className='flex flex-col gap-2'>
-                {task.subTasks.map((subTaskId, index) => (
-                  <SubTask key={subTaskId} id={subTaskId} index={index} />
-                ))}
+                <SubTasks taskCardId={id} />
               </CardContent>
             )}
             <CardFooter className='flex justify-between'>
@@ -47,7 +47,7 @@ export const TaskCard = ({ index, id }: TaskCardProps) => {
                   )
                 }}
               />
-              <p className='text-sm text-right text-emerald-500'>{category}</p>
+              <p className='text-sm text-right text-emerald-500'># {category}</p>
             </CardFooter>
           </Card>
         </div>

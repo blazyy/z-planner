@@ -17,6 +17,20 @@ export const onDragEnd: OnDragEndFunction = (result, data, setData) => {
     return
   }
 
+  if (type === 'subtask') {
+    const [taskCardId, subTaskId] = draggableId.split('~')
+    // Ensure that the drag-and-drop happens within the same task card
+    const reorderedSubTasks = Array.from(data.taskCards[taskCardId].subTasks)
+    reorderedSubTasks.splice(source.index, 1)
+    reorderedSubTasks.splice(destination.index, 0, subTaskId)
+    setData(
+      produce((draft) => {
+        draft.taskCards[taskCardId].subTasks = reorderedSubTasks
+      })
+    )
+    return
+  }
+
   if (type === 'column') {
     setData(
       produce((draft) => {
@@ -29,7 +43,6 @@ export const onDragEnd: OnDragEndFunction = (result, data, setData) => {
     return
   }
 
-  // Create new state
   const startingColumn = data.columns[source.droppableId]
   const endingColumn = data.columns[destination.droppableId]
 
