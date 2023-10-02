@@ -5,19 +5,23 @@ import { useState, createContext, Dispatch, SetStateAction } from 'react'
 
 import { onDragEnd } from './utils'
 import initialData from './initial-data'
-import { CardInfoType, ColumnInfoType, TaskColumn } from './TaskColumn'
+import { TaskCardInfoType, ColumnInfoType, SubTaskInfoType, TaskColumn } from './TaskColumn'
 
 export type PlannerDataType = {
-  cards: {
-    [cardId: string]: CardInfoType
-  }
   columns: {
     [columnId: string]: ColumnInfoType
   }
   columnOrder: string[]
+  taskCards: {
+    [taskCardId: string]: TaskCardInfoType
+  }
+  subTasks: {
+    [taskId: string]: SubTaskInfoType
+  }
 }
 
 type PlannerContextType = {
+  data: PlannerDataType
   setData: Dispatch<SetStateAction<PlannerDataType>>
 }
 
@@ -27,7 +31,7 @@ export const TaskColumns = () => {
   const [data, setData] = useState<PlannerDataType>(initialData)
 
   return (
-    <PlannerContext.Provider value={{ setData }}>
+    <PlannerContext.Provider value={{ data, setData }}>
       <DragDropContext
         onDragEnd={(result) => {
           onDragEnd(result, data, setData)
@@ -37,11 +41,9 @@ export const TaskColumns = () => {
         <Droppable droppableId='all-columns' direction='horizontal' type='column'>
           {(provided) => (
             <div className='flex flex-row' {...provided.droppableProps} ref={provided.innerRef}>
-              {data.columnOrder.map((columnId, index) => {
-                const columnInfo = data.columns[columnId]
-                const cards = columnInfo.cardIds.map((cardId) => data.cards[cardId])
-                return <TaskColumn key={columnId} index={index} columnInfo={columnInfo} cards={cards} />
-              })}
+              {data.columnOrder.map((columnId, index) => (
+                <TaskColumn key={columnId} index={index} columnId={columnId} />
+              ))}
               {provided.placeholder}
             </div>
           )}

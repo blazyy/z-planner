@@ -1,7 +1,8 @@
 import { Droppable, Draggable } from '@hello-pangea/dnd'
 
 import { TaskCard } from './TaskCard'
-import React from 'react'
+import { useContext } from 'react'
+import { PlannerContext } from './TaskColumns'
 
 export type ColumnInfoType = {
   id: string
@@ -9,23 +10,30 @@ export type ColumnInfoType = {
   cardIds: string[]
 }
 
-export type CardInfoType = {
+export type SubTaskInfoType = {
+  id: string
+  title: string
+  checked: boolean
+}
+
+export type TaskCardInfoType = {
   id: string
   title: string
   category: string
   content: string
   checked: boolean
+  subTasks: string[] | []
 }
 
 type TaskColumnProps = {
   index: number
-  columnInfo: ColumnInfoType
-  cards: CardInfoType[]
+  columnId: string
 }
 
-// const TaskColumnWrapper = ({ children }: { children: JSX.Element }) => {}
-
-export const TaskColumn = ({ index, columnInfo, cards }: TaskColumnProps) => {
+export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
+  const { data } = useContext(PlannerContext)!
+  const columnInfo = data.columns[columnId]
+  const taskCards = columnInfo.cardIds.map((cardId) => data.taskCards[cardId])
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
@@ -42,17 +50,9 @@ export const TaskColumn = ({ index, columnInfo, cards }: TaskColumnProps) => {
                   snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
                 }`}
               >
-                {cards.map((card, index) => (
-                  <TaskCard
-                    key={card.id}
-                    index={index}
-                    id={card.id}
-                    title={card.title}
-                    category={card.category}
-                    content={card.content}
-                    checked={card.checked}
-                  />
-                ))}
+                {taskCards.map((taskCard, index) => {
+                  return <TaskCard key={taskCard.id} index={index} id={taskCard.id} />
+                })}
                 {provided.placeholder}
               </div>
             )}
