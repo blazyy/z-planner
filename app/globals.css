@@ -1,5 +1,14 @@
 body {
-  padding: 2.5%;
+  padding: 1%;
+}
+
+.task-column {
+  height: 500px;
+  width: 500px;
+}
+
+.card-list {
+  min-height: 200px;
 }
 
 @tailwind base;
