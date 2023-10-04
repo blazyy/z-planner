@@ -2,10 +2,8 @@ import { produce } from 'immer'
 import { useContext } from 'react'
 
 import { Checkbox } from '@/components/ui/checkbox'
-import { MdDragIndicator, MdAddCircleOutline } from 'react-icons/md'
 
-import { PlannerContext } from './TaskColumns'
-import { Droppable, Draggable } from '@hello-pangea/dnd'
+import { PlannerContext } from '../TaskColumns'
 
 type SubTasksProps = {
   taskCardId: string
@@ -23,10 +21,12 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
             id={`${index}`}
             className='text-gray-500'
             checked={subTask.checked}
-            onCheckedChange={(isChecked) => {
+            onClick={(event) => {
+              event.preventDefault() // Neede to prevent dialog from triggering
+              const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
               setData(
                 produce((draft) => {
-                  draft.subTasks[subTask.id].checked = Boolean(isChecked)
+                  draft.subTasks[subTask.id].checked = !isChecked
                 })
               )
             }}

@@ -1,7 +1,7 @@
 'use client'
 
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
-import { useState, createContext, Dispatch, SetStateAction } from 'react'
+import { useState, createContext, Dispatch, SetStateAction, MutableRefObject } from 'react'
 
 import { onDragEnd } from './utils'
 import initialData from './initial-data'
@@ -20,18 +20,27 @@ export type PlannerDataType = {
   }
 }
 
+type TaskCardBeingInitializedInfoType = {
+  taskCardId: string
+  columnId: string
+}
+
 type PlannerContextType = {
   data: PlannerDataType
   setData: Dispatch<SetStateAction<PlannerDataType>>
+  taskCardBeingInitializedInfo: TaskCardBeingInitializedInfoType | null
+  setTaskCardBeingInitializedInfo: Dispatch<SetStateAction<TaskCardBeingInitializedInfoType | null>>
 }
 
 export const PlannerContext = createContext<PlannerContextType | null>(null)
 
 export const TaskColumns = () => {
   const [data, setData] = useState<PlannerDataType>(initialData)
+  const [taskCardBeingInitializedInfo, setTaskCardBeingInitializedInfo] =
+    useState<TaskCardBeingInitializedInfoType | null>(null)
 
   return (
-    <PlannerContext.Provider value={{ data, setData }}>
+    <PlannerContext.Provider value={{ data, setData, taskCardBeingInitializedInfo, setTaskCardBeingInitializedInfo }}>
       <DragDropContext
         onDragEnd={(result) => {
           onDragEnd(result, data, setData)

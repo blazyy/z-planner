@@ -1,8 +1,10 @@
+import { useState, useContext } from 'react'
 import { Droppable, Draggable } from '@hello-pangea/dnd'
 
-import { TaskCard } from './TaskCard'
-import { useContext } from 'react'
+import { TaskCard } from './TaskCard/TaskCard'
 import { PlannerContext } from './TaskColumns'
+import { AddTaskCardButton } from './AddTaskCardButton'
+import { InitializingTaskCard } from './TaskCard/InitializingTaskCard'
 
 export type ColumnInfoType = {
   id: string
@@ -31,16 +33,16 @@ type TaskColumnProps = {
 }
 
 export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
-  const { data } = useContext(PlannerContext)!
+  const { data, taskCardBeingInitializedInfo } = useContext(PlannerContext)!
   const columnInfo = data.columns[columnId]
-  const taskCards = columnInfo.cardIds.map((cardId) => data.taskCards[cardId])
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
-        <div className={`task-column flex flex-col mx-2 gap-4`} {...provided.draggableProps} ref={provided.innerRef}>
+        <div className={`task-column flex flex-col mx-2 gap-2`} {...provided.draggableProps} ref={provided.innerRef}>
           <h1 className='text-2xl text-bold text-center' {...provided.dragHandleProps}>
             {columnInfo.title}
           </h1>
+          <AddTaskCardButton columnId={columnInfo.id} />
           <Droppable droppableId={columnInfo.id} type='card'>
             {(provided, snapshot) => (
               <div
@@ -50,8 +52,11 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
                   snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
                 }`}
               >
-                {taskCards.map((taskCard, index) => {
-                  return <TaskCard key={taskCard.id} index={index} id={taskCard.id} />
+                {taskCardBeingInitializedInfo && taskCardBeingInitializedInfo.columnId === columnId && (
+                  <InitializingTaskCard columnId={columnInfo.id} />
+                )}
+                {columnInfo.cardIds.map((taskCardId, index) => {
+                  return <TaskCard key={taskCardId} index={index} taskCardId={taskCardId} columnId={columnId} />
                 })}
                 {provided.placeholder}
               </div>
