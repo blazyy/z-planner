@@ -1,15 +1,24 @@
 import { produce } from 'immer'
-import type { DropResult } from '@hello-pangea/dnd'
-import { PlannerDataType } from './TaskColumns'
 import { Dispatch, SetStateAction } from 'react'
+
+import { PlannerDataType } from './TaskColumns'
+import type { DropResult } from '@hello-pangea/dnd'
 
 type OnDragEndFunction = (
   result: DropResult,
   data: PlannerDataType,
-  setData: Dispatch<SetStateAction<PlannerDataType>>
+  setData: Dispatch<SetStateAction<PlannerDataType>>,
+  setIsSubTaskBeingDragged: Dispatch<SetStateAction<boolean>>,
+  setIndexOfCardBeingDragged: Dispatch<SetStateAction<string>>
 ) => void
 
-export const onDragEnd: OnDragEndFunction = (result, data, setData) => {
+export const onDragEnd: OnDragEndFunction = (
+  result,
+  data,
+  setData,
+  setIsSubTaskBeingDragged,
+  setIndexOfCardBeingDragged
+) => {
   const { destination, source, draggableId, type } = result
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
@@ -28,6 +37,7 @@ export const onDragEnd: OnDragEndFunction = (result, data, setData) => {
         draft.taskCards[taskCardId].subTasks = reorderedSubTasks
       })
     )
+    setIsSubTaskBeingDragged(false)
     return
   }
 
@@ -42,6 +52,8 @@ export const onDragEnd: OnDragEndFunction = (result, data, setData) => {
     )
     return
   }
+
+  setIndexOfCardBeingDragged('')
 
   const startingColumn = data.columns[source.droppableId]
   const endingColumn = data.columns[destination.droppableId]

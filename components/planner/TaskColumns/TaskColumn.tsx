@@ -4,7 +4,7 @@ import { Droppable, Draggable } from '@hello-pangea/dnd'
 import { TaskCard } from './TaskCard/TaskCard'
 import { PlannerContext } from './TaskColumns'
 import { AddTaskCardButton } from './AddTaskCardButton'
-import { InitializingTaskCard } from './TaskCard/InitializingTaskCard'
+import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 
 export type ColumnInfoType = {
   id: string
@@ -56,7 +56,7 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
                   <InitializingTaskCard columnId={columnInfo.id} />
                 )}
                 {columnInfo.cardIds.map((taskCardId, index) => {
-                  return <TaskCard key={taskCardId} index={index} taskCardId={taskCardId} columnId={columnId} />
+                  return <TaskCard key={taskCardId} index={index} columnId={columnId} taskCardId={taskCardId} />
                 })}
                 {provided.placeholder}
               </div>

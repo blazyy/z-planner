@@ -7,8 +7,9 @@ body {
   width: 500px;
 }
 
-.card-list {
-  min-height: 200px;
+/* Removes outline on subtasks that have contentEditable set to true */
+[contenteditable]:focus {
+  outline: 0px solid transparent;
 }
 
 @tailwind base;

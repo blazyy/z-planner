@@ -24,14 +24,14 @@ const initialData = {
       category: 'Life',
       content: 'Bro, it has been filling up for a while. I mean, it stinks. Do your chores.',
       checked: false,
-      subTasks: ['subtask-1', 'subtask-2'],
+      subTasks: ['subtask-1', 'subtask-2', 'subtask-6'],
     },
     'taskcard-2': {
       id: 'taskcard-2',
       title: 'Eat food',
       category: 'Life',
       content: 'What more is there to say? Food is the one of the greatest things in life.',
-      checked: true,
+      checked: false,
       subTasks: [],
     },
     'taskcard-3': {
@@ -40,7 +40,7 @@ const initialData = {
       category: 'Life',
       content: 'I know, you have watched it so many times already. But one more time. Do it. For Daddy Voldy.',
       checked: false,
-      subTasks: ['subtask-3'],
+      subTasks: ['subtask-3', 'subtask-4'],
     },
   },
   subTasks: {
@@ -58,6 +58,16 @@ const initialData = {
       id: 'subtask-3',
       title: 'Download the movie first',
       checked: true,
+    },
+    'subtask-4': {
+      id: 'subtask-4',
+      title: 'Watch the frickin movie',
+      checked: false,
+    },
+    'subtask-6': {
+      id: 'subtask-6',
+      title: 'yooo what the f is going on?',
+      checked: false,
     },
   },
 }

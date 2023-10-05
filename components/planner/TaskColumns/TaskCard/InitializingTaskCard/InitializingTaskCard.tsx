@@ -1,6 +1,6 @@
 import * as z from 'zod'
 import { produce } from 'immer'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -10,7 +10,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardFooter } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 
-import { PlannerContext } from '../TaskColumns'
+import { PlannerContext } from '../../TaskColumns'
+import { CancelButton } from './CancelButton'
 
 type InitializingTaskCardProps = {
   columnId: string
@@ -32,6 +33,16 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
       taskCardTitle: '',
       taskCardDesc: '',
     },
+  })
+
+  const [isFormEmpty, setIsFormEmpty] = useState(true)
+
+  form.watch((value) => {
+    if (value.taskCardTitle !== '' || value.taskCardDesc !== '') {
+      setIsFormEmpty(false)
+    } else {
+      setIsFormEmpty(true)
+    }
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -84,8 +95,11 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
             />
           </CardHeader>
           <CardFooter className='flex justify-between'>
-            {/* <p className='text-sm text-right text-emerald-500'># {task.category}</p> */}
-            <Button type='submit'>Add</Button>
+            <div className='flex gap-2'>
+              <Button type='submit'>Add</Button>
+              <CancelButton isFormEmpty={isFormEmpty} />
+            </div>
+            <p className='text-sm text-right text-emerald-500'># Default</p>
           </CardFooter>
         </form>
       </Form>
