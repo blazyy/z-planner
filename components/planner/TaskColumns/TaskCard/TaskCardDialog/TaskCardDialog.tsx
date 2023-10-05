@@ -23,7 +23,6 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
         <CardHeader className='p-4'>
           <CardTitle>
             <Textarea
-              // type='text'
               value={task.title}
               className='p-3 min-h-fit text-2xl border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
               onChange={(event) => {
@@ -37,7 +36,6 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
           </CardTitle>
           <CardDescription className='m-0'>
             <Textarea
-              // type='text'
               value={task.content}
               className='p-3 min-h-fit border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
               onChange={(event) => {
@@ -48,14 +46,11 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
                 )
               }}
             />
-            {/* {task.content} */}
           </CardDescription>
         </CardHeader>
-        {task.subTasks.length > 0 && (
-          <CardContent className='flex flex-col gap-2 px-2'>
-            <EditableSubTasks taskCardId={id} />
-          </CardContent>
-        )}
+        <CardContent className='flex flex-col gap-2 px-2'>
+          <EditableSubTasks taskCardId={id} />
+        </CardContent>
         <CardFooter className='flex justify-between'>
           <Badge className='bg-emerald-500 hover:bg-emerald-600'>{task.category}</Badge>
           <Checkbox

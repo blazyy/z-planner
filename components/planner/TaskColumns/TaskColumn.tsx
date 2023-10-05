@@ -24,7 +24,7 @@ export type TaskCardInfoType = {
   category: string
   content: string
   checked: boolean
-  subTasks: string[] | []
+  subTasks: string[]
 }
 
 type TaskColumnProps = {

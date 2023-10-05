@@ -31,7 +31,7 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
               )
             }}
           />
-          <label htmlFor={subTask.id} className={`text-sm text-gray-500 ${subTask.checked ? 'line-through' : ''}`}>
+          <label htmlFor={subTask.id} className='text-sm text-gray-500'>
             {subTask.title}
           </label>
         </div>

@@ -1,13 +1,15 @@
 import { produce } from 'immer'
-import { Dispatch, SetStateAction, useContext, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { useContext, useState } from 'react'
+import { Droppable, Draggable, DraggableProvided } from '@hello-pangea/dnd'
 
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd'
-import { PlannerContext } from '../../TaskColumns'
 import { GripVertical } from 'lucide-react'
-import { createPortal } from 'react-dom'
+
+import { PlannerContext } from '../../TaskColumns'
 import { SubTaskInfoType } from '../../TaskColumn'
+import { AddNewSubTaskButton } from './AddNewSubTaskButton'
 
 type EditableSubTasksProps = {
   taskCardId: string
@@ -16,11 +18,12 @@ type EditableSubTasksProps = {
 type EditableSubTaskProps = {
   index: number
   provided: DraggableProvided
+  taskCardId: string
   subTask: SubTaskInfoType
   isBeingDragged: boolean
 }
 
-const EditableSubTask = ({ index, provided, subTask, isBeingDragged }: EditableSubTaskProps) => {
+const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
   const { setData, isSubTaskBeingDragged } = useContext(PlannerContext)!
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   return (
@@ -50,12 +53,33 @@ const EditableSubTask = ({ index, provided, subTask, isBeingDragged }: EditableS
         }}
       />
       <Input
+        autoFocus
+        id={subTask.id}
         type='text'
         value={subTask.title}
-        disabled={subTask.checked}
-        className={`h-1 my-1 border-none focus-visible:ring-0 focus-visible:ring-transparent ${
-          subTask.checked ? 'line-through disabled:cursor-default' : ''
-        }`}
+        className='h-1 my-1 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
+        onKeyDown={(event) => {
+          if (event.key === 'Backspace' && subTask.title === '') {
+            setData(
+              produce((draft) => {
+                /* -------------------------------------------------------- */
+                /* Moves cursor focus to subtask above using the subtask ID */
+                const subTaskIds = draft.taskCards[taskCardId].subTasks
+                let idOfSubTaskAbove = null
+                for (let subTaskId of subTaskIds) {
+                  if (subTaskId === subTask.id) break
+                  idOfSubTaskAbove = subTaskId
+                }
+                if (idOfSubTaskAbove) document.getElementById(idOfSubTaskAbove)?.focus()
+                /* -------------------------------------------------------- */
+                delete draft.subTasks[subTask.id]
+                draft.taskCards[taskCardId].subTasks = draft.taskCards[taskCardId].subTasks.filter(
+                  (subTaskId) => subTaskId !== subTask.id
+                )
+              })
+            )
+          }
+        }}
         onChange={(event) => {
           setData(
             produce((draft) => {
@@ -93,13 +117,28 @@ export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
               {(provided, snapshot) => {
                 if (snapshot.isDragging)
                   return createPortal(
-                    <EditableSubTask index={index} provided={provided} subTask={subTask} isBeingDragged={true} />,
+                    <EditableSubTask
+                      index={index}
+                      provided={provided}
+                      taskCardId={taskCardId}
+                      subTask={subTask}
+                      isBeingDragged={true}
+                    />,
                     portal
                   )
-                return <EditableSubTask index={index} provided={provided} subTask={subTask} isBeingDragged={false} />
+                return (
+                  <EditableSubTask
+                    index={index}
+                    provided={provided}
+                    taskCardId={taskCardId}
+                    subTask={subTask}
+                    isBeingDragged={false}
+                  />
+                )
               }}
             </Draggable>
           ))}
+          <AddNewSubTaskButton taskCardId={taskCardId} />
           {provided.placeholder}
         </div>
       )}
