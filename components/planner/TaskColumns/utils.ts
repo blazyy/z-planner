@@ -1,24 +1,22 @@
-import { produce } from 'immer'
-import { Dispatch, SetStateAction } from 'react'
+'use client'
 
-import { PlannerDataType } from './TaskColumns'
-import type { DropResult } from '@hello-pangea/dnd'
+import { AppDispatch } from '@/app/store/store'
+import { useAppSelector } from '@/app/store/hooks'
 
-type OnDragEndFunction = (
-  result: DropResult,
-  data: PlannerDataType,
-  setData: Dispatch<SetStateAction<PlannerDataType>>,
-  setIsSubTaskBeingDragged: Dispatch<SetStateAction<boolean>>,
-  setIndexOfCardBeingDragged: Dispatch<SetStateAction<string>>
-) => void
+import type { DragStart, DropResult } from '@hello-pangea/dnd'
+import {
+  cardMovedAcrossColumns,
+  cardMovedWithinColumn,
+  columnsReordered,
+  idOfCardBeingMovedChanged,
+  subTaskDragged,
+  subTasksReordered,
+} from '@/app/store/planner/reducer'
+import { PlannerDataType } from '@/components/planner/TaskColumns/TaskColumns'
 
-export const onDragEnd: OnDragEndFunction = (
-  result,
-  data,
-  setData,
-  setIsSubTaskBeingDragged,
-  setIndexOfCardBeingDragged
-) => {
+type OnDragEndFunc = (data: PlannerDataType, result: DropResult, dispatch: AppDispatch) => void
+
+export const handleOnDragEnd: OnDragEndFunc = (data, result, dispatch) => {
   const { destination, source, draggableId, type } = result
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
@@ -27,73 +25,54 @@ export const onDragEnd: OnDragEndFunction = (
   }
 
   if (type === 'subtask') {
-    const [taskCardId, subTaskId] = draggableId.split('~')
-    // Ensure that the drag-and-drop happens within the same task card
-    const reorderedSubTasks = Array.from(data.taskCards[taskCardId].subTasks)
-    reorderedSubTasks.splice(source.index, 1)
-    reorderedSubTasks.splice(destination.index, 0, subTaskId)
-    setData(
-      produce((draft) => {
-        draft.taskCards[taskCardId].subTasks = reorderedSubTasks
+    dispatch(
+      subTasksReordered({
+        draggableId: draggableId,
+        sourceIndex: source.index,
+        destIndex: destination.index,
       })
     )
-    setIsSubTaskBeingDragged(false)
     return
   }
 
   if (type === 'column') {
-    setData(
-      produce((draft) => {
-        const newColumnOrder = Array.from(draft.columnOrder)
-        newColumnOrder.splice(source.index, 1)
-        newColumnOrder.splice(destination.index, 0, draggableId)
-        draft.columnOrder = newColumnOrder
+    dispatch(
+      columnsReordered({
+        draggableId: draggableId,
+        sourceIndex: source.index,
+        destIndex: destination.index,
       })
     )
     return
   }
 
-  setIndexOfCardBeingDragged('')
-
-  const startingColumn = data.columns[source.droppableId]
-  const endingColumn = data.columns[destination.droppableId]
+  dispatch(idOfCardBeingMovedChanged({ id: '' }))
 
   // Moving a card within the same column
-  if (startingColumn === endingColumn) {
-    setData(
-      produce((draft) => {
-        const newCardIds = Array.from(startingColumn.cardIds) // Copy of cardIds
-        // Move cardId from old index to new index
-        newCardIds.splice(source.index, 1)
-        newCardIds.splice(destination.index, 0, draggableId)
-        const newColumn = {
-          ...startingColumn,
-          cardIds: newCardIds,
-        }
-        draft.columns[newColumn.id] = newColumn
+  if (data.columns[source.droppableId] === data.columns[destination.droppableId]) {
+    dispatch(
+      cardMovedWithinColumn({
+        draggableId,
+        source,
+        destination,
       })
     )
-
     return
   }
 
-  // Moving cards between columns
-  setData(
-    produce((draft) => {
-      const startCardIds = Array.from(startingColumn.cardIds) // Copy of cardIds
-      startCardIds.splice(source.index, 1)
-      const newStartColumn = {
-        ...startingColumn,
-        cardIds: startCardIds,
-      }
-      const endCardIds = Array.from(endingColumn.cardIds)
-      endCardIds.splice(destination.index, 0, draggableId)
-      const newEndColumn = {
-        ...endingColumn,
-        cardIds: endCardIds,
-      }
-      draft.columns[newStartColumn.id] = newStartColumn
-      draft.columns[newEndColumn.id] = newEndColumn
+  // Moving cards betweean columns
+  dispatch(
+    cardMovedAcrossColumns({
+      draggableId,
+      source,
+      destination,
     })
   )
+}
+
+type OnDragStartFunction = (dragStartObj: DragStart, dispatch: AppDispatch) => void
+
+export const handleOnDragStart: OnDragStartFunction = (dragStartObj, dispatch) => {
+  if (dragStartObj.type === 'subtask') dispatch(subTaskDragged())
+  if (dragStartObj.type === 'card') dispatch(idOfCardBeingMovedChanged({ id: dragStartObj.draggableId }))
 }

@@ -1,19 +1,16 @@
-import { produce } from 'immer'
-import { useContext } from 'react'
-import { Draggable, DraggableStateSnapshot } from '@hello-pangea/dnd'
+import { Draggable } from '@hello-pangea/dnd'
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { taskCardCheckedStatusChanged } from '@/app/store/planner/reducer'
 
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { AlertDialog } from '@/components/ui/alert-dialog'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 
 import { SubTasks } from './SubTasks'
-import { PlannerContext } from '../TaskColumns'
 import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
-import { createContext } from 'vm'
 
 type TaskCardProps = {
   index: number
@@ -28,14 +25,10 @@ type TaskCardWrapperProps = {
   children: JSX.Element
 }
 
-type SnapshotContextType = {
-  snapshot: DraggableStateSnapshot
-}
-
 const TaskCardWrapper = ({ index, columnId, taskCardId, children }: TaskCardWrapperProps) => {
   return (
     <Draggable draggableId={taskCardId} index={index}>
-      {(provided, snapshot) => (
+      {(provided) => (
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
           <Dialog>
             <TaskCardDialog id={taskCardId} />
@@ -59,7 +52,8 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
 
-  const { data, setData, idOfCardBeingDragged } = useContext(PlannerContext)!
+  const dispatch = useAppDispatch()
+  const { data, idOfCardBeingDragged } = useAppSelector((state) => state.planner)
   const task = data.taskCards[taskCardId]
 
   return (
@@ -86,9 +80,10 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
             onClick={(event) => {
               event.preventDefault() // Needed to prevent dialog from triggering
               const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-              setData(
-                produce((draft) => {
-                  draft.taskCards[task.id].checked = !isChecked
+              dispatch(
+                taskCardCheckedStatusChanged({
+                  taskCardId: task.id,
+                  isChecked: !isChecked,
                 })
               )
             }}

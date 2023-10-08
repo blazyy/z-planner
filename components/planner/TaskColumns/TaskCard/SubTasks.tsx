@@ -2,15 +2,16 @@ import { produce } from 'immer'
 import { useContext } from 'react'
 
 import { Checkbox } from '@/components/ui/checkbox'
-
-import { PlannerContext } from '../TaskColumns'
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { subTasksCheckedStatusChanged } from '@/app/store/planner/reducer'
 
 type SubTasksProps = {
   taskCardId: string
 }
 
 export const SubTasks = ({ taskCardId }: SubTasksProps) => {
-  const { data, setData } = useContext(PlannerContext)!
+  const dispatch = useAppDispatch()
+  const { data } = useAppSelector((state) => state.planner)
   const subTasks = data.taskCards[taskCardId].subTasks.map((subTaskId) => data.subTasks[subTaskId])
 
   return (
@@ -24,9 +25,10 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
             onClick={(event) => {
               event.preventDefault() // Neede to prevent dialog from triggering
               const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-              setData(
-                produce((draft) => {
-                  draft.subTasks[subTask.id].checked = !isChecked
+              dispatch(
+                subTasksCheckedStatusChanged({
+                  subTaskId: subTask.id,
+                  isChecked: !isChecked,
                 })
               )
             }}

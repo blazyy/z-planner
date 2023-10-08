@@ -1,8 +1,9 @@
 import * as z from 'zod'
-import { produce } from 'immer'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { newTaskCardAdded } from '@/app/store/planner/reducer'
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -10,7 +11,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardFooter } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 
-import { PlannerContext } from '../../TaskColumns'
 import { CancelButton } from './CancelButton'
 
 type InitializingTaskCardProps = {
@@ -25,7 +25,8 @@ const formSchema = z.object({
 })
 
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
-  const { setData, taskCardBeingInitializedInfo, setTaskCardBeingInitializedInfo } = useContext(PlannerContext)!
+  const dispatch = useAppDispatch()
+  const { taskCardBeingInitializedInfo } = useAppSelector((state) => state.planner)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,22 +47,13 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const taskCardId = taskCardBeingInitializedInfo?.taskCardId!
-    setData(
-      produce((draft) => {
-        const newTaskCard = {
-          id: taskCardId,
-          title: values.taskCardTitle,
-          category: 'Default',
-          content: `${values.taskCardDesc}`,
-          checked: false,
-          subTasks: [],
-        }
-        draft.taskCards[taskCardId] = newTaskCard
-        draft.columns[columnId].cardIds.unshift(taskCardId)
+    dispatch(
+      newTaskCardAdded({
+        columnId: columnId,
+        title: values.taskCardTitle,
+        content: `${values.taskCardDesc}`,
       })
     )
-    setTaskCardBeingInitializedInfo(null)
   }
 
   return (

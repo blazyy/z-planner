@@ -1,3 +1,6 @@
+import { useAppDispatch } from '@/app/store/hooks'
+import { newTaskCardInitializationCancelled } from '@/app/store/planner/reducer'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,20 +13,18 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { useContext } from 'react'
-import { PlannerContext } from '../../TaskColumns'
 
 type CancelButtonProps = {
   isFormEmpty: boolean
 }
 
 export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
-  const { setTaskCardBeingInitializedInfo } = useContext(PlannerContext)!
+  const dispatch = useAppDispatch()
   // If user has entered any input, show confirmation dialog on clicking cancel.
   // Else, directly remove the initializing task.
   if (isFormEmpty)
     return (
-      <Button type='button' variant='destructive' onClick={() => setTaskCardBeingInitializedInfo(null)}>
+      <Button type='button' variant='destructive' onClick={() => dispatch(newTaskCardInitializationCancelled())}>
         Cancel
       </Button>
     )
@@ -44,7 +45,7 @@ export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => setTaskCardBeingInitializedInfo(null)}>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={() => dispatch(newTaskCardInitializationCancelled())}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

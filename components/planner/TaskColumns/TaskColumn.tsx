@@ -1,8 +1,7 @@
-import { useState, useContext } from 'react'
+import { useAppSelector } from '@/app/store/hooks'
 import { Droppable, Draggable } from '@hello-pangea/dnd'
 
 import { TaskCard } from './TaskCard/TaskCard'
-import { PlannerContext } from './TaskColumns'
 import { AddTaskCardButton } from './AddTaskCardButton'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 
@@ -33,7 +32,8 @@ type TaskColumnProps = {
 }
 
 export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
-  const { data, taskCardBeingInitializedInfo } = useContext(PlannerContext)!
+  const { data, taskCardBeingInitializedInfo } = useAppSelector((state) => state.planner)
+
   const columnInfo = data.columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>

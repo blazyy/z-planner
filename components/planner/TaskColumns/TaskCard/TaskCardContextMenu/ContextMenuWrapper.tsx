@@ -1,5 +1,5 @@
-import { produce } from 'immer'
-import { useContext } from 'react'
+import { useAppDispatch } from '@/app/store/hooks'
+import { taskCardDeleted } from '@/app/store/planner/reducer'
 
 import {
   AlertDialog,
@@ -15,8 +15,6 @@ import { Toaster } from '@/components/ui/toaster'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 
-import { PlannerContext } from '../../TaskColumns'
-
 type ContextMenuWrapperProps = {
   columnId: string
   taskCardId: string
@@ -25,7 +23,7 @@ type ContextMenuWrapperProps = {
 
 export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {
   const { toast } = useToast()
-  const { setData } = useContext(PlannerContext)!
+  const dispatch = useAppDispatch()
   return (
     <AlertDialog>
       <Toaster />
@@ -41,12 +39,10 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              setData(
-                produce((draft) => {
-                  draft.columns[columnId].cardIds = draft.columns[columnId].cardIds.filter(
-                    (cardId) => cardId !== taskCardId
-                  )
-                  delete draft.taskCards[taskCardId]
+              dispatch(
+                taskCardDeleted({
+                  columnId,
+                  taskCardId,
                 })
               )
               toast({

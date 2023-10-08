@@ -1,9 +1,9 @@
-import { useContext } from 'react'
-
 import { PlusCircle } from 'lucide-react'
 import { Card, CardHeader } from '@/components/ui/card'
 
-import { PlannerContext, PlannerDataType } from './TaskColumns'
+import { PlannerDataType } from './TaskColumns'
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { newTaskCardInitializationStarted } from '@/app/store/planner/reducer'
 
 const getTotalTaskCardsCount = (data: PlannerDataType): number => {
   return Object.keys(data.taskCards).length
@@ -14,17 +14,15 @@ type AddTaskCardButtonProps = {
 }
 
 export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
-  const { data, setTaskCardBeingInitializedInfo } = useContext(PlannerContext)!
+  const { data } = useAppSelector((state) => state.planner)
+  const dispatch = useAppDispatch()
   return (
     <Card
       className='mb-2 cursor-pointer'
       onClick={() => {
         const currentTaskCardsCount = getTotalTaskCardsCount(data)
         const newTaskCardId = `taskcard-${currentTaskCardsCount + 1}`
-        setTaskCardBeingInitializedInfo({
-          taskCardId: newTaskCardId,
-          columnId: columnId,
-        })
+        dispatch(newTaskCardInitializationStarted({ columnId, newTaskCardId }))
       }}
     >
       <CardHeader className='p-3'>
