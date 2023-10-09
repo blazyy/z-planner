@@ -1,5 +1,5 @@
-import Planner from '@/components/planner/Planner'
+import { Planner } from '@/components/planner/Planner'
 
-export default function () {
+export default function PlannerPage() {
   return <Planner />
 }

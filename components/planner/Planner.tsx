@@ -27,7 +27,7 @@ export type PlannerContextType = {
 
 export const PlannerContext = createContext<PlannerContextType | null>(null)
 
-export default function () {
+export const Planner = () => {
   // isSubTaskBeingDragged is used to hide/show drag handles on subtasks on a TaskCard Dialog. Handles should only be shown when
   // hovered over (and not actively dragging a subtask), or, when actively dragging a subtask. The only
   // way to handle this is using onDragStart and onDragEnd handlers, which are only available on the
