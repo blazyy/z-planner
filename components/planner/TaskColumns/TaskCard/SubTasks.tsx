@@ -1,9 +1,6 @@
-import { produce } from 'immer'
-import { useContext } from 'react'
-
-import { Checkbox } from '@/components/ui/checkbox'
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { subTasksCheckedStatusChanged } from '@/app/store/planner/reducer'
+import { Checkbox } from '@/components/ui/checkbox'
 
 type SubTasksProps = {
   taskCardId: string

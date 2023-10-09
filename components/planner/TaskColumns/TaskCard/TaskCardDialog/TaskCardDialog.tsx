@@ -1,12 +1,10 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { taskCardCheckedStatusChanged, taskCardContentChanged, taskCardTitleChanged } from '@/app/store/planner/reducer'
-
 import { Badge } from '@/components/ui/badge'
-import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent } from '@/components/ui/dialog'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
-
+import { Textarea } from '@/components/ui/textarea'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
 type TaskCardDialogProps = {

@@ -1,9 +1,8 @@
 import { useAppSelector } from '@/app/store/hooks'
-import { Droppable, Draggable } from '@hello-pangea/dnd'
-
-import { TaskCard } from './TaskCard/TaskCard'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { AddTaskCardButton } from './AddTaskCardButton'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
+import { TaskCard } from './TaskCard/TaskCard'
 
 export type ColumnInfoType = {
   id: string

@@ -1,9 +1,8 @@
-import { PlusCircle } from 'lucide-react'
-import { Card, CardHeader } from '@/components/ui/card'
-
-import { PlannerDataType } from './TaskColumns'
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { newTaskCardInitializationStarted } from '@/app/store/planner/reducer'
+import { Card, CardHeader } from '@/components/ui/card'
+import { PlusCircle } from 'lucide-react'
+import { PlannerDataType } from '../Planner'
 
 const getTotalTaskCardsCount = (data: PlannerDataType): number => {
   return Object.keys(data.taskCards).length

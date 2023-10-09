@@ -1,8 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
-
 import { PlannerDataType } from '@/components/planner/Planner'
-
 import initialData from '@/components/planner/TaskColumns/initial-data'
+import { createSlice } from '@reduxjs/toolkit'
 
 type TaskCardBeingInitializedInfoType = {
   taskCardId: string

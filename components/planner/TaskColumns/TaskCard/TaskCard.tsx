@@ -1,16 +1,16 @@
-import { Draggable } from '@hello-pangea/dnd'
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { taskCardCheckedStatusChanged } from '@/app/store/planner/reducer'
-
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
-
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Draggable } from '@hello-pangea/dnd'
+import { useContext } from 'react'
+import { PlannerContext } from '../../Planner'
 import { SubTasks } from './SubTasks'
-import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
+import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
 
 type TaskCardProps = {
   index: number
@@ -53,7 +53,8 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
 
   const dispatch = useAppDispatch()
-  const { data, idOfCardBeingDragged } = useAppSelector((state) => state.planner)
+  const { data } = useAppSelector((state) => state.planner)
+  const { idOfCardBeingDragged } = useContext(PlannerContext)!
   const task = data.taskCards[taskCardId]
 
   return (

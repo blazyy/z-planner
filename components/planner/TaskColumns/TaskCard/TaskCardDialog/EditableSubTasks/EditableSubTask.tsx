@@ -1,15 +1,13 @@
-import { useContext, useState } from 'react'
-import { DraggableProvided } from '@hello-pangea/dnd'
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { subTaskTitleChanged, subTasksCheckedStatusChanged } from '@/app/store/planner/reducer'
-
-import { GripVertical } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-
-import { handleKeyDownOnSubTask } from './utils'
-import { SubTaskInfoType } from '../../../TaskColumn'
 import { PlannerContext } from '@/components/planner/Planner'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { DraggableProvided } from '@hello-pangea/dnd'
+import { GripVertical } from 'lucide-react'
+import { useContext, useState } from 'react'
+import { SubTaskInfoType } from '../../../TaskColumn'
+import { handleKeyDownOnSubTask } from './utils'
 
 type EditableSubTaskProps = {
   index: number

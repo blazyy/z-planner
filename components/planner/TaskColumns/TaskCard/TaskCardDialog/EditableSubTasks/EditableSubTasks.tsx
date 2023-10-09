@@ -1,9 +1,8 @@
-import { createPortal } from 'react-dom'
 import { useAppSelector } from '@/app/store/hooks'
-import { Droppable, Draggable } from '@hello-pangea/dnd'
-
-import { EditableSubTask } from './EditableSubTask'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
+import { createPortal } from 'react-dom'
 import { AddNewSubTaskButton } from '../AddNewSubTaskButton'
+import { EditableSubTask } from './EditableSubTask'
 
 type EditableSubTasksProps = {
   taskCardId: string

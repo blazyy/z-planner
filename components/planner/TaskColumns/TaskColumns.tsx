@@ -1,12 +1,10 @@
 'use client'
-
-import { useContext } from 'react'
-import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-
-import { TaskColumn } from './TaskColumn'
+import { DragDropContext, Droppable } from '@hello-pangea/dnd'
+import { useContext } from 'react'
 import { PlannerContext } from '../Planner'
-import { handleOnDragStart, handleOnDragEnd } from './utils'
+import { TaskColumn } from './TaskColumn'
+import { handleOnDragEnd, handleOnDragStart } from './utils'
 
 export const TaskColumns = () => {
   const dispatch = useAppDispatch()

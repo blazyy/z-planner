@@ -1,8 +1,7 @@
-import { AppDispatch } from '@/app/store/store'
 import { newSubTaskAddedOnEnterKeydown, subTaskDeletedOnBackspaceKeydown } from '@/app/store/planner/reducer'
-
+import { AppDispatch } from '@/app/store/store'
+import { PlannerDataType } from '@/components/planner/Planner'
 import { SubTaskInfoType } from '../../../TaskColumn'
-import { PlannerDataType } from '../../../TaskColumns'
 import { getTotalSubTasksCount } from '../AddNewSubTaskButton'
 
 type HandleKeyDownOnSubTaskFunc = (

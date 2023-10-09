@@ -1,10 +1,8 @@
-import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { newSubTaskAddedOnButtonClick } from '@/app/store/planner/reducer'
-
-import { PlusCircle, GripVertical } from 'lucide-react'
-
-import { PlannerDataType } from '@/components/planner/Planner'
+import { PlannerContext, PlannerDataType } from '@/components/planner/Planner'
+import { GripVertical, PlusCircle } from 'lucide-react'
+import { useContext, useState } from 'react'
 
 type AddNewSubTaskButtonProps = {
   taskCardId: string
@@ -20,6 +18,7 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
   const numTotalNumSubTasks = getTotalSubTasksCount(data)
   const newSubTaskId: string = `$subtask-${numTotalNumSubTasks + 1}`
   const [isHoveringOver, setIsHoveringOver] = useState(false)
+  const { isSubTaskBeingDragged } = useContext(PlannerContext)!
 
   return (
     <div
@@ -36,8 +35,13 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
       }
     >
       <GripVertical size={12} className='invisible' />
-      <PlusCircle size={20} className={`${isHoveringOver ? 'text-blue-500' : 'text-gray-400'}`} />
-      <span className={`ml-2 text-sm ${isHoveringOver ? 'text-blue-500' : 'text-gray-400'}`}>Add subtask</span>
+      <PlusCircle
+        size={20}
+        className={`${isHoveringOver && !isSubTaskBeingDragged ? 'text-blue-500' : 'text-gray-400'}`}
+      />
+      <span className={`ml-2 text-sm ${isHoveringOver && !isSubTaskBeingDragged ? 'text-blue-500' : 'text-gray-400'}`}>
+        Add subtask
+      </span>
     </div>
   )
 }

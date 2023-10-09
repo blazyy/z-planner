@@ -1,16 +1,13 @@
 'use client'
-
-import { AppDispatch } from '@/app/store/store'
-
-import type { DragStart, DropResult } from '@hello-pangea/dnd'
 import {
   cardMovedAcrossColumns,
   cardMovedWithinColumn,
   columnsReordered,
   subTasksReordered,
 } from '@/app/store/planner/reducer'
-import { PlannerContext, PlannerContextType, PlannerDataType } from '../Planner'
-import { useContext } from 'react'
+import { AppDispatch } from '@/app/store/store'
+import type { DragStart, DropResult } from '@hello-pangea/dnd'
+import { PlannerContextType, PlannerDataType } from '../Planner'
 
 type OnDragEndFunc = (
   data: PlannerDataType,

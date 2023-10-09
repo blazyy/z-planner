@@ -1,11 +1,9 @@
 'use client'
-
-import { Provider } from 'react-redux'
-import { Dispatch, SetStateAction, createContext, useContext, useState } from 'react'
 import { store } from '@/app/store/store'
-
+import { Dispatch, SetStateAction, createContext, useState } from 'react'
+import { Provider } from 'react-redux'
+import { ColumnInfoType, SubTaskInfoType, TaskCardInfoType } from './TaskColumns/TaskColumn'
 import { TaskColumns } from './TaskColumns/TaskColumns'
-import { ColumnInfoType, TaskCardInfoType, SubTaskInfoType } from './TaskColumns/TaskColumn'
 
 export type PlannerDataType = {
   columns: {
