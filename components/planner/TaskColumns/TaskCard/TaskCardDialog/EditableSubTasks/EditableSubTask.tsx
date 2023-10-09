@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { DraggableProvided } from '@hello-pangea/dnd'
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { subTaskTitleChanged, subTasksCheckedStatusChanged } from '@/app/store/planner/reducer'
@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 
 import { handleKeyDownOnSubTask } from './utils'
 import { SubTaskInfoType } from '../../../TaskColumn'
+import { PlannerContext } from '@/components/planner/Planner'
 
 type EditableSubTaskProps = {
   index: number
@@ -20,7 +21,7 @@ type EditableSubTaskProps = {
 
 export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
   const { data } = useAppSelector((state) => state.planner)
-  const { isSubTaskBeingDragged } = useAppSelector((state) => state.planner)
+  const { isSubTaskBeingDragged } = useContext(PlannerContext)!
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = useAppDispatch()
   return (

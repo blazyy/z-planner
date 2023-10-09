@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { PlannerDataType } from '@/components/planner/TaskColumns/TaskColumns'
+import { PlannerDataType } from '@/components/planner/Planner'
 
 import initialData from '@/components/planner/TaskColumns/initial-data'
 
@@ -12,15 +12,11 @@ type TaskCardBeingInitializedInfoType = {
 type InitialState = {
   data: PlannerDataType
   taskCardBeingInitializedInfo: TaskCardBeingInitializedInfoType | null
-  isSubTaskBeingDragged: boolean
-  idOfCardBeingDragged: string
 }
 
 const initialState: InitialState = {
   data: initialData,
   taskCardBeingInitializedInfo: null,
-  isSubTaskBeingDragged: false,
-  idOfCardBeingDragged: '',
 }
 
 export const plannerSlice = createSlice({
@@ -33,10 +29,6 @@ export const plannerSlice = createSlice({
       newColumnOrder.splice(sourceIndex, 1)
       newColumnOrder.splice(destIndex, 0, draggableId)
       state.data.columnOrder = newColumnOrder
-    },
-    idOfCardBeingMovedChanged: (state, action) => {
-      const { id } = action.payload
-      state.idOfCardBeingDragged = id
     },
     cardMovedWithinColumn: (state, action) => {
       const { draggableId, source, destination } = action.payload
@@ -124,9 +116,6 @@ export const plannerSlice = createSlice({
       )
       delete state.data.taskCards[taskCardId]
     },
-    subTaskDragged: (state) => {
-      state.isSubTaskBeingDragged = true
-    },
     subTasksReordered: (state, action) => {
       const { draggableId, sourceIndex, destIndex } = action.payload
       const [taskCardId, subTaskId] = draggableId.split('~')
@@ -134,7 +123,6 @@ export const plannerSlice = createSlice({
       reorderedSubTasks.splice(sourceIndex, 1)
       reorderedSubTasks.splice(destIndex, 0, subTaskId)
       state.data.taskCards[taskCardId].subTasks = reorderedSubTasks
-      state.isSubTaskBeingDragged = false
     },
     subTasksCheckedStatusChanged: (state, action) => {
       const { subTaskId, isChecked } = action.payload
@@ -183,7 +171,6 @@ export const plannerSlice = createSlice({
 
 export const {
   columnsReordered,
-  idOfCardBeingMovedChanged,
   cardMovedWithinColumn,
   cardMovedAcrossColumns,
   newTaskCardInitializationStarted,
@@ -195,7 +182,6 @@ export const {
   taskCardMovedToBottom,
   taskCardMovedToTop,
   taskCardDeleted,
-  subTaskDragged,
   subTasksReordered,
   subTasksCheckedStatusChanged,
   subTaskTitleChanged,

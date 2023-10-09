@@ -4,7 +4,7 @@ import { newSubTaskAddedOnButtonClick } from '@/app/store/planner/reducer'
 
 import { PlusCircle, GripVertical } from 'lucide-react'
 
-import { PlannerDataType } from '../../TaskColumns'
+import { PlannerDataType } from '@/components/planner/Planner'
 
 type AddNewSubTaskButtonProps = {
   taskCardId: string

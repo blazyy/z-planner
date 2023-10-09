@@ -1,23 +1,27 @@
 'use client'
 
 import { AppDispatch } from '@/app/store/store'
-import { useAppSelector } from '@/app/store/hooks'
 
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 import {
   cardMovedAcrossColumns,
   cardMovedWithinColumn,
   columnsReordered,
-  idOfCardBeingMovedChanged,
-  subTaskDragged,
   subTasksReordered,
 } from '@/app/store/planner/reducer'
-import { PlannerDataType } from '@/components/planner/TaskColumns/TaskColumns'
+import { PlannerContext, PlannerContextType, PlannerDataType } from '../Planner'
+import { useContext } from 'react'
 
-type OnDragEndFunc = (data: PlannerDataType, result: DropResult, dispatch: AppDispatch) => void
+type OnDragEndFunc = (
+  data: PlannerDataType,
+  result: DropResult,
+  dispatch: AppDispatch,
+  plannerContext: PlannerContextType
+) => void
 
-export const handleOnDragEnd: OnDragEndFunc = (data, result, dispatch) => {
+export const handleOnDragEnd: OnDragEndFunc = (data, result, dispatch, plannerContext) => {
   const { destination, source, draggableId, type } = result
+  const { setIdOfCardBeingDragged, setIsSubTaskBeingDragged } = plannerContext
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
   if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
@@ -32,6 +36,7 @@ export const handleOnDragEnd: OnDragEndFunc = (data, result, dispatch) => {
         destIndex: destination.index,
       })
     )
+    setIsSubTaskBeingDragged(false)
     return
   }
 
@@ -46,7 +51,7 @@ export const handleOnDragEnd: OnDragEndFunc = (data, result, dispatch) => {
     return
   }
 
-  dispatch(idOfCardBeingMovedChanged({ id: '' }))
+  setIdOfCardBeingDragged('')
 
   // Moving a card within the same column
   if (data.columns[source.droppableId] === data.columns[destination.droppableId]) {
@@ -70,9 +75,15 @@ export const handleOnDragEnd: OnDragEndFunc = (data, result, dispatch) => {
   )
 }
 
-type OnDragStartFunction = (dragStartObj: DragStart, dispatch: AppDispatch) => void
+type OnDragStartFunction = (dragStartObj: DragStart, plannerContext: PlannerContextType) => void
 
-export const handleOnDragStart: OnDragStartFunction = (dragStartObj, dispatch) => {
-  if (dragStartObj.type === 'subtask') dispatch(subTaskDragged())
-  if (dragStartObj.type === 'card') dispatch(idOfCardBeingMovedChanged({ id: dragStartObj.draggableId }))
+export const handleOnDragStart: OnDragStartFunction = (dragStartObj, plannerContext) => {
+  if (dragStartObj.type === 'subtask') {
+    const { setIsSubTaskBeingDragged } = plannerContext
+    setIsSubTaskBeingDragged(true)
+  }
+  if (dragStartObj.type === 'card') {
+    const { setIdOfCardBeingDragged } = plannerContext
+    setIdOfCardBeingDragged(dragStartObj.draggableId)
+  }
 }
