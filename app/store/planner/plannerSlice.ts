@@ -2,19 +2,12 @@ import { PlannerDataType } from '@/components/planner/Planner'
 import initialData from '@/components/planner/TaskColumns/initial-data'
 import { createSlice } from '@reduxjs/toolkit'
 
-type TaskCardBeingInitializedInfoType = {
-  taskCardId: string
-  columnId: string
-}
-
 type InitialState = {
   data: PlannerDataType
-  taskCardBeingInitializedInfo: TaskCardBeingInitializedInfoType | null
 }
 
 const initialState: InitialState = {
   data: initialData,
-  taskCardBeingInitializedInfo: null,
 }
 
 export const plannerSlice = createSlice({
@@ -60,17 +53,8 @@ export const plannerSlice = createSlice({
       state.data.columns[newStartColumn.id] = newStartColumn
       state.data.columns[newEndColumn.id] = newEndColumn
     },
-    newTaskCardInitializationStarted: (state, action) => {
-      const { columnId, newTaskCardId } = action.payload
-      state.taskCardBeingInitializedInfo = {
-        taskCardId: newTaskCardId,
-        columnId: columnId,
-      }
-    },
     newTaskCardAdded: (state, action) => {
-      if (!state.taskCardBeingInitializedInfo) return // This won't be null when the action is called. This line is just to silence TypeScript.
-      const taskCardId = state.taskCardBeingInitializedInfo.taskCardId
-      const { columnId, title, content } = action.payload
+      const { columnId, taskCardId, title, content } = action.payload
       const newTaskCard = {
         id: taskCardId,
         title: title,
@@ -81,12 +65,7 @@ export const plannerSlice = createSlice({
       }
       state.data.taskCards[taskCardId] = newTaskCard
       state.data.columns[columnId].cardIds.unshift(taskCardId)
-      state.taskCardBeingInitializedInfo = null
     },
-    newTaskCardInitializationCancelled: (state) => {
-      state.taskCardBeingInitializedInfo = null
-    },
-
     taskCardCheckedStatusChanged: (state, action) => {
       const { taskCardId, isChecked } = action.payload
       state.data.taskCards[taskCardId].checked = isChecked
@@ -171,8 +150,6 @@ export const {
   columnsReordered,
   cardMovedWithinColumn,
   cardMovedAcrossColumns,
-  newTaskCardInitializationStarted,
-  newTaskCardInitializationCancelled,
   newTaskCardAdded,
   taskCardCheckedStatusChanged,
   taskCardTitleChanged,

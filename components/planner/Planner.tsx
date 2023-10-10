@@ -18,11 +18,18 @@ export type PlannerDataType = {
   }
 }
 
+type TaskCardBeingInitializedType = {
+  taskCardId: string
+  columnId: string
+}
+
 export type PlannerContextType = {
   isSubTaskBeingDragged: boolean
   setIsSubTaskBeingDragged: Dispatch<SetStateAction<boolean>>
   idOfCardBeingDragged: string
   setIdOfCardBeingDragged: Dispatch<SetStateAction<string>>
+  taskCardBeingInitialized: TaskCardBeingInitializedType | null
+  setTaskCardBeingInitialized: Dispatch<SetStateAction<TaskCardBeingInitializedType | null>>
 }
 
 export const PlannerContext = createContext<PlannerContextType | null>(null)
@@ -39,11 +46,20 @@ export const Planner = () => {
   // a decision to use a wrapper component which made passing the isDragging prop very tricky
   const [idOfCardBeingDragged, setIdOfCardBeingDragged] = useState<string>('')
 
+  const [taskCardBeingInitialized, setTaskCardBeingInitialized] = useState<TaskCardBeingInitializedType | null>(null)
+
   return (
     <main className='flex min-h-screen flex-col items-center gap-8'>
       <h1 className='text-8xl font-semibold'>Planner</h1>
       <PlannerContext.Provider
-        value={{ isSubTaskBeingDragged, setIsSubTaskBeingDragged, idOfCardBeingDragged, setIdOfCardBeingDragged }}
+        value={{
+          isSubTaskBeingDragged,
+          setIsSubTaskBeingDragged,
+          idOfCardBeingDragged,
+          setIdOfCardBeingDragged,
+          taskCardBeingInitialized,
+          setTaskCardBeingInitialized,
+        }}
       >
         <Provider store={store}>
           <TaskColumns />

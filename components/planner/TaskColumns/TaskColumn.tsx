@@ -1,5 +1,7 @@
 import { useAppSelector } from '@/app/store/hooks'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
+import { useContext } from 'react'
+import { PlannerContext } from '../Planner'
 import { AddTaskCardButton } from './AddTaskCardButton'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 import { TaskCard } from './TaskCard/TaskCard'
@@ -31,8 +33,8 @@ type TaskColumnProps = {
 }
 
 export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
-  const { data, taskCardBeingInitializedInfo } = useAppSelector((state) => state.planner)
-
+  const { data } = useAppSelector((state) => state.planner)!
+  const { taskCardBeingInitialized } = useContext(PlannerContext)!
   const columnInfo = data.columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
@@ -51,7 +53,7 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
                   snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
                 }`}
               >
-                {taskCardBeingInitializedInfo && taskCardBeingInitializedInfo.columnId === columnId && (
+                {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
                   <InitializingTaskCard columnId={columnInfo.id} />
                 )}
                 {columnInfo.cardIds.map((taskCardId, index) => {

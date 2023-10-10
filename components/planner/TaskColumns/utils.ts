@@ -4,10 +4,11 @@ import {
   cardMovedWithinColumn,
   columnsReordered,
   subTasksReordered,
-} from '@/app/store/planner/reducer'
+} from '@/app/store/planner/plannerSlice'
 import { AppDispatch } from '@/app/store/store'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
-import { PlannerContextType, PlannerDataType } from '../Planner'
+import { PlannerDataType } from '../Planner'
+import { PlannerContextType } from '../PlannerContextType'
 
 type OnDragEndFunc = (
   data: PlannerDataType,

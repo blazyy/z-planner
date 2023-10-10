@@ -12,6 +12,14 @@ body {
   outline: 0px solid transparent;
 }
 
+.task-card {
+  transition: box-shadow 0.3s;
+}
+
+.task-card:hover {
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

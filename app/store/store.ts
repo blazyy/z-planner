@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import plannerReducer from './planner/reducer'
+import plannerReducer from './planner/plannerSlice'
 
 export const store = configureStore({
   reducer: {

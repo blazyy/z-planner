@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { taskCardCheckedStatusChanged } from '@/app/store/planner/reducer'
+import { taskCardCheckedStatusChanged } from '@/app/store/planner/plannerSlice'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -60,7 +60,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   return (
     <TaskCardWrapper index={index} columnId={columnId} taskCardId={taskCardId}>
       <Card
-        className={`border-stone-200 mb-2 ${
+        className={`transition-shadow hover:shadow-neutral-700/30 duration-200 border-stone-200 mb-2 ${
           idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''
         } ${task.checked ? 'opacity-50' : ''}`}
       >
