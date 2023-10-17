@@ -16,6 +16,14 @@ const initialData = {
       cardIds: [],
     },
   },
+  categories: {
+    Unassigned: {
+      color: 'slate',
+    },
+    Life: {
+      color: 'green',
+    },
+  },
   columnOrder: ['column-1', 'column-2', 'column-3'],
   taskCards: {
     'taskcard-1': {

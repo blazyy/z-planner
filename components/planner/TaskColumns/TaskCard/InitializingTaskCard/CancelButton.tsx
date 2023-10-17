@@ -19,13 +19,12 @@ type CancelButtonProps = {
 }
 
 export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
-  const dispatch = useAppDispatch()
   const { setTaskCardBeingInitialized } = useContext(PlannerContext)!
   // If user has entered any input, show confirmation dialog on clicking cancel.
   // Else, directly remove the initializing task.
   if (isFormEmpty)
     return (
-      <Button type='button' variant='destructive' onClick={() => setTaskCardBeingInitialized(null)}>
+      <Button type='button' variant='destructive' size='sm' onClick={() => setTaskCardBeingInitialized(null)}>
         Cancel
       </Button>
     )

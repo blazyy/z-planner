@@ -4,11 +4,11 @@ import {
   taskCardContentChanged,
   taskCardTitleChanged,
 } from '@/app/store/planner/plannerSlice'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
+import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
 type TaskCardDialogProps = {
@@ -56,7 +56,7 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
           <EditableSubTasks taskCardId={id} />
         </CardContent>
         <CardFooter className='flex justify-between'>
-          <Badge className='bg-emerald-500 hover:bg-emerald-600'>{task.category}</Badge>
+          <CategoryBadge taskCardId={id} />
           <Checkbox
             className='h-5 w-5'
             checked={task.checked}

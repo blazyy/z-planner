@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
 import { taskCardCheckedStatusChanged } from '@/app/store/planner/plannerSlice'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
@@ -8,6 +7,7 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Draggable } from '@hello-pangea/dnd'
 import { useContext } from 'react'
 import { PlannerContext } from '../../Planner'
+import { CategoryBadge } from './CategoryBadge'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
 import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
@@ -60,7 +60,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   return (
     <TaskCardWrapper index={index} columnId={columnId} taskCardId={taskCardId}>
       <Card
-        className={`transition-shadow hover:shadow-neutral-700/30 duration-200 border-stone-200 mb-2 ${
+        className={`border-stone-200 mb-2 ${
           idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''
         } ${task.checked ? 'opacity-50' : ''}`}
       >
@@ -74,7 +74,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
           </CardContent>
         )}
         <CardFooter className='flex justify-between'>
-          <Badge className='bg-emerald-500 hover:bg-emerald-600'>{task.category}</Badge>
+          <CategoryBadge taskCardId={taskCardId} />
           <Checkbox
             className='h-5 w-5'
             checked={task.checked}

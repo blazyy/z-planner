@@ -2,6 +2,7 @@
 import { store } from '@/app/store/store'
 import { Dispatch, SetStateAction, createContext, useState } from 'react'
 import { Provider } from 'react-redux'
+import { TaskCategoryType } from './TaskColumns/TaskCard/CategoryBadge'
 import { ColumnInfoType, SubTaskInfoType, TaskCardInfoType } from './TaskColumns/TaskColumn'
 import { TaskColumns } from './TaskColumns/TaskColumns'
 
@@ -10,6 +11,7 @@ export type PlannerDataType = {
     [columnId: string]: ColumnInfoType
   }
   columnOrder: string[]
+  categories: TaskCategoryType
   taskCards: {
     [taskCardId: string]: TaskCardInfoType
   }
@@ -46,6 +48,8 @@ export const Planner = () => {
   // a decision to use a wrapper component which made passing the isDragging prop very tricky
   const [idOfCardBeingDragged, setIdOfCardBeingDragged] = useState<string>('')
 
+  // Contains data of card that's being initialized. Didn't make sense to keep this in the store, since the data
+  // is only changed in a few places.
   const [taskCardBeingInitialized, setTaskCardBeingInitialized] = useState<TaskCardBeingInitializedType | null>(null)
 
   return (

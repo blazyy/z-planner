@@ -1,5 +1,6 @@
 import { useAppDispatch } from '@/app/store/hooks'
 import { newTaskCardAdded } from '@/app/store/planner/plannerSlice'
+import { PlannerContext } from '@/components/planner/Planner'
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -9,9 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-
-import { PlannerContext } from '@/components/planner/Planner'
 import { CancelButton } from './CancelButton'
+import { CategoryBadge } from './CategoryBadge'
 
 type InitializingTaskCardProps = {
   columnId: string
@@ -27,6 +27,7 @@ const formSchema = z.object({
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
   const dispatch = useAppDispatch()
   const { taskCardBeingInitialized, setTaskCardBeingInitialized } = useContext(PlannerContext)!
+  const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,6 +54,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
         taskCardId: taskCardBeingInitialized?.taskCardId,
         title: values.taskCardTitle,
         content: `${values.taskCardDesc}`,
+        category: selectedCategory,
       })
     )
     setTaskCardBeingInitialized(null)
@@ -90,10 +92,12 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
           </CardHeader>
           <CardFooter className='flex justify-between'>
             <div className='flex gap-2'>
-              <Button type='submit'>Add</Button>
+              <Button type='submit' size='sm'>
+                Add
+              </Button>
               <CancelButton isFormEmpty={isFormEmpty} />
             </div>
-            <p className='text-sm text-right text-emerald-500'># Default</p>
+            <CategoryBadge selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
           </CardFooter>
         </form>
       </Form>

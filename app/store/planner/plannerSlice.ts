@@ -54,11 +54,11 @@ export const plannerSlice = createSlice({
       state.data.columns[newEndColumn.id] = newEndColumn
     },
     newTaskCardAdded: (state, action) => {
-      const { columnId, taskCardId, title, content } = action.payload
+      const { columnId, taskCardId, title, content, category } = action.payload
       const newTaskCard = {
         id: taskCardId,
         title: title,
-        category: 'Default',
+        category: category,
         content: content,
         checked: false,
         subTasks: [],
@@ -143,6 +143,10 @@ export const plannerSlice = createSlice({
         (id) => id !== subTaskId
       )
     },
+    taskCategoryChanged: (state, action) => {
+      const { taskCardId, chosenCategory } = action.payload
+      state.data.taskCards[taskCardId].category = chosenCategory
+    },
   },
 })
 
@@ -163,6 +167,7 @@ export const {
   newSubTaskAddedOnEnterKeydown,
   newSubTaskAddedOnButtonClick,
   subTaskDeletedOnBackspaceKeydown,
+  taskCategoryChanged,
 } = plannerSlice.actions
 
 export default plannerSlice.reducer

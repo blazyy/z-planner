@@ -7,8 +7,7 @@ import {
 } from '@/app/store/planner/plannerSlice'
 import { AppDispatch } from '@/app/store/store'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
-import { PlannerDataType } from '../Planner'
-import { PlannerContextType } from '../PlannerContextType'
+import { PlannerContextType, PlannerDataType } from '../Planner'
 
 type OnDragEndFunc = (
   data: PlannerDataType,
