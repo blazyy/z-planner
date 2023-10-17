@@ -2,12 +2,12 @@
 
 import Link from 'next/link'
 
-import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { usePathname } from 'next/navigation'
 
 export function NavLinks() {
   const pathname = usePathname() // Used to highlight which route the website is currently on
-  const internalNavRoutes = ['About', 'Tracker', 'Planner']
+  const internalNavRoutes = ['About', 'Planner']
   return (
     <div className='flex gap-2'>
       {internalNavRoutes.map((routeName) => {

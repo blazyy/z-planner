@@ -1,21 +1,24 @@
-import type { Metadata } from 'next'
-
+'use client'
+import { Navbar } from '@/components/global/Navbar'
+import type { Session } from 'next-auth'
+import { SessionProvider } from 'next-auth/react'
 import './globals.css'
 
-import { Navbar } from '@/components/global/Navbar'
+// import type { Metadata } from 'next'
+// export const metadata: Metadata = {
+//   title: 'Faaez Razeen Nizamudeen',
+//   description: 'The digital realm of Faaez Razeen Nizamudeen',
+// }
 
-export const metadata: Metadata = {
-  title: 'Faaez Razeen Nizamudeen',
-  description: 'The digital realm of Faaez Razeen Nizamudeen',
-}
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children, session }: { children: React.ReactNode; session: Session }) {
   return (
-    <html lang='en'>
-      <body>
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    <SessionProvider session={session}>
+      <html lang='en'>
+        <body>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </SessionProvider>
   )
 }
