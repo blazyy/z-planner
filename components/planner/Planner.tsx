@@ -23,6 +23,7 @@ export type PlannerDataType = {
 type TaskCardBeingInitializedType = {
   taskCardId: string
   columnId: string
+  isHighlighted: boolean
 }
 
 export type PlannerContextType = {
@@ -32,6 +33,8 @@ export type PlannerContextType = {
   setIdOfCardBeingDragged: Dispatch<SetStateAction<string>>
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   setTaskCardBeingInitialized: Dispatch<SetStateAction<TaskCardBeingInitializedType | null>>
+  dataEnteredInTaskCardBeingInitialized: boolean
+  setDataEnteredInTaskCardBeingInitialized: Dispatch<SetStateAction<boolean>>
 }
 
 export const PlannerContext = createContext<PlannerContextType | null>(null)
@@ -52,6 +55,10 @@ export const Planner = () => {
   // is only changed in a few places.
   const [taskCardBeingInitialized, setTaskCardBeingInitialized] = useState<TaskCardBeingInitializedType | null>(null)
 
+  // Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
+  // in the previous one.
+  const [dataEnteredInTaskCardBeingInitialized, setDataEnteredInTaskCardBeingInitialized] = useState<boolean>(false)
+
   return (
     <main className='flex min-h-screen flex-col items-center gap-8'>
       <h1 className='text-8xl font-semibold'>Planner</h1>
@@ -63,6 +70,8 @@ export const Planner = () => {
           setIdOfCardBeingDragged,
           taskCardBeingInitialized,
           setTaskCardBeingInitialized,
+          dataEnteredInTaskCardBeingInitialized,
+          setDataEnteredInTaskCardBeingInitialized,
         }}
       >
         <Provider store={store}>

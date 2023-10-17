@@ -23,6 +23,9 @@ const initialData = {
     Life: {
       color: 'green',
     },
+    Downtime: {
+      color: 'purple',
+    },
   },
   columnOrder: ['column-1', 'column-2', 'column-3'],
   taskCards: {
@@ -45,7 +48,7 @@ const initialData = {
     'taskcard-3': {
       id: 'taskcard-3',
       title: 'Watch Harry Potter',
-      category: 'Life',
+      category: 'Downtime',
       content: 'I know, you have watched it so many times already. But one more time. Do it. For Daddy Voldy.',
       checked: false,
       subTasks: ['subtask-3', 'subtask-4'],

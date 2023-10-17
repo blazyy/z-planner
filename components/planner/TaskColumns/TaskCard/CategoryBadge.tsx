@@ -56,7 +56,6 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
         >
           <Settings className='mr-2 h-4 w-4' />
           <span>Manage Categories</span>
-          {/* <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

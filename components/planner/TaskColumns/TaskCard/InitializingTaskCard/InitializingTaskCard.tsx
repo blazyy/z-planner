@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { produce } from 'immer'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -26,7 +27,8 @@ const formSchema = z.object({
 
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
   const dispatch = useAppDispatch()
-  const { taskCardBeingInitialized, setTaskCardBeingInitialized } = useContext(PlannerContext)!
+  const { taskCardBeingInitialized, setTaskCardBeingInitialized, setDataEnteredInTaskCardBeingInitialized } =
+    useContext(PlannerContext)!
   const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,10 +42,17 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   const [isFormEmpty, setIsFormEmpty] = useState(true)
 
   form.watch((value) => {
+    setTaskCardBeingInitialized(
+      produce((draft) => {
+        if (draft) draft.isHighlighted = false
+      })
+    )
     if (value.taskCardTitle !== '' || value.taskCardDesc !== '') {
       setIsFormEmpty(false)
+      setDataEnteredInTaskCardBeingInitialized(true)
     } else {
       setIsFormEmpty(true)
+      setDataEnteredInTaskCardBeingInitialized(false)
     }
   })
 
@@ -58,10 +67,13 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
       })
     )
     setTaskCardBeingInitialized(null)
+    setDataEnteredInTaskCardBeingInitialized(false)
   }
 
   return (
-    <Card className='border-stone-400 mb-2'>
+    <Card
+      className={`${taskCardBeingInitialized?.isHighlighted ? 'border-4 border-red-500/50' : 'border-stone-400'} mb-2`}
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
           <CardHeader className='p-4'>

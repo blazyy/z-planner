@@ -19,19 +19,27 @@ type CancelButtonProps = {
 }
 
 export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
-  const { setTaskCardBeingInitialized } = useContext(PlannerContext)!
+  const { setTaskCardBeingInitialized, setDataEnteredInTaskCardBeingInitialized } = useContext(PlannerContext)!
   // If user has entered any input, show confirmation dialog on clicking cancel.
   // Else, directly remove the initializing task.
   if (isFormEmpty)
     return (
-      <Button type='button' variant='destructive' size='sm' onClick={() => setTaskCardBeingInitialized(null)}>
+      <Button
+        type='button'
+        variant='destructive'
+        size='sm'
+        onClick={() => {
+          setTaskCardBeingInitialized(null)
+          setDataEnteredInTaskCardBeingInitialized(false)
+        }}
+      >
         Cancel
       </Button>
     )
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button type='button' variant='destructive'>
+        <Button type='button' variant='destructive' size='sm'>
           Cancel
         </Button>
       </AlertDialogTrigger>
@@ -45,7 +53,14 @@ export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => setTaskCardBeingInitialized(null)}>Continue</AlertDialogAction>
+          <AlertDialogAction
+            onClick={() => {
+              setTaskCardBeingInitialized(null)
+              setDataEnteredInTaskCardBeingInitialized(false)
+            }}
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
