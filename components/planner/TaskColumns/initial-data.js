@@ -24,7 +24,7 @@ const initialData = {
       color: 'green',
     },
     Downtime: {
-      color: 'purple',
+      color: 'rose',
     },
   },
   columnOrder: ['column-1', 'column-2', 'column-3'],
