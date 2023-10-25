@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import plannerReducer from './planner/plannerSlice'
+import databaseReducer from './databaseSlice'
+import plannerReducer from './plannerSlice'
 
 export const store = configureStore({
   reducer: {
     planner: plannerReducer,
+    database: databaseReducer,
   },
 })
 

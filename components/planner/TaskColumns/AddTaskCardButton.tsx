@@ -1,9 +1,10 @@
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { useAppSelector } from '@/app/store/hooks'
 import { Card, CardHeader } from '@/components/ui/card'
 import { produce } from 'immer'
 import { PlusCircle } from 'lucide-react'
 import { useContext } from 'react'
-import { PlannerContext, PlannerDataType } from '../Planner'
+import { PlannerContext } from '../Planner'
+import { PlannerDataType } from '../types'
 
 const getTotalTaskCardsCount = (data: PlannerDataType): number => {
   return Object.keys(data.taskCards).length

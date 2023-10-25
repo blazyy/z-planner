@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/app/store/hooks'
-import { taskCardDeleted } from '@/app/store/planner/plannerSlice'
+import { taskCardDeleted } from '@/app/store/plannerSlice'
 import {
   AlertDialog,
   AlertDialogAction,

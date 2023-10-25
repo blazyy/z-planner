@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { taskCardCheckedStatusChanged } from '@/app/store/planner/plannerSlice'
+import { taskCardCheckedStatusChanged } from '@/app/store/plannerSlice'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'

@@ -2,6 +2,10 @@ body {
   padding: 1% !important; /* The important is needed because the dialog component was messing up the body padding for some weird reason */
 }
 
+.empty-task-column {
+  width: 500px;
+}
+
 .task-column {
   height: 500px;
   width: 500px;

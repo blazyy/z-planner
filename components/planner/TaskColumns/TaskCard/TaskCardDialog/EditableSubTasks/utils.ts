@@ -1,4 +1,4 @@
-import { newSubTaskAddedOnEnterKeydown, subTaskDeletedOnBackspaceKeydown } from '@/app/store/planner/plannerSlice'
+import { newSubTaskAddedOnEnterKeydown, subTaskDeletedOnBackspaceKeydown } from '@/app/store/plannerSlice'
 import { AppDispatch } from '@/app/store/store'
 import { PlannerDataType } from '@/components/planner/Planner'
 import { SubTaskInfoType } from '../../../TaskColumn'

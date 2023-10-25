@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { newSubTaskAddedOnButtonClick } from '@/app/store/planner/plannerSlice'
+import { newSubTaskAddedOnButtonClick } from '@/app/store/plannerSlice'
 import { PlannerContext, PlannerDataType } from '@/components/planner/Planner'
 import { GripVertical, PlusCircle } from 'lucide-react'
 import { useContext, useState } from 'react'

@@ -1,9 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import {
-  taskCardCheckedStatusChanged,
-  taskCardContentChanged,
-  taskCardTitleChanged,
-} from '@/app/store/planner/plannerSlice'
+import { taskCardCheckedStatusChanged, taskCardContentChanged, taskCardTitleChanged } from '@/app/store/plannerSlice'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent } from '@/components/ui/dialog'

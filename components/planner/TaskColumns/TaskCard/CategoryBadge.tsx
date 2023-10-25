@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { taskCategoryChanged } from '@/app/store/planner/plannerSlice'
+import { taskCategoryChanged } from '@/app/store/plannerSlice'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,

@@ -10,11 +10,6 @@ const initialData = {
       title: 'Doing',
       cardIds: [],
     },
-    'column-3': {
-      id: 'column-3',
-      title: 'Done',
-      cardIds: [],
-    },
   },
   categories: {
     Unassigned: {
@@ -27,7 +22,7 @@ const initialData = {
       color: 'rose',
     },
   },
-  columnOrder: ['column-1', 'column-2', 'column-3'],
+  columnOrder: ['column-1', 'column-2'],
   taskCards: {
     'taskcard-1': {
       id: 'taskcard-1',

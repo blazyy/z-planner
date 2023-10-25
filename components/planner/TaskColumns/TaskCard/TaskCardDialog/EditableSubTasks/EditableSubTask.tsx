@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { subTaskTitleChanged, subTasksCheckedStatusChanged } from '@/app/store/planner/plannerSlice'
+import { subTaskTitleChanged, subTasksCheckedStatusChanged } from '@/app/store/plannerSlice'
 import { PlannerContext } from '@/components/planner/Planner'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -52,7 +52,6 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
       <Input
         autoFocus
         id={subTask.id}
-        type='text'
         value={subTask.title}
         className='h-1 my-1 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
         onKeyDown={(event) => handleKeyDownOnSubTask(event, data, dispatch, taskCardId, subTask)}

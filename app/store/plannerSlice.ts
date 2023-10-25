@@ -1,5 +1,5 @@
-import { PlannerDataType } from '@/components/planner/Planner'
 import initialData from '@/components/planner/TaskColumns/initial-data'
+import { PlannerDataType } from '@/components/planner/types'
 import { createSlice } from '@reduxjs/toolkit'
 
 type InitialState = {
@@ -14,6 +14,17 @@ export const plannerSlice = createSlice({
   name: 'planner',
   initialState: initialState,
   reducers: {
+    newColumnAdded: (state, action) => {
+      const { columnName } = action.payload
+      const columnId = 'yoloswag'
+      const newColumn = {
+        id: columnId,
+        title: columnName,
+        cardIds: [],
+      }
+      state.data.columns[columnId] = newColumn
+      state.data.columnOrder.push(columnId)
+    },
     columnsReordered: (state, action) => {
       const { draggableId, sourceIndex, destIndex } = action.payload
       const newColumnOrder = Array.from(state.data.columnOrder)
@@ -151,6 +162,7 @@ export const plannerSlice = createSlice({
 })
 
 export const {
+  newColumnAdded,
   columnsReordered,
   cardMovedWithinColumn,
   cardMovedAcrossColumns,

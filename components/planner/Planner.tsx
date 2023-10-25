@@ -1,41 +1,8 @@
 'use client'
-import { store } from '@/app/store/store'
-import { Dispatch, SetStateAction, createContext, useState } from 'react'
-import { Provider } from 'react-redux'
-import { TaskCategoryType } from './TaskColumns/TaskCard/CategoryBadge'
-import { ColumnInfoType, SubTaskInfoType, TaskCardInfoType } from './TaskColumns/TaskColumn'
+import supabaseClient from '@/app/db/supabase'
+import { createContext, useState } from 'react'
 import { TaskColumns } from './TaskColumns/TaskColumns'
-
-export type PlannerDataType = {
-  columns: {
-    [columnId: string]: ColumnInfoType
-  }
-  columnOrder: string[]
-  categories: TaskCategoryType
-  taskCards: {
-    [taskCardId: string]: TaskCardInfoType
-  }
-  subTasks: {
-    [taskId: string]: SubTaskInfoType
-  }
-}
-
-type TaskCardBeingInitializedType = {
-  taskCardId: string
-  columnId: string
-  isHighlighted: boolean
-}
-
-export type PlannerContextType = {
-  isSubTaskBeingDragged: boolean
-  setIsSubTaskBeingDragged: Dispatch<SetStateAction<boolean>>
-  idOfCardBeingDragged: string
-  setIdOfCardBeingDragged: Dispatch<SetStateAction<string>>
-  taskCardBeingInitialized: TaskCardBeingInitializedType | null
-  setTaskCardBeingInitialized: Dispatch<SetStateAction<TaskCardBeingInitializedType | null>>
-  dataEnteredInTaskCardBeingInitialized: boolean
-  setDataEnteredInTaskCardBeingInitialized: Dispatch<SetStateAction<boolean>>
-}
+import { PlannerContextType, TaskCardBeingInitializedType } from './types'
 
 export const PlannerContext = createContext<PlannerContextType | null>(null)
 
@@ -45,7 +12,7 @@ export const Planner = () => {
   // way to handle this is using onDragStart and onDragEnd handlers, which are only available on the
   // DragDropContext component. This is why this state is in the parent, while it's being used way below
   // in the component tree.
-  const [isSubTaskBeingDragged, setIsSubTaskBeingDragged] = useState(false)
+  const [isSubTaskBeingDragged, setIsSubTaskBeingDragged] = useState<boolean>(false)
 
   // idOfCardBeingDragged is used to handle transparency of card while being dragged. isDragging coulnd't be used because of
   // a decision to use a wrapper component which made passing the isDragging prop very tricky
@@ -72,11 +39,10 @@ export const Planner = () => {
           setTaskCardBeingInitialized,
           dataEnteredInTaskCardBeingInitialized,
           setDataEnteredInTaskCardBeingInitialized,
+          supabaseClient,
         }}
       >
-        <Provider store={store}>
-          <TaskColumns />
-        </Provider>
+        <TaskColumns />
       </PlannerContext.Provider>
     </main>
   )

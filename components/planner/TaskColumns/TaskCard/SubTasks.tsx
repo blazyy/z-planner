@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { subTasksCheckedStatusChanged } from '@/app/store/planner/plannerSlice'
+import { subTasksCheckedStatusChanged } from '@/app/store/plannerSlice'
 import { Checkbox } from '@/components/ui/checkbox'
 
 type SubTasksProps = {

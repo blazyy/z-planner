@@ -39,7 +39,7 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
-        <div className={`task-column flex flex-col mx-2 gap-2`} {...provided.draggableProps} ref={provided.innerRef}>
+        <div className={`task-column flex flex-col gap-2`} {...provided.draggableProps} ref={provided.innerRef}>
           <h1 className='text-2xl text-bold text-center' {...provided.dragHandleProps}>
             {columnInfo.title}
           </h1>

@@ -4,7 +4,7 @@ import {
   cardMovedWithinColumn,
   columnsReordered,
   subTasksReordered,
-} from '@/app/store/planner/plannerSlice'
+} from '@/app/store/plannerSlice'
 import { AppDispatch } from '@/app/store/store'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 import { PlannerContextType, PlannerDataType } from '../Planner'

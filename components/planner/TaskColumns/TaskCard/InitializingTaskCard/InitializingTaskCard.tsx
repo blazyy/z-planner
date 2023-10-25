@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/app/store/hooks'
-import { newTaskCardAdded } from '@/app/store/planner/plannerSlice'
+import { newTaskCardAdded } from '@/app/store/plannerSlice'
 import { PlannerContext } from '@/components/planner/Planner'
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
