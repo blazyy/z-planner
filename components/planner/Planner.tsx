@@ -1,5 +1,4 @@
 'use client'
-import supabaseClient from '@/app/db/supabase'
 import { createContext, useState } from 'react'
 import { TaskColumns } from './TaskColumns/TaskColumns'
 import { PlannerContextType, TaskCardBeingInitializedType } from './types'
@@ -39,7 +38,6 @@ export const Planner = () => {
           setTaskCardBeingInitialized,
           dataEnteredInTaskCardBeingInitialized,
           setDataEnteredInTaskCardBeingInitialized,
-          supabaseClient,
         }}
       >
         <TaskColumns />

@@ -1,4 +1,3 @@
-import { SupabaseClient } from '@supabase/supabase-js'
 import { Dispatch, SetStateAction } from 'react'
 import { TaskCategoryType } from './TaskColumns/TaskCard/CategoryBadge'
 import { ColumnInfoType, SubTaskInfoType, TaskCardInfoType } from './TaskColumns/TaskColumn'
@@ -32,5 +31,4 @@ export type PlannerContextType = {
   setTaskCardBeingInitialized: Dispatch<SetStateAction<TaskCardBeingInitializedType | null>>
   dataEnteredInTaskCardBeingInitialized: boolean
   setDataEnteredInTaskCardBeingInitialized: Dispatch<SetStateAction<boolean>>
-  supabaseClient: SupabaseClient
 }

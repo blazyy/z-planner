@@ -1,6 +1,6 @@
 import { newSubTaskAddedOnEnterKeydown, subTaskDeletedOnBackspaceKeydown } from '@/app/store/plannerSlice'
 import { AppDispatch } from '@/app/store/store'
-import { PlannerDataType } from '@/components/planner/Planner'
+import { PlannerDataType } from '@/components/planner/types'
 import { SubTaskInfoType } from '../../../TaskColumn'
 import { getTotalSubTasksCount } from '../AddNewSubTaskButton'
 

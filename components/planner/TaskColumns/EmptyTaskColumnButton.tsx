@@ -3,13 +3,19 @@ import { newColumnAdded } from '@/app/store/plannerSlice'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/components/ui/use-toast'
 import { PlusCircle } from 'lucide-react'
-import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useContext, useState } from 'react'
+import { PlannerContext } from '../Planner'
 
 export const AddNewColumnButton = () => {
+  const { data: session } = useSession()
   const dispatch = useAppDispatch()
+  //   const { supabase } = useContext(PlannerContext)!
   const [columnBeingInitialized, setColumnBeingInitialized] = useState<boolean>(false)
   const [newColumnName, setNewColumnName] = useState<string>('')
+  const { toast } = useToast()
   return (
     <div className='empty-task-column mt-10'>
       <Card
@@ -18,45 +24,55 @@ export const AddNewColumnButton = () => {
           setColumnBeingInitialized(true)
         }}
       >
-        <CardHeader className='p-2'>
-          {!columnBeingInitialized && (
-            <div className=' flex flex-row align-center gap-2'>
+        <CardHeader className={columnBeingInitialized ? 'p-1' : 'p-2'}>
+          {!columnBeingInitialized ? (
+            <div className=' flex flex-row gap-2'>
               <PlusCircle className='text-gray-400' />
               <div className='text-gray-500'>Add new column</div>
             </div>
-          )}
-          {columnBeingInitialized && (
-            <>
+          ) : (
+            <div className='flex'>
               <Input
                 autoFocus
                 placeholder='Enter new column name...'
-                className='h-1 my-1 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
+                className='h-8 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
                 onChange={(e) => {
                   setNewColumnName(e.target.value)
                 }}
               />
               <div className='flex flex-row gap-2'>
                 <Button
-                  size='sm'
-                  onClick={() => {
-                    dispatch(newColumnAdded({ columnName: newColumnName }))
+                  size='xs'
+                  disabled={newColumnName === ''}
+                  onClick={async (e) => {
+                    e.stopPropagation()
                     setColumnBeingInitialized(false)
+                    // dispatch(newColumnAdded({ columnName: newColumnName }))
+                    // const { error } = await supabase
+                    //   .from('columns')
+                    //   .insert({ id: 1, name: 'Denmark' })
+                    //   .then((response) => {
+                    //     console.log(response)
+                    //   })
+                    toast({
+                      description: `New column ${newColumnName} created.`,
+                    })
                   }}
                 >
                   Add
                 </Button>
                 <Button
-                  size='sm'
+                  size='xs'
                   variant='destructive'
-                  onClick={() => {
-                    console.log('clicked')
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setColumnBeingInitialized(false)
                   }}
                 >
                   Cancel
                 </Button>
               </div>
-            </>
+            </div>
           )}
         </CardHeader>
       </Card>

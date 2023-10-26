@@ -1,24 +1,25 @@
+import supabase from '@/app/db/supabase'
 import { createSlice } from '@reduxjs/toolkit'
 import { SupabaseClient } from '@supabase/supabase-js'
 
 type InitialState = {
-  supabaseClient: null | SupabaseClient
+  supabase: null | SupabaseClient
 }
 
 const initialState: InitialState = {
-  supabaseClient: null,
+  supabase: supabase,
 }
 
 export const databaseSlice = createSlice({
   name: 'database',
   initialState: initialState,
   reducers: {
-    initSupabase: (state, action) => {
-      state.supabaseClient = action.payload.supabaseClient
-    },
+    // initSupabase: (state, action) => {
+    //   state.supabase = action.payload.supabase
+    // },
   },
 })
 
-export const { initSupabase } = databaseSlice.actions
+export const {} = databaseSlice.actions
 
 export default databaseSlice.reducer
