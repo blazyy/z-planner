@@ -1,6 +1,5 @@
-import { createClient } from '@/utils/supabase/server'
+import supabase from '@/app/db/supabase'
 import { NextResponse } from 'next/server'
-
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
@@ -8,7 +7,6 @@ export async function POST(request: Request) {
   const formData = await request.formData()
   const email = String(formData.get('email'))
   const password = String(formData.get('password'))
-  const supabase = createClient()
 
   const { error } = await supabase.auth.signUp({
     email,
@@ -19,20 +17,14 @@ export async function POST(request: Request) {
   })
 
   if (error) {
-    return NextResponse.redirect(
-      `${requestUrl.origin}/login?error=Could not authenticate user`,
-      {
-        // a 301 status is required to redirect from a POST to a GET route
-        status: 301,
-      }
-    )
-  }
-
-  return NextResponse.redirect(
-    `${requestUrl.origin}/login?message=Check email to continue sign in process`,
-    {
+    return NextResponse.redirect(`${requestUrl.origin}/login?error=Could not authenticate user`, {
       // a 301 status is required to redirect from a POST to a GET route
       status: 301,
-    }
-  )
+    })
+  }
+
+  return NextResponse.redirect(`${requestUrl.origin}/login?message=Check email to continue sign in process`, {
+    // a 301 status is required to redirect from a POST to a GET route
+    status: 301,
+  })
 }

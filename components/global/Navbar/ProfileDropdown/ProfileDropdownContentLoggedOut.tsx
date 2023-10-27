@@ -1,20 +1,13 @@
-import { useAppSelector } from '@/app/store/hooks'
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut } from '@/components/ui/dropdown-menu'
+import { DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import Link from 'next/link'
 
 export const ProfileDropdownContentLoggedOut = () => {
-  const { supabase } = useAppSelector((state) => state.database)!
   return (
-    <DropdownMenuContent className='w-56' align='end' forceMount>
-      <DropdownMenuItem
-        onClick={async () => {
-          const { data, error } = await supabase!.auth.signInWithOAuth({
-            provider: 'github',
-          })
-        }}
-      >
-        Log in
-        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+    <DropdownMenuContent className='w-48' align='end' forceMount>
+      <DropdownMenuItem>
+        <Link href='/auth/sign-up'>Sign Up</Link>
       </DropdownMenuItem>
+      <DropdownMenuItem>Log in</DropdownMenuItem>
     </DropdownMenuContent>
   )
 }

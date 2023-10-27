@@ -8,19 +8,19 @@ import { AddNewColumnButton } from './EmptyTaskColumnButton'
 import { TaskColumn } from './TaskColumn'
 import { handleOnDragEnd, handleOnDragStart } from './utils'
 
-const getData = async () => {
-  const { data, error } = await supabase.from('boards').select()
-  console.log('data', data)
-}
+// const getData = async () => {
+//   const { data, error } = await supabase.from('boards').select()
+//   console.log('data', data)
+// }
 
 export const TaskColumns = () => {
   const dispatch = useAppDispatch()
   const plannerContext = useContext(PlannerContext)!
   const { data } = useAppSelector((state) => state.planner)
 
-  useEffect(() => {
-    getData()
-  }, [])
+  // useEffect(() => {
+  //   getData()
+  // }, [])
 
   return (
     <DragDropContext

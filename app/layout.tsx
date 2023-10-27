@@ -1,7 +1,5 @@
 'use client'
 import { Navbar } from '@/components/global/Navbar'
-import type { Session } from 'next-auth'
-import { SessionProvider } from 'next-auth/react'
 import { Provider } from 'react-redux'
 import './globals.css'
 import { store } from './store/store'
@@ -12,17 +10,15 @@ import { store } from './store/store'
 //   description: 'The digital realm of Faaez Razeen Nizamudeen',
 // }
 
-export default function RootLayout({ children, session }: { children: React.ReactNode; session: Session }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider session={session}>
-      <Provider store={store}>
-        <html lang='en'>
-          <body>
-            <Navbar />
-            {children}
-          </body>
-        </html>
-      </Provider>
-    </SessionProvider>
+    <Provider store={store}>
+      <html lang='en'>
+        <body className='flex flex-col'>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </Provider>
   )
 }

@@ -1,3 +1,4 @@
+import supabase from '@/app/db/supabase'
 import { useAppDispatch } from '@/app/store/hooks'
 import { newColumnAdded } from '@/app/store/plannerSlice'
 import { Button } from '@/components/ui/button'
@@ -5,14 +6,10 @@ import { Card, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { PlusCircle } from 'lucide-react'
-import { useSession } from 'next-auth/react'
-import { useContext, useState } from 'react'
-import { PlannerContext } from '../Planner'
+import { useState } from 'react'
 
 export const AddNewColumnButton = () => {
-  const { data: session } = useSession()
   const dispatch = useAppDispatch()
-  //   const { supabase } = useContext(PlannerContext)!
   const [columnBeingInitialized, setColumnBeingInitialized] = useState<boolean>(false)
   const [newColumnName, setNewColumnName] = useState<string>('')
   const { toast } = useToast()
@@ -48,9 +45,9 @@ export const AddNewColumnButton = () => {
                     e.stopPropagation()
                     setColumnBeingInitialized(false)
                     // dispatch(newColumnAdded({ columnName: newColumnName }))
-                    // const { error } = await supabase
+                    // await supabase
                     //   .from('columns')
-                    //   .insert({ id: 1, name: 'Denmark' })
+                    //   .insert({name: 'Denmark' })
                     //   .then((response) => {
                     //     console.log(response)
                     //   })
