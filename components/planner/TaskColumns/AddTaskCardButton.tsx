@@ -1,7 +1,6 @@
 import { Card, CardHeader } from '@/components/ui/card'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { PlannerData } from '@/hooks/Planner/types'
-import { produce } from 'immer'
 import { PlusCircle } from 'lucide-react'
 
 const getTotalTaskCardsCount = (data: PlannerData): number => {
@@ -13,7 +12,8 @@ type AddTaskCardButtonProps = {
 }
 
 export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
-  const { data, dataEnteredInTaskCardBeingInitialized, setTaskCardBeingInitialized } = usePlanner()!
+  const { data, dataEnteredInTaskCardBeingInitialized } = usePlanner()!
+  const plannerDispatch = usePlannerDispatch()!
   return (
     <Card
       className='mb-2 cursor-pointer'
@@ -23,17 +23,19 @@ export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
         if (!dataEnteredInTaskCardBeingInitialized) {
           const currentTaskCardsCount = getTotalTaskCardsCount(data)
           const newTaskCardId = `taskcard-${currentTaskCardsCount + 1}`
-          setTaskCardBeingInitialized({
-            taskCardId: newTaskCardId,
-            columnId,
-            isHighlighted: false,
+          plannerDispatch({
+            type: 'newTaskCardInitialized',
+            payload: {
+              taskCardId: newTaskCardId,
+              columnId,
+              isHighlighted: false,
+            },
           })
         } else {
-          setTaskCardBeingInitialized(
-            produce((draft) => {
-              if (draft) draft.isHighlighted = true
-            })
-          )
+          plannerDispatch({
+            type: 'taskCardBeingInitializedHighlightStatusChange',
+            payload: true,
+          })
         }
       }}
     >

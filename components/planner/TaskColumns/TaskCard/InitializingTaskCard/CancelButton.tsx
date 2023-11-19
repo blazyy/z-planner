@@ -28,11 +28,11 @@ export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
         size='sm'
         onClick={() => {
           plannerDispatch({
-            type: 'taskCardBeingInitializedStatusChange',
+            type: 'taskCardInitializationCancelled',
             payload: null,
           })
           plannerDispatch({
-            type: 'dataEnteredInTaskCardBeingInitializedChanged',
+            type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
             payload: false,
           })
         }}
@@ -60,12 +60,10 @@ export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
           <AlertDialogAction
             onClick={() => {
               plannerDispatch({
-                type: 'taskCardBeingInitializedStatusChange',
-                payload: null,
+                type: 'taskCardInitializationCancelled',
               })
               plannerDispatch({
-                type: 'dataEnteredInTaskCardBeingInitializedChanged',
-                payload: false,
+                type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
               })
             }}
           >

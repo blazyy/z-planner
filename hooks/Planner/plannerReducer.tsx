@@ -1,8 +1,6 @@
 import { produce } from 'immer'
 
 export const plannerReducer = produce((draft, action) => {
-  console.log(action.type)
-
   switch (action.type) {
     case 'subTaskDragStatusChanged': {
       draft.isSubTaskBeingDragged = action.payload
@@ -12,11 +10,19 @@ export const plannerReducer = produce((draft, action) => {
       draft.idOfCardBeingDragged = action.payload
       break
     }
-    case 'taskCardBeingInitializedStatusChange': {
+    case 'taskCardInitializationCancelled': {
+      draft.taskCardBeingInitialized = null
+      break
+    }
+    case 'newTaskCardInitialized': {
       draft.taskCardBeingInitialized = action.payload
       break
     }
-    case 'dataEnteredInTaskCardBeingInitializedChanged': {
+    case 'taskCardBeingInitializedHighlightStatusChange': {
+      draft.taskCardBeingInitialized.isHighlighted = action.payload
+      break
+    }
+    case 'dataEnteredInTaskCardBeingInitializedStatusChanged': {
       draft.dataEnteredInTaskCardBeingInitialized = action.payload
       break
     }

@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { produce } from 'immer'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -25,8 +24,7 @@ const formSchema = z.object({
 
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
   const plannerDispatch = usePlannerDispatch()!
-  const { taskCardBeingInitialized, setTaskCardBeingInitialized, setDataEnteredInTaskCardBeingInitialized } =
-    usePlanner()!
+  const { taskCardBeingInitialized } = usePlanner()!
   const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,17 +38,22 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   const [isFormEmpty, setIsFormEmpty] = useState(true)
 
   form.watch((value) => {
-    setTaskCardBeingInitialized(
-      produce((draft) => {
-        if (draft) draft.isHighlighted = false
-      })
-    )
+    plannerDispatch({
+      type: 'taskCardBeingInitializedHighlightStatusChange',
+      payload: false,
+    })
     if (value.taskCardTitle !== '' || value.taskCardDesc !== '') {
       setIsFormEmpty(false)
-      setDataEnteredInTaskCardBeingInitialized(true)
+      plannerDispatch({
+        type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
+        payload: true,
+      })
     } else {
       setIsFormEmpty(true)
-      setDataEnteredInTaskCardBeingInitialized(false)
+      plannerDispatch({
+        type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
+        payload: false,
+      })
     }
   })
 
@@ -65,8 +68,13 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
         category: selectedCategory,
       },
     })
-    setTaskCardBeingInitialized(null)
-    setDataEnteredInTaskCardBeingInitialized(false)
+    plannerDispatch({
+      type: 'taskCardInitializationCancelled',
+    })
+    plannerDispatch({
+      type: 'setDataEnteredInTaskCardBeingInitialized',
+      payload: false,
+    })
   }
 
   return (
