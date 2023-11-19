@@ -33,11 +33,19 @@ export type TaskCategoryType = {
   }
 }
 
+export type BoardInfoType = {
+  id: string
+  columns: string[]
+}
+
 export type PlannerData = {
+  boardOrder: string[]
+  boards: {
+    [boardId: string]: BoardInfoType
+  }
   columns: {
     [columnId: string]: ColumnInfoType
   }
-  columnOrder: string[]
   categories: TaskCategoryType
   taskCards: {
     [taskCardId: string]: TaskCardInfoType
@@ -53,6 +61,6 @@ export type PlannerContextType = {
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   dataEnteredInTaskCardBeingInitialized: boolean
   data: PlannerData
-} | null
+}
 
 export type PlannerDispatchContextType = Dispatch<any> | null

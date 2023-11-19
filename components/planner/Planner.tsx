@@ -1,7 +1,7 @@
 'use client'
 import { PlannerProvider } from '@/hooks/Planner/Planner'
 import { ProtectedRoute } from '../global/ProtectedRoute'
-import { TaskColumns } from './TaskColumns/TaskColumns'
+import { Board } from './Board/Board'
 
 export const Planner = () => {
   return (
@@ -9,7 +9,7 @@ export const Planner = () => {
       <main className='flex min-h-screen flex-col items-center gap-8'>
         <h1 className='text-8xl font-semibold'>Planner</h1>
         <PlannerProvider>
-          <TaskColumns />
+          <Board />
         </PlannerProvider>
       </main>
     </ProtectedRoute>

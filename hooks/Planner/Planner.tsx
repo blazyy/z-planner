@@ -3,8 +3,16 @@ import { Dispatch, createContext, useContext, useReducer } from 'react'
 import { plannerReducer } from './plannerReducer'
 import { PlannerContextType } from './types'
 
-export const PlannerContext = createContext<PlannerContextType | null>(null)
-export const PlannerDispatchContext = createContext<Dispatch<any> | null>(null)
+const initialPlannerData: PlannerContextType = {
+  isSubTaskBeingDragged: false,
+  idOfCardBeingDragged: '',
+  taskCardBeingInitialized: null,
+  dataEnteredInTaskCardBeingInitialized: false,
+  data: data,
+}
+
+export const PlannerContext = createContext<PlannerContextType>(initialPlannerData)
+export const PlannerDispatchContext = createContext<Dispatch<PlannerContextType>>(() => {})
 
 export const PlannerProvider = ({ children }: { children: JSX.Element }) => {
   // isSubTaskBeingDragged - Used to hide/show drag handles on subtasks on a TaskCard Dialog. Handles should only be shown when
@@ -22,15 +30,8 @@ export const PlannerProvider = ({ children }: { children: JSX.Element }) => {
   // dataEnteredInTaskCardBeingInitialized - Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
   // in the previous one.
 
-  const initialPlannerData = {
-    isSubTaskBeingDragged: false,
-    idOfCardBeingDragged: '',
-    taskCardBeingInitialized: null,
-    dataEnteredInTaskCardBeingInitialized: false,
-    data: data,
-  }
-
   const [tasks, dispatch] = useReducer(plannerReducer, initialPlannerData)
+
   return (
     <PlannerContext.Provider value={tasks}>
       <PlannerDispatchContext.Provider value={dispatch}>{children}</PlannerDispatchContext.Provider>

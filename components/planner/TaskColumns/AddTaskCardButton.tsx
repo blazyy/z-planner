@@ -13,7 +13,7 @@ type AddTaskCardButtonProps = {
 
 export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
   const { data, dataEnteredInTaskCardBeingInitialized } = usePlanner()!
-  const plannerDispatch = usePlannerDispatch()!
+  const dispatch = usePlannerDispatch()!
   return (
     <Card
       className='mb-2 cursor-pointer'
@@ -23,7 +23,7 @@ export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
         if (!dataEnteredInTaskCardBeingInitialized) {
           const currentTaskCardsCount = getTotalTaskCardsCount(data)
           const newTaskCardId = `taskcard-${currentTaskCardsCount + 1}`
-          plannerDispatch({
+          dispatch({
             type: 'newTaskCardInitialized',
             payload: {
               taskCardId: newTaskCardId,
@@ -32,7 +32,7 @@ export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
             },
           })
         } else {
-          plannerDispatch({
+          dispatch({
             type: 'taskCardBeingInitializedHighlightStatusChange',
             payload: true,
           })

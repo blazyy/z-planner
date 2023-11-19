@@ -1,9 +1,10 @@
-import { produce } from 'immer'
+import { Draft, produce } from 'immer'
+import { PlannerContextType } from './types'
 
-export const plannerReducer = produce((draft, action) => {
+export const plannerReducer = produce((draft: Draft<PlannerContextType>, action) => {
   switch (action.type) {
     case 'subTaskDragStatusChanged': {
-      draft.isSubTaskBeingDragged = action.payload
+      draft!.isSubTaskBeingDragged = action.payload
       break
     }
     case 'idOfCardBeingDraggedChanged': {
@@ -19,7 +20,7 @@ export const plannerReducer = produce((draft, action) => {
       break
     }
     case 'taskCardBeingInitializedHighlightStatusChange': {
-      draft.taskCardBeingInitialized.isHighlighted = action.payload
+      draft.taskCardBeingInitialized!.isHighlighted = action.payload
       break
     }
     case 'dataEnteredInTaskCardBeingInitializedStatusChanged': {
@@ -27,11 +28,11 @@ export const plannerReducer = produce((draft, action) => {
       break
     }
     case 'columnsReordered': {
-      const { draggableId, sourceIndex, destIndex } = action.payload
-      const newColumnOrder = Array.from(draft.data.columnOrder)
+      const { draggableId, sourceIndex, destIndex, boardId } = action.payload
+      const newColumnOrder = Array.from(draft.data.boards[boardId].columns)
       newColumnOrder.splice(sourceIndex, 1)
       newColumnOrder.splice(destIndex, 0, draggableId)
-      draft.data.columnOrder = newColumnOrder
+      draft.data.boards[boardId].columns = newColumnOrder
       break
     }
     case 'cardMovedWithinColumn': {

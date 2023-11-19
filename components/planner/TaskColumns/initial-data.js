@@ -1,4 +1,11 @@
 const initialData = {
+  boardOrder: ['board-1'],
+  boards: {
+    'board-1': {
+      id: 'board-1',
+      columns: ['column-1', 'column-2', 'column-3'],
+    },
+  },
   columns: {
     'column-1': {
       id: 'column-1',
@@ -27,7 +34,6 @@ const initialData = {
       color: 'rose',
     },
   },
-  columnOrder: ['column-1', 'column-2', 'column-3'],
   taskCards: {
     'taskcard-1': {
       id: 'taskcard-1',

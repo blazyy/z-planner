@@ -5,10 +5,11 @@ import type { DragStart, DropResult } from '@hello-pangea/dnd'
 type OnDragEndFunc = (
   result: DropResult,
   plannerDispatch: PlannerDispatchContextType,
-  plannerContext: PlannerContextType
+  plannerContext: PlannerContextType,
+  boardId: string
 ) => void
 
-export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerContext) => {
+export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerContext, boardId) => {
   const { destination, source, draggableId, type } = result
   const { data } = plannerContext!
 
@@ -37,7 +38,8 @@ export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerC
     plannerDispatch!({
       type: 'columnsReordered',
       payload: {
-        draggableId: draggableId,
+        boardId,
+        draggableId,
         sourceIndex: source.index,
         destIndex: destination.index,
       },
