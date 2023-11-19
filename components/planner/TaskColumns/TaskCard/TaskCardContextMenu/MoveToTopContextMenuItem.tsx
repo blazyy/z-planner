@@ -1,13 +1,12 @@
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { taskCardMovedToTop } from '@/app/store/planner/plannerSlice'
 import { ContextMenuItem } from '@/components/ui/context-menu'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { ArrowBigUp } from 'lucide-react'
 import { useContext } from 'react'
 import { ContextMenuItemContext } from './TaskCardContextMenu'
 
 export const MoveToTopContextMenuItem = () => {
-  const dispatch = useAppDispatch()
-  const { data } = useAppSelector((state) => state.planner)
+  const plannerDispatch = usePlannerDispatch()!
+  const { data } = usePlanner()!
   const { columnId, taskCardId, iconProps, contextMenuItemProps } = useContext(ContextMenuItemContext)!
   const index = data.columns[columnId].cardIds.indexOf(taskCardId)
   if (index === 0) return <></> // Don't show option if card is already at top
@@ -16,12 +15,13 @@ export const MoveToTopContextMenuItem = () => {
       <div
         {...contextMenuItemProps}
         onClick={() =>
-          dispatch(
-            taskCardMovedToTop({
+          plannerDispatch({
+            type: 'taskCardMovedToTop',
+            payload: {
               columnId,
               taskCardIndex: index,
-            })
-          )
+            },
+          })
         }
       >
         <ArrowBigUp {...iconProps} />

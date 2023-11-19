@@ -1,14 +1,12 @@
-import { useAppDispatch } from '@/app/store/hooks'
-import { newTaskCardAdded } from '@/app/store/planner/plannerSlice'
-import { PlannerContext } from '@/components/planner/Planner'
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { produce } from 'immer'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { CancelButton } from './CancelButton'
@@ -26,9 +24,9 @@ const formSchema = z.object({
 })
 
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
-  const dispatch = useAppDispatch()
+  const plannerDispatch = usePlannerDispatch()!
   const { taskCardBeingInitialized, setTaskCardBeingInitialized, setDataEnteredInTaskCardBeingInitialized } =
-    useContext(PlannerContext)!
+    usePlanner()!
   const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,15 +55,16 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    dispatch(
-      newTaskCardAdded({
+    plannerDispatch({
+      type: 'newTaskCardAdded',
+      payload: {
         columnId: columnId,
         taskCardId: taskCardBeingInitialized?.taskCardId,
         title: values.taskCardTitle,
         content: `${values.taskCardDesc}`,
         category: selectedCategory,
-      })
-    )
+      },
+    })
     setTaskCardBeingInitialized(null)
     setDataEnteredInTaskCardBeingInitialized(false)
   }

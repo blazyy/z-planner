@@ -1,14 +1,13 @@
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { subTasksCheckedStatusChanged } from '@/app/store/planner/plannerSlice'
 import { Checkbox } from '@/components/ui/checkbox'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 
 type SubTasksProps = {
   taskCardId: string
 }
 
 export const SubTasks = ({ taskCardId }: SubTasksProps) => {
-  const dispatch = useAppDispatch()
-  const { data } = useAppSelector((state) => state.planner)
+  const plannerDispatch = usePlannerDispatch()!
+  const { data } = usePlanner()!
   const subTasks = data.taskCards[taskCardId].subTasks.map((subTaskId) => data.subTasks[subTaskId])
 
   return (
@@ -22,12 +21,13 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
             onClick={(event) => {
               event.preventDefault() // Neede to prevent dialog from triggering
               const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-              dispatch(
-                subTasksCheckedStatusChanged({
+              plannerDispatch({
+                type: 'subTasksCheckedStatusChanged',
+                payload: {
                   subTaskId: subTask.id,
                   isChecked: !isChecked,
-                })
-              )
+                },
+              })
             }}
           />
           <label htmlFor={subTask.id} className='text-sm text-gray-500'>

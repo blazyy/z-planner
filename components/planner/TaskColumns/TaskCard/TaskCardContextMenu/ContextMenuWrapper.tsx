@@ -1,5 +1,3 @@
-import { useAppDispatch } from '@/app/store/hooks'
-import { taskCardDeleted } from '@/app/store/planner/plannerSlice'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,6 +11,7 @@ import {
 import { ToastAction } from '@/components/ui/toast'
 import { Toaster } from '@/components/ui/toaster'
 import { useToast } from '@/components/ui/use-toast'
+import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 
 type ContextMenuWrapperProps = {
   columnId: string
@@ -22,7 +21,7 @@ type ContextMenuWrapperProps = {
 
 export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {
   const { toast } = useToast()
-  const dispatch = useAppDispatch()
+  const plannerDispatch = usePlannerDispatch()!
   return (
     <AlertDialog>
       <Toaster />
@@ -38,12 +37,13 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              dispatch(
-                taskCardDeleted({
+              plannerDispatch({
+                type: 'taskCardDeleted',
+                payload: {
                   columnId,
                   taskCardId,
-                })
-              )
+                },
+              })
               toast({
                 title: 'Deleted task',
                 // description: 'Friday, February 10, 2023 at 5:57 PM',

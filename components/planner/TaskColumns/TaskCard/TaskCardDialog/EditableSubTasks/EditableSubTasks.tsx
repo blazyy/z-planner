@@ -1,4 +1,4 @@
-import { useAppSelector } from '@/app/store/hooks'
+import { usePlanner } from '@/hooks/Planner/Planner'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { createPortal } from 'react-dom'
 import { AddNewSubTaskButton } from '../AddNewSubTaskButton'
@@ -9,7 +9,7 @@ type EditableSubTasksProps = {
 }
 
 export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
-  const { data } = useAppSelector((state) => state.planner)
+  const { data } = usePlanner()!
   const subTasks = data.taskCards[taskCardId].subTasks.map((subTaskId) => data.subTasks[subTaskId])
 
   // ------------------------------------------------------------------------------------------------------------------------------------------------

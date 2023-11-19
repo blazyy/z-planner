@@ -1,24 +1,22 @@
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { newSubTaskAddedOnButtonClick } from '@/app/store/planner/plannerSlice'
-import { PlannerContext, PlannerDataType } from '@/components/planner/Planner'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { PlannerData } from '@/hooks/Planner/types'
 import { GripVertical, PlusCircle } from 'lucide-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
 type AddNewSubTaskButtonProps = {
   taskCardId: string
 }
 
-export const getTotalSubTasksCount = (data: PlannerDataType): number => {
+export const getTotalSubTasksCount = (data: PlannerData): number => {
   return Object.keys(data.subTasks).length
 }
 
 export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) => {
-  const dispatch = useAppDispatch()
-  const { data } = useAppSelector((state) => state.planner)
+  const dispatch = usePlannerDispatch()!
+  const [isHoveringOver, setIsHoveringOver] = useState(false)
+  const { data, isSubTaskBeingDragged } = usePlanner()!
   const numTotalNumSubTasks = getTotalSubTasksCount(data)
   const newSubTaskId: string = `$subtask-${numTotalNumSubTasks + 1}`
-  const [isHoveringOver, setIsHoveringOver] = useState(false)
-  const { isSubTaskBeingDragged } = useContext(PlannerContext)!
 
   return (
     <div
@@ -26,12 +24,13 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
       onMouseEnter={() => setIsHoveringOver(true)}
       onMouseLeave={() => setIsHoveringOver(false)}
       onClick={() =>
-        dispatch(
-          newSubTaskAddedOnButtonClick({
+        dispatch({
+          type: 'newSubTaskAddedOnButtonClick',
+          payload: {
             taskCardId,
             newSubTaskId,
-          })
-        )
+          },
+        })
       }
     >
       <GripVertical size={12} className='invisible' />

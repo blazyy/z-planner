@@ -1,4 +1,3 @@
-import { useAppSelector } from '@/app/store/hooks'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -9,6 +8,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { usePlanner } from '@/hooks/Planner/Planner'
 import { Plus } from 'lucide-react'
 import { Dispatch, SetStateAction } from 'react'
 import { getCategoryBadgeClassNames } from '../utils'
@@ -25,7 +25,7 @@ type CategoryBadgeProps = {
 }
 
 export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: CategoryBadgeProps) => {
-  const { data } = useAppSelector((state) => state.planner)
+  const { data } = usePlanner()!
   const allCategoryNames = Object.keys(data.categories).sort()
   return (
     <DropdownMenu>

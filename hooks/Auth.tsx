@@ -11,7 +11,7 @@ const AuthContext = createContext<{
   signOut: () => void
 }>({ session: null, user: null, signIn: () => {}, signOut: () => {} })
 
-export const AuthProvider = ({ children }: any) => {
+export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<User>()
   const [session, setSession] = useState<Session | null>()
   const [loading, setLoading] = useState(true)

@@ -1,12 +1,10 @@
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { subTaskTitleChanged, subTasksCheckedStatusChanged } from '@/app/store/planner/plannerSlice'
-import { PlannerContext } from '@/components/planner/Planner'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { SubTaskInfoType } from '@/hooks/Planner/types'
 import { DraggableProvided } from '@hello-pangea/dnd'
 import { GripVertical } from 'lucide-react'
-import { useContext, useState } from 'react'
-import { SubTaskInfoType } from '../../../TaskColumn'
+import { useState } from 'react'
 import { handleKeyDownOnSubTask } from './utils'
 
 type EditableSubTaskProps = {
@@ -18,10 +16,9 @@ type EditableSubTaskProps = {
 }
 
 export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
-  const { data } = useAppSelector((state) => state.planner)
-  const { isSubTaskBeingDragged } = useContext(PlannerContext)!
+  const { data, isSubTaskBeingDragged } = usePlanner()!
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
-  const dispatch = useAppDispatch()
+  const dispatch = usePlannerDispatch()!
   return (
     <div
       ref={provided.innerRef}
@@ -41,12 +38,13 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         id={`${index}`}
         checked={subTask.checked}
         onCheckedChange={(isChecked) => {
-          dispatch(
-            subTasksCheckedStatusChanged({
+          dispatch({
+            type: 'subTasksCheckedStatusChanged',
+            payload: {
               subTaskId: subTask.id,
               isChecked: Boolean(isChecked),
-            })
-          )
+            },
+          })
         }}
       />
       <Input
@@ -57,12 +55,13 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         className='h-1 my-1 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
         onKeyDown={(event) => handleKeyDownOnSubTask(event, data, dispatch, taskCardId, subTask)}
         onChange={(event) => {
-          dispatch(
-            subTaskTitleChanged({
+          dispatch({
+            type: 'subTaskTitleChanged',
+            payload: {
               subTaskId: subTask.id,
               newTitle: event.target.value,
-            })
-          )
+            },
+          })
         }}
       />
     </div>

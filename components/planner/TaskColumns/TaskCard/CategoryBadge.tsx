@@ -1,5 +1,3 @@
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { taskCategoryChanged } from '@/app/store/planner/plannerSlice'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -7,25 +5,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { Settings } from 'lucide-react'
 import { getCategoryBadgeClassNames } from './utils'
-
-export type TaskCategoryType = {
-  [name: string]: {
-    color: string
-  }
-}
 
 type CategoryBadgeProps = {
   taskCardId: string
 }
 
 export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
-  const dispatch = useAppDispatch()
-  const { data } = useAppSelector((state) => state.planner)
+  const plannerDispatch = usePlannerDispatch()!
+  const { data } = usePlanner()!
   const selectedCategoryName = data.taskCards[taskCardId].category
   const allCategoryNames = Object.keys(data.categories).sort()
   return (
@@ -42,7 +34,13 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
             checked={selectedCategoryName === categoryName}
             onClick={(event) => {
               event.preventDefault()
-              dispatch(taskCategoryChanged({ taskCardId, chosenCategory: categoryName }))
+              plannerDispatch({
+                type: 'taskCategoryChanged',
+                payload: {
+                  taskCardId,
+                  chosenCategory: categoryName,
+                },
+              })
             }}
           >
             <Badge className={getCategoryBadgeClassNames(data.categories[categoryName].color)}>{categoryName}</Badge>

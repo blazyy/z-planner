@@ -1,31 +1,8 @@
-import { useAppSelector } from '@/app/store/hooks'
+import { usePlanner } from '@/hooks/Planner/Planner'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
-import { useContext } from 'react'
-import { PlannerContext } from '../Planner'
 import { AddTaskCardButton } from './AddTaskCardButton'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 import { TaskCard } from './TaskCard/TaskCard'
-
-export type ColumnInfoType = {
-  id: string
-  title: string
-  cardIds: string[]
-}
-
-export type SubTaskInfoType = {
-  id: string
-  title: string
-  checked: boolean
-}
-
-export type TaskCardInfoType = {
-  id: string
-  title: string
-  category: string
-  content: string
-  checked: boolean
-  subTasks: string[]
-}
 
 type TaskColumnProps = {
   index: number
@@ -33,8 +10,7 @@ type TaskColumnProps = {
 }
 
 export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
-  const { data } = useAppSelector((state) => state.planner)!
-  const { taskCardBeingInitialized } = useContext(PlannerContext)!
+  const { data, taskCardBeingInitialized } = usePlanner()!
   const columnInfo = data.columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
@@ -50,7 +26,7 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 className={`flex flex-col transition ease grow p-3 rounded-lg ${
-                  snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
+                  snapshot.isDraggingOver ? 'bg-neutral-400' : 'bg-neutral-300'
                 }`}
               >
                 {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
