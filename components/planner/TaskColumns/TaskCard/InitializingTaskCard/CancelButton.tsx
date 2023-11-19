@@ -1,5 +1,3 @@
-import { useAppDispatch } from '@/app/store/hooks'
-import { PlannerContext } from '@/components/planner/Planner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,14 +10,14 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { useContext } from 'react'
+import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 
 type CancelButtonProps = {
   isFormEmpty: boolean
 }
 
 export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
-  const { setTaskCardBeingInitialized, setDataEnteredInTaskCardBeingInitialized } = useContext(PlannerContext)!
+  const plannerDispatch = usePlannerDispatch()!
   // If user has entered any input, show confirmation dialog on clicking cancel.
   // Else, directly remove the initializing task.
   if (isFormEmpty)
@@ -29,8 +27,14 @@ export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
         variant='destructive'
         size='sm'
         onClick={() => {
-          setTaskCardBeingInitialized(null)
-          setDataEnteredInTaskCardBeingInitialized(false)
+          plannerDispatch({
+            type: 'taskCardBeingInitializedStatusChange',
+            payload: null,
+          })
+          plannerDispatch({
+            type: 'dataEnteredInTaskCardBeingInitializedChanged',
+            payload: false,
+          })
         }}
       >
         Cancel
@@ -55,8 +59,14 @@ export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              setTaskCardBeingInitialized(null)
-              setDataEnteredInTaskCardBeingInitialized(false)
+              plannerDispatch({
+                type: 'taskCardBeingInitializedStatusChange',
+                payload: null,
+              })
+              plannerDispatch({
+                type: 'dataEnteredInTaskCardBeingInitializedChanged',
+                payload: false,
+              })
             }}
           >
             Continue

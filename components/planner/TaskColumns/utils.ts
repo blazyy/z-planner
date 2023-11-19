@@ -10,7 +10,7 @@ type OnDragEndFunc = (
 
 export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerContext) => {
   const { destination, source, draggableId, type } = result
-  const { data, setIdOfCardBeingDragged, setIsSubTaskBeingDragged } = plannerContext!
+  const { data } = plannerContext!
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
   if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
@@ -19,14 +19,17 @@ export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerC
 
   if (type === 'subtask') {
     plannerDispatch!({
-      action: 'subTasksReordered',
+      type: 'subTasksReordered',
       payload: {
         draggableId: draggableId,
         sourceIndex: source.index,
         destIndex: destination.index,
       },
     })
-    setIsSubTaskBeingDragged(false)
+    plannerDispatch!({
+      type: 'subTaskDragStatusChanged',
+      payload: false,
+    })
     return
   }
 
@@ -42,7 +45,10 @@ export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerC
     return
   }
 
-  setIdOfCardBeingDragged('')
+  plannerDispatch!({
+    type: 'idOfCardBeingDraggedChanged',
+    payload: '',
+  })
 
   // Moving a card within the same column
   if (data.columns[source.droppableId] === data.columns[destination.droppableId]) {
@@ -68,15 +74,20 @@ export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerC
   })
 }
 
-type OnDragStartFunction = (dragStartObj: DragStart, plannerContext: PlannerContextType) => void
+type OnDragStartFunction = (dragStartObj: DragStart, plannerDispatch: PlannerDispatchContextType) => void
 
-export const handleOnDragStart: OnDragStartFunction = (dragStartObj, plannerContext) => {
+export const handleOnDragStart: OnDragStartFunction = (dragStartObj, plannerDispatch) => {
   if (dragStartObj.type === 'subtask') {
-    const { setIsSubTaskBeingDragged } = plannerContext!
-    setIsSubTaskBeingDragged(true)
+    // const { setIsSubTaskBeingDragged } = plannerContext!
+    plannerDispatch!({
+      type: 'subTaskDragStatusChanged',
+      payload: true,
+    })
   }
   if (dragStartObj.type === 'card') {
-    const { setIdOfCardBeingDragged } = plannerContext!
-    setIdOfCardBeingDragged(dragStartObj.draggableId)
+    plannerDispatch!({
+      type: 'idOfCardBeingDraggedChanged',
+      payload: dragStartObj.draggableId,
+    })
   }
 }

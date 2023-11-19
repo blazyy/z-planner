@@ -10,7 +10,7 @@ export const TaskColumns = () => {
   const { data } = plannerContext
   return (
     <DragDropContext
-      onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerContext)}
+      onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
       onDragEnd={(result) => handleOnDragEnd(result, plannerDispatch, plannerContext)}
     >
       {/* droppableId doesn't matter here because it won't be interacting with other droppables */}

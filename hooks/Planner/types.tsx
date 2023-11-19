@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch } from 'react'
 
 export type ColumnInfoType = {
   id: string
@@ -49,13 +49,9 @@ export type PlannerData = {
 
 export type PlannerContextType = {
   isSubTaskBeingDragged: boolean
-  setIsSubTaskBeingDragged: Dispatch<SetStateAction<boolean>>
   idOfCardBeingDragged: string
-  setIdOfCardBeingDragged: Dispatch<SetStateAction<string>>
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
-  setTaskCardBeingInitialized: Dispatch<SetStateAction<TaskCardBeingInitializedType | null>>
   dataEnteredInTaskCardBeingInitialized: boolean
-  setDataEnteredInTaskCardBeingInitialized: Dispatch<SetStateAction<boolean>>
   data: PlannerData
 } | null
 
