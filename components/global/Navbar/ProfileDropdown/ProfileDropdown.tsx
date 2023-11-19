@@ -1,37 +1,36 @@
+'use client'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { useAuth } from '@/hooks/Auth'
 import { User } from 'lucide-react'
-import { useSession } from 'next-auth/react'
 import { ProfileDropdownContentLoggedIn } from './ProfileDropdownContentLoggedIn'
 import { ProfileDropdownContentLoggedOut } from './ProfileDropdownContentLoggedOut'
 import { getInitials } from './utils'
 
 export const ProfileDropdown = () => {
-  const { data: session } = useSession()
+  const { user } = useAuth()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='relative h-10 w-10 rounded-full'>
           <Avatar className='h-10 w-10'>
-            {session && (
+            {user && (
               <>
-                <AvatarImage src={`${session?.user?.image}`} alt={`${session?.user?.email}`} />
-                <AvatarFallback>{getInitials(`${session?.user?.name}`)}</AvatarFallback>
+                <AvatarImage src={`${user?.user_metadata.avatar_url}`} alt={`${user?.user_metadata.email}`} />
+                <AvatarFallback>{getInitials(`${user?.user_metadata.email}`)}</AvatarFallback>
               </>
             )}
-            {!session && (
-              <>
-                <AvatarFallback>
-                  <User />
-                </AvatarFallback>
-              </>
-            )}
+            <>
+              <AvatarFallback>
+                <User />
+              </AvatarFallback>
+            </>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      {session && <ProfileDropdownContentLoggedIn />}
-      {!session && <ProfileDropdownContentLoggedOut />}
+      {user && <ProfileDropdownContentLoggedIn />}
+      {!user && <ProfileDropdownContentLoggedOut />}
     </DropdownMenu>
   )
 }

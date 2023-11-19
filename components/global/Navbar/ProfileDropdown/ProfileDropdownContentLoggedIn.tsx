@@ -6,16 +6,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
 } from '@/components/ui/dropdown-menu'
-import { signOut, useSession } from 'next-auth/react'
+import { useAuth } from '@/hooks/Auth'
 
 export const ProfileDropdownContentLoggedIn = () => {
-  const { data: session } = useSession()
+  const { user, signOut } = useAuth()
   return (
     <DropdownMenuContent className='w-56' align='end' forceMount>
       <DropdownMenuLabel className='font-normal'>
         <div className='flex flex-col space-y-1'>
-          <p className='text-sm font-medium leading-none'>{session?.user?.name}</p>
-          <p className='text-xs leading-none text-muted-foreground'>{session?.user?.email}</p>
+          <p className='text-sm font-medium leading-none'>{user?.user_metadata.full_name}</p>
+          <p className='text-xs leading-none text-muted-foreground'>{user?.user_metadata.email}</p>
         </div>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
@@ -30,7 +30,7 @@ export const ProfileDropdownContentLoggedIn = () => {
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={() => signOut()}>
+      <DropdownMenuItem onClick={signOut}>
         Log out
         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
       </DropdownMenuItem>

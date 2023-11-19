@@ -1,11 +1,9 @@
 'use client'
-
-import Link from 'next/link'
-
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export function NavLinks() {
+export const NavLinks = () => {
   const pathname = usePathname() // Used to highlight which route the website is currently on
   const internalNavRoutes = ['About', 'Planner']
   return (

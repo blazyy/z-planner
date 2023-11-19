@@ -2,6 +2,7 @@
 import { store } from '@/app/store/store'
 import { Dispatch, SetStateAction, createContext, useState } from 'react'
 import { Provider } from 'react-redux'
+import { ProtectedRoute } from '../global/ProtectedRoute'
 import { TaskCategoryType } from './TaskColumns/TaskCard/CategoryBadge'
 import { ColumnInfoType, SubTaskInfoType, TaskCardInfoType } from './TaskColumns/TaskColumn'
 import { TaskColumns } from './TaskColumns/TaskColumns'
@@ -60,24 +61,26 @@ export const Planner = () => {
   const [dataEnteredInTaskCardBeingInitialized, setDataEnteredInTaskCardBeingInitialized] = useState<boolean>(false)
 
   return (
-    <main className='flex min-h-screen flex-col items-center gap-8'>
-      <h1 className='text-8xl font-semibold'>Planner</h1>
-      <PlannerContext.Provider
-        value={{
-          isSubTaskBeingDragged,
-          setIsSubTaskBeingDragged,
-          idOfCardBeingDragged,
-          setIdOfCardBeingDragged,
-          taskCardBeingInitialized,
-          setTaskCardBeingInitialized,
-          dataEnteredInTaskCardBeingInitialized,
-          setDataEnteredInTaskCardBeingInitialized,
-        }}
-      >
-        <Provider store={store}>
-          <TaskColumns />
-        </Provider>
-      </PlannerContext.Provider>
-    </main>
+    <ProtectedRoute>
+      <main className='flex min-h-screen flex-col items-center gap-8'>
+        <h1 className='text-8xl font-semibold'>Planner</h1>
+        <PlannerContext.Provider
+          value={{
+            isSubTaskBeingDragged,
+            setIsSubTaskBeingDragged,
+            idOfCardBeingDragged,
+            setIdOfCardBeingDragged,
+            taskCardBeingInitialized,
+            setTaskCardBeingInitialized,
+            dataEnteredInTaskCardBeingInitialized,
+            setDataEnteredInTaskCardBeingInitialized,
+          }}
+        >
+          <Provider store={store}>
+            <TaskColumns />
+          </Provider>
+        </PlannerContext.Provider>
+      </main>
+    </ProtectedRoute>
   )
 }
