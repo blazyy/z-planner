@@ -56,6 +56,7 @@ export type BoardsType = {
 }
 
 export type PlannerType = {
+  dataLoaded: false
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null

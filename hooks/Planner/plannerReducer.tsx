@@ -3,6 +3,9 @@ import { PlannerType } from './types'
 
 export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
   switch (action.type) {
+    case 'dataFetchedFromDatabase': {
+      return action.payload
+    }
     case 'newBoardAdded': {
       const { boardId, boardName } = action.payload
       draft.boardOrder.push(boardId)
