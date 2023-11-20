@@ -24,7 +24,7 @@ const formSchema = z.object({
 
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
   const dispatch = usePlannerDispatch()!
-  const { taskCardBeingInitialized } = usePlanner()!
+  const { taskCardBeingInitialized } = usePlanner()
   const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,7 +50,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
     })
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     dispatch({
       type: 'newTaskCardAdded',
       payload: {
@@ -61,13 +61,13 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
         category: selectedCategory,
       },
     })
-    dispatch({
-      type: 'taskCardInitializationCancelled',
-    })
-    dispatch({
-      type: 'setDataEnteredInTaskCardBeingInitialized',
-      payload: false,
-    })
+    // dispatch({
+    //   type: 'taskCardInitializationCancelled',
+    // })
+    // dispatch({
+    //   type: 'setDataEnteredInTaskCardBeingInitialized',
+    //   payload: false,
+    // })
   }
 
   return (

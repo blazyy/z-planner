@@ -7,7 +7,7 @@ type SubTasksProps = {
 
 export const SubTasks = ({ taskCardId }: SubTasksProps) => {
   const plannerDispatch = usePlannerDispatch()!
-  const { taskCards, subTasks } = usePlanner()!
+  const { taskCards, subTasks } = usePlanner()
   const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
 
   return (

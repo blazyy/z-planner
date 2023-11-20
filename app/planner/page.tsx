@@ -1,5 +1,11 @@
+'use client'
 import { Planner } from '@/components/planner/Planner'
+import { PlannerProvider } from '@/hooks/Planner/Planner'
 
 export default function PlannerPage() {
-  return <Planner />
+  return (
+    <PlannerProvider>
+      <Planner />
+    </PlannerProvider>
+  )
 }

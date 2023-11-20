@@ -12,15 +12,21 @@ type AddTaskCardButtonProps = {
 }
 
 export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
-  const { taskCards, dataEnteredInTaskCardBeingInitialized } = usePlanner()!
+  const { taskCards, taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlanner()
   const dispatch = usePlannerDispatch()!
   return (
     <Card
       className='mb-2 cursor-pointer'
       onClick={() => {
         // Only allow an initializing task card to be added in an existing task card doesn't already exist,
-        // or if it exists and does not have any info entered.
-        if (!dataEnteredInTaskCardBeingInitialized) {
+        // or if it exists and does not have any info entered and the add button is clicked from another
+        // column
+        if (
+          !taskCardBeingInitialized ||
+          (taskCardBeingInitialized &&
+            !dataEnteredInTaskCardBeingInitialized &&
+            taskCardBeingInitialized.columnId !== columnId)
+        ) {
           const currentTaskCardsCount = getTotalTaskCardsCount(taskCards)
           const newTaskCardId = `taskcard-${currentTaskCardsCount + 1}`
           dispatch({

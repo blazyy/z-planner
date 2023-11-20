@@ -9,7 +9,7 @@ type TaskColumnsPropsType = {
 }
 
 export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
-  const plannerContext = usePlanner()!
+  const plannerContext = usePlanner()
   const plannerDispatch = usePlannerDispatch()
   const { boards } = plannerContext
   return (

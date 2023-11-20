@@ -16,7 +16,7 @@ type EditableSubTaskProps = {
 }
 
 export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
-  const { isSubTaskBeingDragged, taskCards, subTasks } = usePlanner()!
+  const { isSubTaskBeingDragged, taskCards, subTasks } = usePlanner()
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = usePlannerDispatch()!
   return (

@@ -6,7 +6,7 @@ import { ContextMenuItemContext } from './TaskCardContextMenu'
 
 export const MoveToBottomContextMenuItem = () => {
   const dispatch = usePlannerDispatch()!
-  const { columns } = usePlanner()!
+  const { columns } = usePlanner()
   const { columnId, taskCardId, iconProps, contextMenuItemProps } = useContext(ContextMenuItemContext)!
   const index = columns[columnId].taskCards.indexOf(taskCardId)
   if (index === columns[columnId].taskCards.length - 1) return <></> // Don't show option if card is already at bottom

@@ -25,7 +25,7 @@ type CategoryBadgeProps = {
 }
 
 export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: CategoryBadgeProps) => {
-  const { categories } = usePlanner()!
+  const { categories } = usePlanner()
   const allCategoryNames = Object.keys(categories).sort()
   return (
     <DropdownMenu>

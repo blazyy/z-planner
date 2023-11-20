@@ -14,7 +14,7 @@ export const getTotalSubTasksCount = (subTasks: { [subTaskId: string]: SubTaskIn
 export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) => {
   const dispatch = usePlannerDispatch()!
   const [isHoveringOver, setIsHoveringOver] = useState(false)
-  const { subTasks, isSubTaskBeingDragged } = usePlanner()!
+  const { subTasks, isSubTaskBeingDragged } = usePlanner()
   const numTotalNumSubTasks = getTotalSubTasksCount(subTasks)
   const newSubTaskId: string = `$subtask-${numTotalNumSubTasks + 1}`
 

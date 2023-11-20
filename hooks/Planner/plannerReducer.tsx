@@ -20,26 +20,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.isSubTaskBeingDragged = action.payload
       break
     }
-    case 'idOfCardBeingDraggedChanged': {
-      draft.idOfCardBeingDragged = action.payload
-      break
-    }
-    case 'taskCardInitializationCancelled': {
-      draft.taskCardBeingInitialized = null
-      break
-    }
-    case 'newTaskCardInitialized': {
-      draft.taskCardBeingInitialized = action.payload
-      break
-    }
-    case 'taskCardBeingInitializedHighlightStatusChange': {
-      draft.taskCardBeingInitialized!.isHighlighted = action.payload
-      break
-    }
-    case 'dataEnteredInTaskCardBeingInitializedStatusChanged': {
-      draft.dataEnteredInTaskCardBeingInitialized = action.payload
-      break
-    }
     case 'columnsReordered': {
       const { draggableId, sourceIndex, destIndex, boardId } = action.payload
       const newColumnOrder = Array.from(draft.boards[boardId].columns)
@@ -83,6 +63,26 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.columns[newEndColumn.id] = newEndColumn
       break
     }
+    case 'idOfCardBeingDraggedChanged': {
+      draft.idOfCardBeingDragged = action.payload
+      break
+    }
+    case 'taskCardInitializationCancelled': {
+      draft.taskCardBeingInitialized = null
+      break
+    }
+    case 'newTaskCardInitialized': {
+      draft.taskCardBeingInitialized = action.payload
+      break
+    }
+    case 'taskCardBeingInitializedHighlightStatusChange': {
+      draft.taskCardBeingInitialized!.isHighlighted = action.payload
+      break
+    }
+    case 'dataEnteredInTaskCardBeingInitializedStatusChanged': {
+      draft.dataEnteredInTaskCardBeingInitialized = action.payload
+      break
+    }
     case 'newTaskCardAdded': {
       const { columnId, taskCardId, title, content, category } = action.payload
       const newTaskCard = {
@@ -95,6 +95,8 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       }
       draft.taskCards[taskCardId] = newTaskCard
       draft.columns[columnId].taskCards.unshift(taskCardId)
+      draft.dataEnteredInTaskCardBeingInitialized = false
+      draft.taskCardBeingInitialized = null
       break
     }
     case 'taskCardCheckedStatusChanged': {

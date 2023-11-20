@@ -9,7 +9,7 @@ type EditableSubTasksProps = {
 }
 
 export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
-  const { taskCards, subTasks } = usePlanner()!
+  const { taskCards, subTasks } = usePlanner()
   const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
 
   // ------------------------------------------------------------------------------------------------------------------------------------------------

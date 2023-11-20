@@ -17,7 +17,7 @@ type CategoryBadgeProps = {
 
 export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
   const plannerDispatch = usePlannerDispatch()!
-  const { taskCards, categories } = usePlanner()!
+  const { taskCards, categories } = usePlanner()
   const selectedCategoryName = taskCards[taskCardId].category
   const allCategoryNames = Object.keys(categories).sort()
   return (
