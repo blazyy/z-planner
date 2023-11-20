@@ -25,7 +25,7 @@ export const Planner = () => {
       <main className='flex min-h-screen flex-col justify-center items-center gap-8'>
         {/* <h1 className='text-8xl font-semibold'>Planner</h1> */}
         {/* <AddBoardCallout /> */}
-        <PlannerProvider>{planner?.data.boardOrder.length === 0 ? <AddBoardCallout /> : <Board />}</PlannerProvider>
+        <PlannerProvider>{planner?.boardOrder.length === 0 ? <AddBoardCallout /> : <Board />}</PlannerProvider>
       </main>
     </ProtectedRoute>
   )

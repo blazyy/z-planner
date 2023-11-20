@@ -7,27 +7,27 @@ import {
   HandleKeyDownOnSubTaskFunc,
 } from './types'
 
-const handleArrowDown: HandleArrowDownFunc = (data, taskCardId, subTask) => {
+const handleArrowDown: HandleArrowDownFunc = (taskCards, taskCardId, subTask) => {
   /* Moves cursor focus to subtask below using the subtask ID */
-  const subTaskIds = data.taskCards[taskCardId].subTasks
+  const subTaskIds = taskCards[taskCardId].subTasks
   const subTaskIndex = subTaskIds.findIndex((subTaskId) => subTaskId === subTask.id)
   if (subTaskIndex < subTaskIds.length - 1) {
     document.getElementById(subTaskIds[subTaskIndex + 1])?.focus()
   }
 }
 
-const handleArrowUp: HandleArrowUpFunc = (data, taskCardId, subTask) => {
+const handleArrowUp: HandleArrowUpFunc = (taskCards, taskCardId, subTask) => {
   /* Moves cursor focus to subtask below using the subtask ID */
-  const subTaskIds = data.taskCards[taskCardId].subTasks
+  const subTaskIds = taskCards[taskCardId].subTasks
   const subTaskIndex = subTaskIds.findIndex((subTaskId) => subTaskId === subTask.id)
   if (subTaskIndex > 0) {
     document.getElementById(subTaskIds[subTaskIndex - 1])?.focus()
   }
 }
 
-const handleBackspace: HandleBackspaceFunc = (event, plannerDispatch, taskCardId, subTask) => {
+const handleBackspace: HandleBackspaceFunc = (event, dispatch, taskCardId, subTask) => {
   event.preventDefault() // Prevents the last character of the task from being delete when the cursor jumps to the task above
-  plannerDispatch!({
+  dispatch!({
     type: 'subTaskDeletedOnBackspaceKeydown',
     payload: {
       taskCardId,
@@ -36,10 +36,10 @@ const handleBackspace: HandleBackspaceFunc = (event, plannerDispatch, taskCardId
   })
 }
 
-const handleEnter: HandleEnterFunc = (data, plannerDispatch, taskCardId, subTask) => {
-  const numTotalNumSubTasks = getTotalSubTasksCount(data)
+const handleEnter: HandleEnterFunc = (subTasks, dispatch, taskCardId, subTask) => {
+  const numTotalNumSubTasks = getTotalSubTasksCount(subTasks)
   const newSubTaskId: string = `$subtask-${numTotalNumSubTasks + 1}`
-  plannerDispatch!({
+  dispatch!({
     type: 'newSubTaskAddedOnEnterKeydown',
     payload: {
       newSubTaskId,
@@ -51,14 +51,14 @@ const handleEnter: HandleEnterFunc = (data, plannerDispatch, taskCardId, subTask
 
 export const handleKeyDownOnSubTask: HandleKeyDownOnSubTaskFunc = (
   event,
-  data,
-  plannerDispatch,
+  taskCards,
+  subTasks,
+  dispatch,
   taskCardId,
   subTask
 ) => {
-  if (event.key === 'ArrowDown') handleArrowDown(data, taskCardId, subTask)
-  else if (event.key === 'ArrowUp') handleArrowUp(data, taskCardId, subTask)
-  else if (event.key === 'Enter') handleEnter(data, plannerDispatch, taskCardId, subTask)
-  else if (event.key === 'Backspace' && subTask.title === '')
-    handleBackspace(event, plannerDispatch, taskCardId, subTask)
+  if (event.key === 'ArrowDown') handleArrowDown(taskCards, taskCardId, subTask)
+  else if (event.key === 'ArrowUp') handleArrowUp(taskCards, taskCardId, subTask)
+  else if (event.key === 'Enter') handleEnter(subTasks, dispatch, taskCardId, subTask)
+  else if (event.key === 'Backspace' && subTask.title === '') handleBackspace(event, dispatch, taskCardId, subTask)
 }

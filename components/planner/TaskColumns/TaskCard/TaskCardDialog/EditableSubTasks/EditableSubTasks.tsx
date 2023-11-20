@@ -9,8 +9,8 @@ type EditableSubTasksProps = {
 }
 
 export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
-  const { data } = usePlanner()!
-  const subTasks = data.taskCards[taskCardId].subTasks.map((subTaskId) => data.subTasks[subTaskId])
+  const { taskCards, subTasks } = usePlanner()!
+  const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
 
   // ------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
     <Droppable droppableId={taskCardId} type='subtask'>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps} className='p-1 flex flex-col rounded-md'>
-          {subTasks.map((subTask, index) => (
+          {subTasksUnderTaskCard.map((subTask, index) => (
             <Draggable key={subTask.id} draggableId={`${taskCardId}~${subTask.id}`} index={index}>
               {(provided, snapshot) => {
                 if (snapshot.isDragging)

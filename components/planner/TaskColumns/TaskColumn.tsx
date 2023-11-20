@@ -10,8 +10,8 @@ type TaskColumnProps = {
 }
 
 export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
-  const { data, taskCardBeingInitialized } = usePlanner()!
-  const columnInfo = data.columns[columnId]
+  const { columns, taskCardBeingInitialized } = usePlanner()!
+  const columnInfo = columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (

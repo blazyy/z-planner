@@ -50,8 +50,8 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
 
   const plannerDispatch = usePlannerDispatch()!
-  const { data, idOfCardBeingDragged } = usePlanner()!
-  const task = data.taskCards[taskCardId]
+  const { taskCards, idOfCardBeingDragged } = usePlanner()!
+  const task = taskCards[taskCardId]
 
   return (
     <TaskCardWrapper index={index} columnId={columnId} taskCardId={taskCardId}>

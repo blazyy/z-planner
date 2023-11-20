@@ -12,8 +12,8 @@ type TaskCardDialogProps = {
 
 export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
   const plannerDispatch = usePlannerDispatch()!
-  const { data } = usePlanner()!
-  const task = data.taskCards[id]
+  const { taskCards } = usePlanner()!
+  const task = taskCards[id]
   return (
     <DialogContent className='p-0'>
       <Card>

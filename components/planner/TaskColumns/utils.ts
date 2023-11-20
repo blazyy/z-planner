@@ -1,17 +1,17 @@
 'use client'
-import { PlannerContextType, PlannerDispatchContextType } from '@/hooks/Planner/types'
+import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 
 type OnDragEndFunc = (
   result: DropResult,
   plannerDispatch: PlannerDispatchContextType,
-  plannerContext: PlannerContextType,
+  plannerContext: PlannerType,
   boardId: string
 ) => void
 
 export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerContext, boardId) => {
   const { destination, source, draggableId, type } = result
-  const { data } = plannerContext!
+  const { columns } = plannerContext!
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
   if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
@@ -53,7 +53,7 @@ export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerC
   })
 
   // Moving a card within the same column
-  if (data.columns[source.droppableId] === data.columns[destination.droppableId]) {
+  if (columns[source.droppableId] === columns[destination.droppableId]) {
     plannerDispatch!({
       type: 'cardMovedWithinColumn',
       payload: {

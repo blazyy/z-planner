@@ -25,14 +25,12 @@ type CategoryBadgeProps = {
 }
 
 export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: CategoryBadgeProps) => {
-  const { data } = usePlanner()!
-  const allCategoryNames = Object.keys(data.categories).sort()
+  const { categories } = usePlanner()!
+  const allCategoryNames = Object.keys(categories).sort()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Badge className={getCategoryBadgeClassNames(data.categories[selectedCategory].color)}>
-          {selectedCategory}
-        </Badge>
+        <Badge className={getCategoryBadgeClassNames(categories[selectedCategory].color)}>{selectedCategory}</Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
         {allCategoryNames.map((categoryName, index) => (
@@ -44,7 +42,7 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
               setSelectedCategory(categoryName)
             }}
           >
-            <Badge className={getCategoryBadgeClassNames(data.categories[categoryName].color)}>{categoryName}</Badge>
+            <Badge className={getCategoryBadgeClassNames(categories[categoryName].color)}>{categoryName}</Badge>
           </DropdownMenuCheckboxItem>
         ))}
         <DropdownMenuSeparator />

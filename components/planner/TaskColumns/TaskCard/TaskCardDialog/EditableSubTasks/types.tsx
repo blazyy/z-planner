@@ -1,16 +1,17 @@
-import { PlannerData, PlannerDispatchContextType, SubTaskInfoType } from '@/hooks/Planner/types'
+import { PlannerDispatchContextType, SubTaskInfoType, SubTasksType, TaskCardsType } from '@/hooks/Planner/types'
 
 export type HandleKeyDownOnSubTaskFunc = (
   event: React.KeyboardEvent<HTMLInputElement>,
-  data: PlannerData,
+  taskCards: TaskCardsType,
+  subTasks: SubTasksType,
   plannerDispatch: PlannerDispatchContextType,
   taskCardId: string,
   subTask: SubTaskInfoType
 ) => void
 
-export type HandleArrowDownFunc = (data: PlannerData, taskCardId: string, subTask: SubTaskInfoType) => void
+export type HandleArrowDownFunc = (taskCards: TaskCardsType, taskCardId: string, subTask: SubTaskInfoType) => void
 
-export type HandleArrowUpFunc = (data: PlannerData, taskCardId: string, subTask: SubTaskInfoType) => void
+export type HandleArrowUpFunc = (taskCards: TaskCardsType, taskCardId: string, subTask: SubTaskInfoType) => void
 
 export type HandleBackspaceFunc = (
   event: React.KeyboardEvent<HTMLInputElement>,
@@ -20,7 +21,7 @@ export type HandleBackspaceFunc = (
 ) => void
 
 export type HandleEnterFunc = (
-  data: PlannerData,
+  subTasks: SubTasksType,
   plannerDispatch: PlannerDispatchContextType,
   taskCardId: string,
   subTask: SubTaskInfoType

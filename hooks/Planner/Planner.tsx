@@ -8,7 +8,12 @@ const initialState: PlannerType = {
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
   dataEnteredInTaskCardBeingInitialized: false,
-  data: data,
+  boardOrder: data.boardOrder,
+  boards: data.boards,
+  columns: data.columns,
+  categories: data.categories,
+  taskCards: data.taskCards,
+  subTasks: data.subTasks,
 }
 
 export const PlannerContext = createContext<PlannerType>(initialState)

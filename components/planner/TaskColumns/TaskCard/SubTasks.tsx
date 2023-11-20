@@ -7,12 +7,12 @@ type SubTasksProps = {
 
 export const SubTasks = ({ taskCardId }: SubTasksProps) => {
   const plannerDispatch = usePlannerDispatch()!
-  const { data } = usePlanner()!
-  const subTasks = data.taskCards[taskCardId].subTasks.map((subTaskId) => data.subTasks[subTaskId])
+  const { taskCards, subTasks } = usePlanner()!
+  const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
 
   return (
     <div>
-      {subTasks.map((subTask, index) => (
+      {subTasksUnderTaskCard.map((subTask, index) => (
         <div key={subTask.id} className='flex gap-2 items-center'>
           <Checkbox
             id={`${index}`}

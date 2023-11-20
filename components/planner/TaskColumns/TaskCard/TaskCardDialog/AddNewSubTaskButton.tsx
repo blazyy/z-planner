@@ -1,5 +1,5 @@
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { PlannerData } from '@/hooks/Planner/types'
+import { SubTaskInfoType } from '@/hooks/Planner/types'
 import { GripVertical, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
@@ -7,15 +7,15 @@ type AddNewSubTaskButtonProps = {
   taskCardId: string
 }
 
-export const getTotalSubTasksCount = (data: PlannerData): number => {
-  return Object.keys(data.subTasks).length
+export const getTotalSubTasksCount = (subTasks: { [subTaskId: string]: SubTaskInfoType }): number => {
+  return Object.keys(subTasks).length
 }
 
 export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) => {
   const dispatch = usePlannerDispatch()!
   const [isHoveringOver, setIsHoveringOver] = useState(false)
-  const { data, isSubTaskBeingDragged } = usePlanner()!
-  const numTotalNumSubTasks = getTotalSubTasksCount(data)
+  const { subTasks, isSubTaskBeingDragged } = usePlanner()!
+  const numTotalNumSubTasks = getTotalSubTasksCount(subTasks)
   const newSubTaskId: string = `$subtask-${numTotalNumSubTasks + 1}`
 
   return (

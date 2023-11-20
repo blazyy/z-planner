@@ -8,7 +8,7 @@ export const MoveToTopContextMenuItem = () => {
   const plannerDispatch = usePlannerDispatch()!
   const { data } = usePlanner()!
   const { columnId, taskCardId, iconProps, contextMenuItemProps } = useContext(ContextMenuItemContext)!
-  const index = data.columns[columnId].cardIds.indexOf(taskCardId)
+  const index = columns[columnId].cardIds.indexOf(taskCardId)
   if (index === 0) return <></> // Don't show option if card is already at top
   return (
     <ContextMenuItem>

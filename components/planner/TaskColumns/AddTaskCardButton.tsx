@@ -1,10 +1,10 @@
 import { Card, CardHeader } from '@/components/ui/card'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { PlannerData } from '@/hooks/Planner/types'
+import { TaskCardsType } from '@/hooks/Planner/types'
 import { PlusCircle } from 'lucide-react'
 
-const getTotalTaskCardsCount = (data: PlannerData): number => {
-  return Object.keys(data.taskCards).length
+const getTotalTaskCardsCount = (taskCards: TaskCardsType): number => {
+  return Object.keys(taskCards).length
 }
 
 type AddTaskCardButtonProps = {
@@ -12,7 +12,7 @@ type AddTaskCardButtonProps = {
 }
 
 export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
-  const { data, dataEnteredInTaskCardBeingInitialized } = usePlanner()!
+  const { taskCards, dataEnteredInTaskCardBeingInitialized } = usePlanner()!
   const dispatch = usePlannerDispatch()!
   return (
     <Card
@@ -21,7 +21,7 @@ export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
         // Only allow an initializing task card to be added in an existing task card doesn't already exist,
         // or if it exists and does not have any info entered.
         if (!dataEnteredInTaskCardBeingInitialized) {
-          const currentTaskCardsCount = getTotalTaskCardsCount(data)
+          const currentTaskCardsCount = getTotalTaskCardsCount(taskCards)
           const newTaskCardId = `taskcard-${currentTaskCardsCount + 1}`
           dispatch({
             type: 'newTaskCardInitialized',

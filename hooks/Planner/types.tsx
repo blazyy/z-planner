@@ -39,21 +39,20 @@ export type BoardInfoType = {
   columns: string[]
 }
 
-export type PlannerDataType = {
-  boardOrder: string[]
-  boards: {
-    [boardId: string]: BoardInfoType
-  }
-  columns: {
-    [columnId: string]: ColumnInfoType
-  }
-  categories: TaskCategoryType
-  taskCards: {
-    [taskCardId: string]: TaskCardInfoType
-  }
-  subTasks: {
-    [taskId: string]: SubTaskInfoType
-  }
+export type TaskCardsType = {
+  [taskCardId: string]: TaskCardInfoType
+}
+
+export type SubTasksType = {
+  [subTaskId: string]: SubTaskInfoType
+}
+
+export type ColumnsType = {
+  [columnId: string]: ColumnInfoType
+}
+
+export type BoardsType = {
+  [boardId: string]: BoardInfoType
 }
 
 export type PlannerType = {
@@ -61,7 +60,12 @@ export type PlannerType = {
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   dataEnteredInTaskCardBeingInitialized: boolean
-  data: PlannerDataType
+  boardOrder: string[]
+  boards: BoardsType
+  columns: ColumnsType
+  categories: TaskCategoryType
+  taskCards: TaskCardsType
+  subTasks: SubTasksType
 }
 
 export type PlannerDispatchContextType = Dispatch<any> | null

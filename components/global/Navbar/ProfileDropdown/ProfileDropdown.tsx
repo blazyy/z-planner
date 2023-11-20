@@ -17,8 +17,8 @@ export const ProfileDropdown = () => {
           <Avatar className='h-10 w-10'>
             {user && (
               <>
-                <AvatarImage src={`${user?.user_metadata.avatar_url}`} alt={`${user?.user_metadata.email}`} />
-                <AvatarFallback>{getInitials(`${user?.user_metadata.email}`)}</AvatarFallback>
+                <AvatarImage src={`${user?.user_metaavatar_url}`} alt={`${user?.user_metaemail}`} />
+                <AvatarFallback>{getInitials(`${user?.user_metaemail}`)}</AvatarFallback>
               </>
             )}
             <>

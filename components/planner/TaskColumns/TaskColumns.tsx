@@ -11,7 +11,7 @@ type TaskColumnsPropsType = {
 export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
   const plannerContext = usePlanner()!
   const plannerDispatch = usePlannerDispatch()
-  const { data } = plannerContext
+  const { boards } = plannerContext
   return (
     <DragDropContext
       onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
@@ -21,7 +21,7 @@ export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
       <Droppable droppableId='all-columns' direction='horizontal' type='column'>
         {(provided) => (
           <div className='flex flex-row' {...provided.droppableProps} ref={provided.innerRef}>
-            {data.boards[boardId].columns.map((columnId, index) => (
+            {boards[boardId].columns.map((columnId, index) => (
               <TaskColumn key={columnId} index={index} columnId={columnId} />
             ))}
             {provided.placeholder}

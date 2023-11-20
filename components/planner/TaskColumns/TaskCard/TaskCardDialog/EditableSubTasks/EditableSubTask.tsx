@@ -16,7 +16,7 @@ type EditableSubTaskProps = {
 }
 
 export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
-  const { data, isSubTaskBeingDragged } = usePlanner()!
+  const { isSubTaskBeingDragged, taskCards, subTasks } = usePlanner()!
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = usePlannerDispatch()!
   return (
@@ -53,7 +53,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         type='text'
         value={subTask.title}
         className='h-1 my-1 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
-        onKeyDown={(event) => handleKeyDownOnSubTask(event, data, dispatch, taskCardId, subTask)}
+        onKeyDown={(event) => handleKeyDownOnSubTask(event, taskCards, subTasks, dispatch, taskCardId, subTask)}
         onChange={(event) => {
           dispatch({
             type: 'subTaskTitleChanged',
