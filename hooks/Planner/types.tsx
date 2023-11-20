@@ -2,8 +2,8 @@ import { Dispatch } from 'react'
 
 export type ColumnInfoType = {
   id: string
-  title: string
-  cardIds: string[]
+  name: string
+  taskCards: string[]
 }
 
 export type SubTaskInfoType = {

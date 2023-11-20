@@ -10,18 +10,18 @@ const initialData = {
   columns: {
     'column-1': {
       id: 'column-1',
-      title: 'To Do',
-      cardIds: ['taskcard-1', 'taskcard-2', 'taskcard-3'],
+      name: 'To Do',
+      taskCards: ['taskcard-1', 'taskcard-2', 'taskcard-3'],
     },
     'column-2': {
       id: 'column-2',
-      title: 'Doing',
-      cardIds: [],
+      name: 'Doing',
+      taskCards: [],
     },
     'column-3': {
       id: 'column-3',
-      title: 'Done',
-      cardIds: [],
+      name: 'Done',
+      taskCards: [],
     },
   },
   categories: {

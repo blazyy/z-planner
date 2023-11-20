@@ -17,7 +17,7 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
       {(provided) => (
         <div className={`task-column flex flex-col mx-2 gap-2`} {...provided.draggableProps} ref={provided.innerRef}>
           <h1 className='text-2xl text-bold text-center' {...provided.dragHandleProps}>
-            {columnInfo.title}
+            {columnInfo.name}
           </h1>
           <AddTaskCardButton columnId={columnInfo.id} />
           <Droppable droppableId={columnInfo.id} type='card'>
@@ -32,7 +32,7 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
                 {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
                   <InitializingTaskCard columnId={columnInfo.id} />
                 )}
-                {columnInfo.cardIds.map((taskCardId, index) => {
+                {columnInfo.taskCards.map((taskCardId, index) => {
                   return <TaskCard key={taskCardId} index={index} columnId={columnId} taskCardId={taskCardId} />
                 })}
                 {provided.placeholder}

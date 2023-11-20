@@ -14,8 +14,13 @@ export const Planner = () => {
   useEffect(() => {
     const getInitialPlannerData = async () => {
       const plannerData = await db.getInitialPlannerData()
-      console.log('planner data', plannerData)
-      // setPlanner(planner)
+      setPlanner({
+        isSubTaskBeingDragged: false,
+        idOfCardBeingDragged: '',
+        taskCardBeingInitialized: null,
+        dataEnteredInTaskCardBeingInitialized: false,
+        ...plannerData,
+      })
     }
     getInitialPlannerData()
   }, [db])

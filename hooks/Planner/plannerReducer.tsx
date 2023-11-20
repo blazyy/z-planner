@@ -48,14 +48,14 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     case 'cardMovedWithinColumn': {
       const { draggableId, source, destination } = action.payload
       const startingColumn = draft.columns[source.droppableId]
-      const newCardIds = Array.from(startingColumn.cardIds) // Copy of cardIds
+      const newCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards
 
       // Move cardId from old index to new index
       newCardIds.splice(source.index, 1)
       newCardIds.splice(destination.index, 0, draggableId)
       const newColumn = {
         ...startingColumn,
-        cardIds: newCardIds,
+        taskCards: newCardIds,
       }
       draft.columns[newColumn.id] = newColumn
       break
@@ -64,17 +64,17 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       const { draggableId, source, destination } = action.payload
       const startingColumn = draft.columns[source.droppableId]
       const endingColumn = draft.columns[destination.droppableId]
-      const startCardIds = Array.from(startingColumn.cardIds) // Copy of cardIds
+      const startCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards
       startCardIds.splice(source.index, 1)
       const newStartColumn = {
         ...startingColumn,
-        cardIds: startCardIds,
+        taskCards: startCardIds,
       }
-      const endCardIds = Array.from(endingColumn.cardIds)
+      const endCardIds = Array.from(endingColumn.taskCards)
       endCardIds.splice(destination.index, 0, draggableId)
       const newEndColumn = {
         ...endingColumn,
-        cardIds: endCardIds,
+        taskCards: endCardIds,
       }
       draft.columns[newStartColumn.id] = newStartColumn
       draft.columns[newEndColumn.id] = newEndColumn
@@ -91,7 +91,7 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
         subTasks: [],
       }
       draft.taskCards[taskCardId] = newTaskCard
-      draft.columns[columnId].cardIds.unshift(taskCardId)
+      draft.columns[columnId].taskCards.unshift(taskCardId)
       break
     }
     case 'taskCardCheckedStatusChanged': {
@@ -111,17 +111,17 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     }
     case 'taskCardMovedToBottom': {
       const { columnId, taskCardIndex } = action.payload
-      draft.columns[columnId].cardIds.push(draft.columns[columnId].cardIds.splice(taskCardIndex, 1)[0])
+      draft.columns[columnId].taskCards.push(draft.columns[columnId].taskCards.splice(taskCardIndex, 1)[0])
       break
     }
     case 'taskCardMovedToTop': {
       const { columnId, taskCardIndex } = action.payload
-      draft.columns[columnId].cardIds.unshift(draft.columns[columnId].cardIds.splice(taskCardIndex, 1)[0])
+      draft.columns[columnId].taskCards.unshift(draft.columns[columnId].taskCards.splice(taskCardIndex, 1)[0])
       break
     }
     case 'taskCardDeleted': {
       const { columnId, taskCardId } = action.payload
-      draft.columns[columnId].cardIds = draft.columns[columnId].cardIds.filter(
+      draft.columns[columnId].taskCards = draft.columns[columnId].taskCards.filter(
         (cardId: string) => cardId !== taskCardId
       )
       delete draft.taskCards[taskCardId]
