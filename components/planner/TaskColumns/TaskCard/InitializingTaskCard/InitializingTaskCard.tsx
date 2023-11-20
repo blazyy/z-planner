@@ -23,7 +23,7 @@ const formSchema = z.object({
 })
 
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
-  const plannerDispatch = usePlannerDispatch()!
+  const dispatch = usePlannerDispatch()!
   const { taskCardBeingInitialized } = usePlanner()!
   const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
@@ -38,27 +38,20 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   const [isFormEmpty, setIsFormEmpty] = useState(true)
 
   form.watch((value) => {
-    plannerDispatch({
+    dispatch({
       type: 'taskCardBeingInitializedHighlightStatusChange',
       payload: false,
     })
-    if (value.taskCardTitle !== '' || value.taskCardDesc !== '') {
-      setIsFormEmpty(false)
-      plannerDispatch({
-        type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
-        payload: true,
-      })
-    } else {
-      setIsFormEmpty(true)
-      plannerDispatch({
-        type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
-        payload: false,
-      })
-    }
+    const dataEntered = value.taskCardTitle !== '' || value.taskCardDesc !== ''
+    setIsFormEmpty(!dataEntered)
+    dispatch({
+      type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
+      payload: dataEntered,
+    })
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    plannerDispatch({
+    dispatch({
       type: 'newTaskCardAdded',
       payload: {
         columnId: columnId,
@@ -68,10 +61,10 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
         category: selectedCategory,
       },
     })
-    plannerDispatch({
+    dispatch({
       type: 'taskCardInitializationCancelled',
     })
-    plannerDispatch({
+    dispatch({
       type: 'setDataEnteredInTaskCardBeingInitialized',
       payload: false,
     })

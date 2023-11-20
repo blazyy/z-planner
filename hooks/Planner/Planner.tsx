@@ -1,9 +1,9 @@
 import data from '@/components/planner/TaskColumns/initial-data'
 import { Dispatch, createContext, useContext, useReducer } from 'react'
 import { plannerReducer } from './plannerReducer'
-import { PlannerContextType } from './types'
+import { PlannerType } from './types'
 
-const initialPlannerData: PlannerContextType = {
+const initialState: PlannerType = {
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
@@ -11,10 +11,10 @@ const initialPlannerData: PlannerContextType = {
   data: data,
 }
 
-export const PlannerContext = createContext<PlannerContextType>(initialPlannerData)
-export const PlannerDispatchContext = createContext<Dispatch<PlannerContextType>>(() => {})
+export const PlannerContext = createContext<PlannerType>(initialState)
+export const PlannerDispatchContext = createContext<Dispatch<any>>(() => {})
 
-export const PlannerProvider = ({ children }: { children: JSX.Element }) => {
+export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
   // isSubTaskBeingDragged - Used to hide/show drag handles on subtasks on a TaskCard Dialog. Handles should only be shown when
   // hovered over (and not actively dragging a subtask), or, when actively dragging a subtask. The only
   // way to handle this is using onDragStart and onDragEnd handlers, which are only available on the
@@ -30,10 +30,10 @@ export const PlannerProvider = ({ children }: { children: JSX.Element }) => {
   // dataEnteredInTaskCardBeingInitialized - Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
   // in the previous one.
 
-  const [tasks, dispatch] = useReducer(plannerReducer, initialPlannerData)
+  const [plannerData, dispatch] = useReducer(plannerReducer, initialState)
 
   return (
-    <PlannerContext.Provider value={tasks}>
+    <PlannerContext.Provider value={plannerData}>
       <PlannerDispatchContext.Provider value={dispatch}>{children}</PlannerDispatchContext.Provider>
     </PlannerContext.Provider>
   )

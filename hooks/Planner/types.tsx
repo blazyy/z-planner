@@ -35,10 +35,11 @@ export type TaskCategoryType = {
 
 export type BoardInfoType = {
   id: string
+  name: string
   columns: string[]
 }
 
-export type PlannerData = {
+export type PlannerDataType = {
   boardOrder: string[]
   boards: {
     [boardId: string]: BoardInfoType
@@ -55,12 +56,12 @@ export type PlannerData = {
   }
 }
 
-export type PlannerContextType = {
+export type PlannerType = {
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   dataEnteredInTaskCardBeingInitialized: boolean
-  data: PlannerData
+  data: PlannerDataType
 }
 
 export type PlannerDispatchContextType = Dispatch<any> | null

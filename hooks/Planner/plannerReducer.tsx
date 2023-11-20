@@ -1,10 +1,20 @@
 import { Draft, produce } from 'immer'
-import { PlannerContextType } from './types'
+import { PlannerType } from './types'
 
-export const plannerReducer = produce((draft: Draft<PlannerContextType>, action) => {
+export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
   switch (action.type) {
+    case 'newBoardAdded': {
+      const { boardId, boardName } = action.payload
+      draft.data.boardOrder.push(boardId)
+      draft.data.boards[boardId] = {
+        id: boardId,
+        name: boardName,
+        columns: [],
+      }
+      break
+    }
     case 'subTaskDragStatusChanged': {
-      draft!.isSubTaskBeingDragged = action.payload
+      draft.isSubTaskBeingDragged = action.payload
       break
     }
     case 'idOfCardBeingDraggedChanged': {

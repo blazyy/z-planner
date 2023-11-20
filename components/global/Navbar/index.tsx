@@ -4,7 +4,8 @@ import { SiteLogo } from './SiteLogo'
 
 export function Navbar() {
   return (
-    <div className='flex justify-between'>
+    // 98% because of 1% padding (x2) on body (globals.css)
+    <div className='fixed min-w-[98%] flex justify-between'>
       <SiteLogo />
       <div className='flex gap-4'>
         <NavLinks />

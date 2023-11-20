@@ -3,6 +3,7 @@ const initialData = {
   boards: {
     'board-1': {
       id: 'board-1',
+      name: 'Boardy',
       columns: ['column-1', 'column-2', 'column-3'],
     },
   },
