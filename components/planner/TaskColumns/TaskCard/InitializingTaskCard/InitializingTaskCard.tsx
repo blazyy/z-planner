@@ -61,13 +61,6 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
         category: selectedCategory,
       },
     })
-    // dispatch({
-    //   type: 'taskCardInitializationCancelled',
-    // })
-    // dispatch({
-    //   type: 'setDataEnteredInTaskCardBeingInitialized',
-    //   payload: false,
-    // })
   }
 
   return (

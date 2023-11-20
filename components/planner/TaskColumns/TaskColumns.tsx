@@ -1,6 +1,7 @@
 'use client'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
+import { AddNewColumnButton } from './AddColumnButton'
 import { TaskColumn } from './TaskColumn'
 import { handleOnDragEnd, handleOnDragStart } from './utils'
 
@@ -25,6 +26,7 @@ export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
               <TaskColumn key={columnId} index={index} columnId={columnId} />
             ))}
             {provided.placeholder}
+            <AddNewColumnButton boardId={boardId} />
           </div>
         )}
       </Droppable>

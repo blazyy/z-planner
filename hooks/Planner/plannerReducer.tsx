@@ -16,8 +16,14 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       }
       break
     }
-    case 'subTaskDragStatusChanged': {
-      draft.isSubTaskBeingDragged = action.payload
+    case 'newColumnAdded': {
+      const { boardId, columnId, columnName } = action.payload
+      draft.boards[boardId].columns.push(columnId)
+      draft.columns[columnId] = {
+        id: columnId,
+        name: columnName,
+        taskCards: [],
+      }
       break
     }
     case 'columnsReordered': {
@@ -130,6 +136,10 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
         (cardId: string) => cardId !== taskCardId
       )
       delete draft.taskCards[taskCardId]
+      break
+    }
+    case 'subTaskDragStatusChanged': {
+      draft.isSubTaskBeingDragged = action.payload
       break
     }
     case 'subTasksReordered': {
