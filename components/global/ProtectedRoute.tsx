@@ -1,10 +1,9 @@
-import { useAuth } from '@/hooks/Auth'
-import { redirect } from 'next/navigation'
+// import { useAuth } from '@/hooks/Auth'
 
 export const ProtectedRoute = ({ children }: any) => {
-  const { user } = useAuth()
-  if (!user) {
-    return redirect('/login')
-  }
+  // const { user } = useAuth()
+  // if (!user) {
+  //   return redirect('/login')
+  // }
   return <>{children}</>
 }

@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { useDatabase } from '@/hooks/Database/Database'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -18,7 +17,6 @@ const formSchema = z.object({
 
 export const AddBoardCallout = () => {
   const dispatch = usePlannerDispatch()!
-  const db = useDatabase()!
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,7 +36,6 @@ export const AddBoardCallout = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const boardId = crypto.randomUUID()
     const boardName = values.boardName
-    await db.addFirstBoard(boardId, boardName)
     dispatch({
       type: 'newBoardAdded',
       payload: {
