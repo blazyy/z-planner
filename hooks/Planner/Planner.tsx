@@ -24,36 +24,31 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
   const [plannerData, dispatch] = useReducer(plannerReducer, initialEmptyState)
 
   useEffect(() => {
-    const fetchInitialPlannerData = () => {
-      fetch('/api/planner', {
-        method: 'GET',
+    fetch('/api/planner', {
+      method: 'GET',
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+        const data = await response.json()
+        dispatch({
+          type: 'dataFetchedFromDatabase',
+          payload: {
+            ...initialEmptyState,
+            hasLoaded: true,
+            boardOrder: data.boardOrder,
+            boards: data.boards,
+            columns: data.columns,
+            categories: data.categories,
+            taskCards: data.taskCards,
+            subTasks: data.subTasks,
+          },
+        })
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`)
-          }
-          return response.json()
-        })
-        .then((data) => {
-          dispatch({
-            type: 'dataFetchedFromDatabase',
-            payload: {
-              ...initialEmptyState,
-              hasLoaded: true,
-              boardOrder: data.boardOrder,
-              boards: data.boards,
-              columns: data.columns,
-              categories: data.categories,
-              taskCards: data.taskCards,
-              subTasks: data.subTasks,
-            },
-          })
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error)
-        })
-    }
-    fetchInitialPlannerData()
+      .catch((error) => {
+        console.error('Error fetching initial planner data:', error)
+      })
   }, [])
 
   return (

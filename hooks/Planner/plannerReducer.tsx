@@ -27,10 +27,7 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'columnsReordered': {
-      const { draggableId, sourceIndex, destIndex, boardId } = action.payload
-      const newColumnOrder = Array.from(draft.boards[boardId].columns)
-      newColumnOrder.splice(sourceIndex, 1)
-      newColumnOrder.splice(destIndex, 0, draggableId)
+      const { boardId, newColumnOrder } = action.payload
       draft.boards[boardId].columns = newColumnOrder
       break
     }

@@ -1,4 +1,5 @@
 'use client'
+import { changeColumnOrder } from '@/app/utils/plannerUtils/plannerUtils'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 
@@ -11,7 +12,7 @@ type OnDragEndFunc = (
 
 export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerContext, boardId) => {
   const { destination, source, draggableId, type } = result
-  const { columns } = plannerContext!
+  const { boards, columns } = plannerContext
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
   if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
@@ -35,15 +36,7 @@ export const handleOnDragEnd: OnDragEndFunc = (result, plannerDispatch, plannerC
   }
 
   if (type === 'column') {
-    plannerDispatch!({
-      type: 'columnsReordered',
-      payload: {
-        boardId,
-        draggableId,
-        sourceIndex: source.index,
-        destIndex: destination.index,
-      },
-    })
+    changeColumnOrder(plannerDispatch, boards, boardId, draggableId, source.index, destination.index)
     return
   }
 
