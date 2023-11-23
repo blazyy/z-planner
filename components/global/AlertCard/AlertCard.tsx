@@ -3,7 +3,8 @@ import { AlertCircle } from 'lucide-react'
 import { FallbackProps } from 'react-error-boundary'
 
 export const logError = (error: Error, info: { componentStack: string }) => {
-  console.error(error, info)
+  //   console.error(error, info)
+  console.log('error occured lol', error)
 }
 
 export const AlertCard = ({ error, resetErrorBoundary }: FallbackProps) => {

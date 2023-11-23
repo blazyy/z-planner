@@ -27,32 +27,32 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch('/api/plannser', {
-          method: 'GET',
-        })
-        if (!response.ok) {
-          return showErrorBoundary('dasdasd')
-        }
-        const data = await response.json()
-        dispatch({
-          type: 'dataFetchedFromDatabase',
-          payload: {
-            ...initialEmptyState,
-            hasLoaded: true,
-            boardOrder: data.boardOrder,
-            boards: data.boards,
-            columns: data.columns,
-            categories: data.categories,
-            taskCards: data.taskCards,
-            subTasks: data.subTasks,
-          },
-        })
-      } catch (error) {
-        showErrorBoundary(error)
+      const response = await fetch('/api/planner', {
+        method: 'GET',
+      })
+      if (!response.ok) {
+        return showErrorBoundary('Could not get response from API')
       }
+      const data = await response.json()
+      dispatch({
+        type: 'dataFetchedFromDatabase',
+        payload: {
+          ...initialEmptyState,
+          hasLoaded: true,
+          boardOrder: data.boardOrder,
+          boards: data.boards,
+          columns: data.columns,
+          categories: data.categories,
+          taskCards: data.taskCards,
+          subTasks: data.subTasks,
+        },
+      })
     }
-    fetchData()
+    try {
+      fetchData()
+    } catch (error) {
+      showErrorBoundary(error)
+    }
   }, [showErrorBoundary])
 
   return (
