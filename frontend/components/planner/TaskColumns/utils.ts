@@ -1,5 +1,5 @@
 'use client'
-import { moveCardWithinColumn } from '@/app/utils/plannerUtils/cardUtils'
+import { moveCardAcrossColumns, moveCardWithinColumn } from '@/app/utils/plannerUtils/cardUtils'
 import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
@@ -52,15 +52,8 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
     return
   }
 
-  // Moving cards betweean columns
-  dispatch!({
-    type: 'cardMovedAcrossColumns',
-    payload: {
-      draggableId,
-      source,
-      destination,
-    },
-  })
+  // Moving cards between columns
+  moveCardAcrossColumns(dispatch, showErrorBoundary, columns, draggableId, source, destination)
 }
 
 type OnDragStartFunction = (dragStartObj: DragStart, dispatch: PlannerDispatchContextType) => void

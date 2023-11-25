@@ -3,6 +3,17 @@ import db from '../../db/conn.mjs'
 
 const router = express.Router()
 
+// Get entire data
+router.get('/', async (req, res) => {
+  try {
+    const results = await db.collection('planner').find().toArray()
+    res.send(results).status(200)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+})
+
 // Get all planner data for given user
 router.get('/planner', async (req, res) => {
   try {

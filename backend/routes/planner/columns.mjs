@@ -17,12 +17,13 @@ router.post('/planner/boards/:boardId/columns', async (req, res) => {
 // Reorder column within board
 router.put('/planner/boards/:boardId/columns/reorder', async (req, res) => {
   try {
+    const username = 'user1'
     const { boardId } = req.params
     const { newColumnOrder } = req.body
-    const filter = { [`boards.${boardId}.id`]: boardId }
+    const filter = { username, [`boards.${boardId}.id`]: boardId }
     const update = { $set: { [`boards.${boardId}.columns`]: newColumnOrder } }
-    const results = await db.collection('planner').updateOne(filter, update)
-    res.status(200)
+    await db.collection('planner').updateOne(filter, update)
+    res.status(204).end() // No Content
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')

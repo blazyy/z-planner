@@ -34,30 +34,17 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.boards[boardId].columns = newColumnOrder
       break
     }
-    // DOING
+    // DONE
     case 'cardMovedWithinColumn': {
       const { columnId, reorderedCardIds } = action.payload
       draft.columns[columnId].taskCards = reorderedCardIds
       break
     }
+    // DONE
     case 'cardMovedAcrossColumns': {
-      const { draggableId, source, destination } = action.payload
-      const startingColumn = draft.columns[source.droppableId]
-      const endingColumn = draft.columns[destination.droppableId]
-      const startCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards
-      startCardIds.splice(source.index, 1)
-      const newStartColumn = {
-        ...startingColumn,
-        taskCards: startCardIds,
-      }
-      const endCardIds = Array.from(endingColumn.taskCards)
-      endCardIds.splice(destination.index, 0, draggableId)
-      const newEndColumn = {
-        ...endingColumn,
-        taskCards: endCardIds,
-      }
-      draft.columns[newStartColumn.id] = newStartColumn
-      draft.columns[newEndColumn.id] = newEndColumn
+      const { sourceColumnId, destColumnId, sourceColumnTaskCardIds, destColumnTaskCardIds } = action.payload
+      draft.columns[sourceColumnId].taskCards = sourceColumnTaskCardIds
+      draft.columns[destColumnId].taskCards = destColumnTaskCardIds
       break
     }
     case 'idOfCardBeingDraggedChanged': {
