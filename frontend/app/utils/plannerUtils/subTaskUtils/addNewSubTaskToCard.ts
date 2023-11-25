@@ -1,4 +1,5 @@
 import { TaskCardInfoType } from '@/hooks/Planner/types'
+import axios from 'axios'
 import { Dispatch } from 'react'
 import { ErrorBoundaryType } from '../types'
 
@@ -22,6 +23,12 @@ const addNewSubTask = async (
       newSubTasksOrder,
     },
   })
+  axios
+    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks`, {
+      newSubTaskDetails,
+      newSubTasksOrder,
+    })
+    .catch((error) => showErrorBoundary(error))
 }
 
 export const addNewSubTaskToCardOnEnterKeydown = async (
@@ -47,27 +54,3 @@ export const addNewSubTaskOnButtonClick = async (
   newSubTasksOrder.push(newSubTaskId)
   addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch, showErrorBoundary)
 }
-
-// case 'newSubTaskAddedOnEnterKeydown': {
-//   const { newSubTaskId, taskCardId, subTaskId } = action.payload
-//   const subTaskIds = draft.taskCards[taskCardId].subTasks
-//   let subTaskIndex = subTaskIds.findIndex((id: string) => id === subTaskId)
-//   draft.taskCards[taskCardId].subTasks.splice(subTaskIndex + 1, 0, newSubTaskId)
-//   draft.subTasks[newSubTaskId] = {
-//     id: newSubTaskId,
-//     title: '',
-//     checked: false,
-//   }
-//   break
-// }
-
-// case 'newSubTaskAddedOnButtonClick': {
-//   const { taskCardId, newSubTaskId } = action.payload
-//   draft.taskCards[taskCardId].subTasks.push(newSubTaskId)
-//   draft.subTasks[newSubTaskId] = {
-//     id: newSubTaskId,
-//     title: '',
-//     checked: false,
-//   }
-//   break
-// }

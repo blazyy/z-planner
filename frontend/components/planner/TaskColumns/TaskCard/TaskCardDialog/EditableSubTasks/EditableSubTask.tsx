@@ -1,3 +1,5 @@
+import changeSubTaskCheckedStatus from '@/app/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
+import changeSubTaskTitle from '@/app/utils/plannerUtils/subTaskUtils/changeSubTaskTitle'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
@@ -39,15 +41,9 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
       <Checkbox
         id={`${index}`}
         checked={subTask.checked}
-        onCheckedChange={(isChecked) => {
-          dispatch({
-            type: 'subTasksCheckedStatusChanged',
-            payload: {
-              subTaskId: subTask.id,
-              isChecked: Boolean(isChecked),
-            },
-          })
-        }}
+        onCheckedChange={(isChecked) =>
+          changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch, showBoundary)
+        }
       />
       <Input
         autoFocus
@@ -58,15 +54,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         onKeyDown={(event) =>
           handleKeyDownOnSubTask(event, taskCards, subTasks, dispatch, taskCardId, subTask, showBoundary)
         }
-        onChange={(event) => {
-          dispatch({
-            type: 'subTaskTitleChanged',
-            payload: {
-              subTaskId: subTask.id,
-              newTitle: event.target.value,
-            },
-          })
-        }}
+        onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch, showBoundary)}
       />
     </div>
   )

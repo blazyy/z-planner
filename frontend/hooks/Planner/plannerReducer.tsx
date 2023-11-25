@@ -119,11 +119,13 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.taskCards[taskCardId].subTasks = reorderedSubTasks
       break
     }
+    // DONE
     case 'subTasksCheckedStatusChanged': {
       const { subTaskId, isChecked } = action.payload
       draft.subTasks[subTaskId].checked = isChecked
       break
     }
+    // DONE
     case 'subTaskTitleChanged': {
       const { subTaskId, newTitle } = action.payload
       draft.subTasks[subTaskId].title = newTitle
