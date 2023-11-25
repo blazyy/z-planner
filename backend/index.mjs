@@ -4,6 +4,7 @@ import './loadEnvironment.mjs'
 import cards from './routes/planner/cards.mjs'
 import columns from './routes/planner/columns.mjs'
 import planner from './routes/planner/planner.mjs'
+import subtasks from './routes/planner/subtasks.mjs'
 
 const PORT = process.env.PORT || 5050
 const app = express()
@@ -18,7 +19,7 @@ app.use(cors())
 app.use(express.json())
 
 // Load the /posts routes
-app.use('/', [planner, columns, cards])
+app.use('/', [planner, columns, cards, subtasks])
 
 // Global error handling
 app.use((err, _req, res, next) => {

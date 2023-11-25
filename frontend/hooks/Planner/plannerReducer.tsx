@@ -121,11 +121,7 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'subTasksReordered': {
-      const { draggableId, sourceIndex, destIndex } = action.payload
-      const [taskCardId, subTaskId] = draggableId.split('~')
-      const reorderedSubTasks = Array.from(draft.taskCards[taskCardId].subTasks)
-      reorderedSubTasks.splice(sourceIndex, 1)
-      reorderedSubTasks.splice(destIndex, 0, subTaskId)
+      const { taskCardId, reorderedSubTasks } = action.payload
       draft.taskCards[taskCardId].subTasks = reorderedSubTasks
       break
     }

@@ -1,6 +1,7 @@
 'use client'
 import { moveCardAcrossColumns, moveCardWithinColumn } from '@/app/utils/plannerUtils/cardUtils'
 import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils'
+import { reorderSubTasks } from '@/app/utils/plannerUtils/subTaskUtils'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 
@@ -13,7 +14,7 @@ type OnDragEndFunc = (
 
 export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext, boardId) => {
   const { destination, source, draggableId, type } = result
-  const { showErrorBoundary, boards, columns } = plannerContext
+  const { showErrorBoundary, boards, columns, taskCards } = plannerContext
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
   if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
@@ -21,18 +22,7 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
   }
 
   if (type === 'subtask') {
-    dispatch!({
-      type: 'subTasksReordered',
-      payload: {
-        draggableId: draggableId,
-        sourceIndex: source.index,
-        destIndex: destination.index,
-      },
-    })
-    dispatch!({
-      type: 'subTaskDragStatusChanged',
-      payload: false,
-    })
+    reorderSubTasks(dispatch, showErrorBoundary, taskCards, draggableId, source.index, destination.index)
     return
   }
 
@@ -41,7 +31,7 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
     return
   }
 
-  dispatch!({
+  dispatch({
     type: 'idOfCardBeingDraggedChanged',
     payload: '',
   })
@@ -61,13 +51,13 @@ type OnDragStartFunction = (dragStartObj: DragStart, dispatch: PlannerDispatchCo
 export const handleOnDragStart: OnDragStartFunction = (dragStartObj, dispatch) => {
   if (dragStartObj.type === 'subtask') {
     // const { setIsSubTaskBeingDragged } = plannerContext!
-    dispatch!({
+    dispatch({
       type: 'subTaskDragStatusChanged',
       payload: true,
     })
   }
   if (dragStartObj.type === 'card') {
-    dispatch!({
+    dispatch({
       type: 'idOfCardBeingDraggedChanged',
       payload: dragStartObj.draggableId,
     })
