@@ -47,22 +47,27 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.columns[destColumnId].taskCards = destColumnTaskCardIds
       break
     }
+    // DONE
     case 'idOfCardBeingDraggedChanged': {
       draft.idOfCardBeingDragged = action.payload
       break
     }
+    // DONE
     case 'taskCardInitializationCancelled': {
       draft.taskCardBeingInitialized = null
       break
     }
+    // DONE
     case 'newTaskCardInitialized': {
       draft.taskCardBeingInitialized = action.payload
       break
     }
+    // DONE
     case 'taskCardBeingInitializedHighlightStatusChange': {
       draft.taskCardBeingInitialized!.isHighlighted = action.payload
       break
     }
+    // DONE
     case 'dataEnteredInTaskCardBeingInitializedStatusChanged': {
       draft.dataEnteredInTaskCardBeingInitialized = action.payload
       break

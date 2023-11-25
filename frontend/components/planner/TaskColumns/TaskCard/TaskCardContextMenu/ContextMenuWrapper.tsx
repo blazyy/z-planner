@@ -1,3 +1,4 @@
+import deleteCard from '@/app/utils/plannerUtils/cardUtils/deleteCard'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +13,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { Toaster } from '@/components/ui/toaster'
 import { useToast } from '@/components/ui/use-toast'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useErrorBoundary } from 'react-error-boundary'
 
 type ContextMenuWrapperProps = {
   columnId: string
@@ -21,7 +23,8 @@ type ContextMenuWrapperProps = {
 
 export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {
   const { toast } = useToast()
-  const plannerDispatch = usePlannerDispatch()!
+  const dispatch = usePlannerDispatch()
+  const { showBoundary } = useErrorBoundary()
   return (
     <AlertDialog>
       <Toaster />
@@ -37,13 +40,7 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              plannerDispatch({
-                type: 'taskCardDeleted',
-                payload: {
-                  columnId,
-                  taskCardId,
-                },
-              })
+              deleteCard(columnId, taskCardId, dispatch, showBoundary)
               toast({
                 title: 'Deleted task',
                 // description: 'Friday, February 10, 2023 at 5:57 PM',
