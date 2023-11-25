@@ -4,12 +4,12 @@ import { Dispatch } from 'react'
 import { ErrorBoundaryType } from '../types'
 
 export const reorderSubTasks = async (
-  dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType,
   taskCards: TaskCardsType,
   draggableId: string,
   sourceIndex: any,
-  destIndex: any
+  destIndex: any,
+  dispatch: Dispatch<any>,
+  showErrorBoundary: ErrorBoundaryType
 ) => {
   const [taskCardId, subTaskId] = draggableId.split('~')
   const reorderedSubTasks = Array.from(taskCards[taskCardId].subTasks)

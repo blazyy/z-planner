@@ -1,3 +1,4 @@
+import changeCardCategory from '@/app/utils/plannerUtils/cardUtils/changeCardCategory'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -9,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { Settings } from 'lucide-react'
+import { useErrorBoundary } from 'react-error-boundary'
 import { getCategoryBadgeClassNames } from './utils'
 
 type CategoryBadgeProps = {
@@ -16,8 +18,9 @@ type CategoryBadgeProps = {
 }
 
 export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
-  const plannerDispatch = usePlannerDispatch()!
+  const dispatch = usePlannerDispatch()!
   const { taskCards, categories } = usePlanner()
+  const { showBoundary } = useErrorBoundary()
   const selectedCategoryName = taskCards[taskCardId].category
   const allCategoryNames = Object.keys(categories).sort()
   return (
@@ -34,13 +37,7 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
             checked={selectedCategoryName === categoryName}
             onClick={(event) => {
               event.preventDefault()
-              plannerDispatch({
-                type: 'taskCategoryChanged',
-                payload: {
-                  taskCardId,
-                  chosenCategory: categoryName,
-                },
-              })
+              changeCardCategory(taskCardId, categoryName, dispatch, showBoundary)
             }}
           >
             <Badge className={getCategoryBadgeClassNames(categories[categoryName].color)}>{categoryName}</Badge>

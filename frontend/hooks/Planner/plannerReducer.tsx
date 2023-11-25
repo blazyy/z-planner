@@ -146,8 +146,8 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'taskCategoryChanged': {
-      const { taskCardId, chosenCategory } = action.payload
-      draft.taskCards[taskCardId].category = chosenCategory
+      const { taskCardId, newCategory } = action.payload
+      draft.taskCards[taskCardId].category = newCategory
       break
     }
   }

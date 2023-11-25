@@ -16,10 +16,10 @@ const debouncedApiCall = debounce(
 )
 
 export default async function changeCardTitle(
-  dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType,
   taskCardId: string,
-  newTitle: string
+  newTitle: string,
+  dispatch: Dispatch<any>,
+  showErrorBoundary: ErrorBoundaryType
 ) {
   dispatch({
     type: 'taskCardTitleChanged',

@@ -3,10 +3,10 @@ import { Dispatch } from 'react'
 import { ErrorBoundaryType } from '../types'
 
 export default async function changeCardCheckedStatus(
-  dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType,
   taskCardId: string,
-  isChecked: boolean
+  isChecked: boolean,
+  dispatch: Dispatch<any>,
+  showErrorBoundary: ErrorBoundaryType
 ) {
   dispatch({
     type: 'taskCardCheckedStatusChanged',

@@ -80,7 +80,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
             onClick={(event) => {
               event.preventDefault() // Needed to prevent dialog from triggering
               const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-              changeCardCheckedStatus(plannerDispatch, showBoundary, taskCardId, !isChecked)
+              changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
             }}
           />
         </CardFooter>

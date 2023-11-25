@@ -16,7 +16,7 @@ type TaskCardDialogProps = {
 
 export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
   const { showBoundary } = useErrorBoundary()
-  const plannerDispatch = usePlannerDispatch()!
+  const dispatch = usePlannerDispatch()!
   const { taskCards } = usePlanner()
   const task = taskCards[id]
   return (
@@ -27,14 +27,14 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
             <Textarea
               value={task.title}
               className='p-3 min-h-fit text-2xl border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-              onChange={(event) => changeCardTitle(plannerDispatch, showBoundary, id, event.target.value)}
+              onChange={(event) => changeCardTitle(id, event.target.value, dispatch, showBoundary)}
             />
           </CardTitle>
           <CardDescription className='m-0'>
             <Textarea
               value={task.content}
               className='p-3 min-h-fit border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-              onChange={(event) => changeCardContent(plannerDispatch, showBoundary, id, event.target.value)}
+              onChange={(event) => changeCardContent(id, event.target.value, dispatch, showBoundary)}
             />
           </CardDescription>
         </CardHeader>
@@ -46,9 +46,7 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
           <Checkbox
             className='h-5 w-5'
             checked={task.checked}
-            onCheckedChange={(isChecked) =>
-              changeCardCheckedStatus(plannerDispatch, showBoundary, id, Boolean(isChecked))
-            }
+            onCheckedChange={(isChecked) => changeCardCheckedStatus(id, Boolean(isChecked), dispatch, showBoundary)}
           />
         </CardFooter>
       </Card>

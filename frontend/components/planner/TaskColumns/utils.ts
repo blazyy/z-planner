@@ -1,7 +1,7 @@
 'use client'
 import moveCardAcrossColumns from '@/app/utils/plannerUtils/cardUtils/moveCardAcrossColumns'
 import moveCardWithinColumn from '@/app/utils/plannerUtils/cardUtils/moveCardWithinColumn'
-import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils'
+import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils/changeColumnOrder'
 import { reorderSubTasks } from '@/app/utils/plannerUtils/subTaskUtils/reorderSubtasks'
 import { ErrorBoundaryType } from '@/app/utils/plannerUtils/types'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
@@ -25,10 +25,10 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
   }
 
   if (type === 'subtask')
-    return reorderSubTasks(dispatch, showErrorBoundary, taskCards, draggableId, source.index, destination.index)
+    return reorderSubTasks(taskCards, draggableId, source.index, destination.index, dispatch, showErrorBoundary)
 
   if (type === 'column')
-    return changeColumnOrder(dispatch, showErrorBoundary, boards, boardId, draggableId, source.index, destination.index)
+    return changeColumnOrder(boards, boardId, draggableId, source.index, destination.index, dispatch, showErrorBoundary)
 
   dispatch({
     type: 'idOfCardBeingDraggedChanged',
@@ -48,7 +48,7 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
     )
 
   // Moving cards between columns
-  moveCardAcrossColumns(dispatch, showErrorBoundary, columns, draggableId, source, destination)
+  moveCardAcrossColumns(columns, draggableId, source, destination, dispatch, showErrorBoundary)
 }
 
 type OnDragStartFunction = (dragStartObj: DragStart, dispatch: PlannerDispatchContextType) => void

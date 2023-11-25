@@ -65,6 +65,21 @@ const changeCardContent = async (req, res) => {
   res.status(204).end()
 }
 
+const changeCardCategory = async (req, res) => {
+  const username = getUsername(req)
+  const { taskCardId } = req.params
+  const { newCategory } = req.body
+  await db.collection('planner').updateOne(
+    { username },
+    {
+      $set: {
+        [`taskCards.${taskCardId}.category`]: newCategory,
+      },
+    }
+  )
+  res.status(204).end()
+}
+
 const moveCardWithinColumn = async (req, res) => {
   const username = getUsername(req)
   const { columnId } = req.params
@@ -117,6 +132,7 @@ router.post('/planner/columns/:columnId/cards', errorHandler(addNewCardToColumn)
 router.patch('/planner/cards/:taskCardId/checked', errorHandler(changeCardCheckedStatus))
 router.patch('/planner/cards/:taskCardId/title', errorHandler(changeCardTitle))
 router.patch('/planner/cards/:taskCardId/content', errorHandler(changeCardContent))
+router.patch('/planner/cards/:taskCardId/category', errorHandler(changeCardCategory))
 router.patch('/planner/columns/:columnId/cards/move', errorHandler(moveCardWithinColumn)) // CHANGE
 router.patch('/planner/columns/move', errorHandler(moveCardAcrossColumns))
 router.delete('/planner/columns/:columnId/cards/:taskCardId/delete', errorHandler(deleteCard))

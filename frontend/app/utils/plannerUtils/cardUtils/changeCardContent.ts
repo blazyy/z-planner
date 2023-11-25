@@ -16,10 +16,10 @@ const debouncedApiCall = debounce(
 )
 
 export default async function changeCardContent(
-  dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType,
   taskCardId: string,
-  newContent: string
+  newContent: string,
+  dispatch: Dispatch<any>,
+  showErrorBoundary: ErrorBoundaryType
 ) {
   dispatch({
     type: 'taskCardContentChanged',

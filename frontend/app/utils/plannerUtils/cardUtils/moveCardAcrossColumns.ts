@@ -4,12 +4,12 @@ import { Dispatch } from 'react'
 import { ErrorBoundaryType } from '../types'
 
 export default async function moveCardAcrossColumns(
-  dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType,
   columns: ColumnsType,
   draggedCardId: string,
   source: any,
-  destination: any
+  destination: any,
+  dispatch: Dispatch<any>,
+  showErrorBoundary: ErrorBoundaryType
 ) {
   const sourceColumnId = source.droppableId
   const sourceColumn = columns[sourceColumnId]
