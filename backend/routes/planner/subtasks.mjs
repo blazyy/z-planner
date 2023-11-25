@@ -63,9 +63,26 @@ const moveSubtaskWithinCard = async (req, res) => {
   res.status(204).end()
 }
 
+const deleteSubTask = async (req, res) => {
+  const username = getUsername(req)
+  const { taskCardId, subTaskId } = req.params
+
+  // Remove the subtask from the subtask object using $unset
+  await db.collection('planner').updateOne({ username }, { $unset: { [`subTasks.${subTaskId}`]: '' } })
+  // Remove the subtask from the subtask list within the specified taskcard using $pull
+  await db
+    .collection('planner')
+    .updateOne(
+      { username, [`taskCards.${taskCardId}.id`]: taskCardId },
+      { $pull: { [`taskCards.${taskCardId}.subTasks`]: subTaskId } }
+    )
+  res.status(204).end()
+}
+
 router.post('/planner/cards/:taskCardId/subtasks', errorHandler(addNewSubTaskToCard))
 router.patch('/planner/subtasks/:subTaskId/checked', errorHandler(changeSubTaskCheckedStatus))
 router.patch('/planner/subtasks/:subTaskId/title', errorHandler(changeSubTaskTitle))
 router.patch('/planner/cards/:taskCardId/subtasks/move', errorHandler(moveSubtaskWithinCard))
+router.delete('/planner/cards/:taskCardId/subtasks/:subTaskId/delete', errorHandler(deleteSubTask))
 
 export default router

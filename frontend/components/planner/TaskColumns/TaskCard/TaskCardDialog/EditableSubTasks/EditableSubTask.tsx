@@ -52,7 +52,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         value={subTask.title}
         className='h-1 my-1 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
         onKeyDown={(event) =>
-          handleKeyDownOnSubTask(event, taskCards, subTasks, dispatch, taskCardId, subTask, showBoundary)
+          handleKeyDownOnSubTask(taskCards, subTasks, taskCardId, subTask, event, dispatch, showBoundary)
         }
         onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch, showBoundary)}
       />

@@ -131,48 +131,18 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.subTasks[subTaskId].title = newTitle
       break
     }
+    // DONE
     case 'newSubTaskAdded': {
       const { taskCardId, newSubTaskDetails, newSubTasksOrder } = action.payload
       draft.taskCards[taskCardId].subTasks = newSubTasksOrder
       draft.subTasks[newSubTaskDetails.id] = newSubTaskDetails
       break
     }
-    case 'newSubTaskAddedOnEnterKeydown': {
-      const { newSubTaskId, taskCardId, subTaskId } = action.payload
-      const subTaskIds = draft.taskCards[taskCardId].subTasks
-      let subTaskIndex = subTaskIds.findIndex((id: string) => id === subTaskId)
-      draft.taskCards[taskCardId].subTasks.splice(subTaskIndex + 1, 0, newSubTaskId)
-      draft.subTasks[newSubTaskId] = {
-        id: newSubTaskId,
-        title: '',
-        checked: false,
-      }
-      break
-    }
-
-    case 'newSubTaskAddedOnButtonClick': {
-      const { taskCardId, newSubTaskId } = action.payload
-      draft.taskCards[taskCardId].subTasks.push(newSubTaskId)
-      draft.subTasks[newSubTaskId] = {
-        id: newSubTaskId,
-        title: '',
-        checked: false,
-      }
-      break
-    }
+    // DONE
     case 'subTaskDeletedOnBackspaceKeydown': {
-      const { taskCardId, subTaskId } = action.payload
-      /* Moves cursor focus to subtask above using the subtask ID */
-      const subTaskIds = draft.taskCards[taskCardId].subTasks
-      const subTaskIndex = subTaskIds.findIndex((id: string) => id === subTaskId)
-      if (subTaskIndex > 0) {
-        document.getElementById(subTaskIds[subTaskIndex - 1])?.focus()
-      }
-      /* -------------------------------------------------------- */
+      const { taskCardId, subTaskId, newSubtasks } = action.payload
+      draft.taskCards[taskCardId].subTasks = newSubtasks
       delete draft.subTasks[subTaskId]
-      draft.taskCards[taskCardId].subTasks = draft.taskCards[taskCardId].subTasks.filter(
-        (id: string) => id !== subTaskId
-      )
       break
     }
     case 'taskCategoryChanged': {

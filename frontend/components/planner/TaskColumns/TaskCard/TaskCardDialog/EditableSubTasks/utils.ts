@@ -1,4 +1,5 @@
 import { addNewSubTaskToCardOnEnterKeydown } from '@/app/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
+import deleteSubTask from '@/app/utils/plannerUtils/subTaskUtils/deleteSubTask'
 import {
   HandleArrowDownFunc,
   HandleArrowUpFunc,
@@ -25,40 +26,27 @@ const handleArrowUp: HandleArrowUpFunc = (taskCards, taskCardId, subTask) => {
   }
 }
 
-const handleBackspace: HandleBackspaceFunc = (event, dispatch, taskCardId, subTask) => {
+const handleBackspace: HandleBackspaceFunc = (taskCard, subTaskId, event, dispatch, showBoundary) => {
   event.preventDefault() // Prevents the last character of the task from being delete when the cursor jumps to the task above
-  dispatch({
-    type: 'subTaskDeletedOnBackspaceKeydown',
-    payload: {
-      taskCardId,
-      subTaskId: subTask.id,
-    },
-  })
+  deleteSubTask(taskCard, subTaskId, dispatch, showBoundary)
 }
 
-const handleEnter: HandleEnterFunc = (taskCards, subTasks, dispatch, taskCardId, subTask, showBoundary) => {
+const handleEnter: HandleEnterFunc = (taskCards, taskCardId, subTask, dispatch, showBoundary) => {
   addNewSubTaskToCardOnEnterKeydown(taskCards[taskCardId], subTask.id, dispatch, showBoundary)
-  // dispatch({
-  //   type: 'newSubTaskAddedOnEnterKeydown',
-  //   payload: {
-  //     newSubTaskId,
-  //     taskCardId,
-  //     subTaskId: subTask.id,
-  //   },
-  // })
 }
 
 export const handleKeyDownOnSubTask: HandleKeyDownOnSubTaskFunc = (
-  event,
   taskCards,
   subTasks,
-  dispatch,
   taskCardId,
   subTask,
+  event,
+  dispatch,
   showBoundary
 ) => {
   if (event.key === 'ArrowDown') handleArrowDown(taskCards, taskCardId, subTask)
   else if (event.key === 'ArrowUp') handleArrowUp(taskCards, taskCardId, subTask)
-  else if (event.key === 'Enter') handleEnter(taskCards, subTasks, dispatch, taskCardId, subTask, showBoundary)
-  else if (event.key === 'Backspace' && subTask.title === '') handleBackspace(event, dispatch, taskCardId, subTask)
+  else if (event.key === 'Enter') handleEnter(taskCards, taskCardId, subTask, dispatch, showBoundary)
+  else if (event.key === 'Backspace' && subTask.title === '')
+    handleBackspace(taskCards[taskCardId], subTask.id, event, dispatch, showBoundary)
 }
