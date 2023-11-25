@@ -21,15 +21,11 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
     return
   }
 
-  if (type === 'subtask') {
-    reorderSubTasks(dispatch, showErrorBoundary, taskCards, draggableId, source.index, destination.index)
-    return
-  }
+  if (type === 'subtask')
+    return reorderSubTasks(dispatch, showErrorBoundary, taskCards, draggableId, source.index, destination.index)
 
-  if (type === 'column') {
-    changeColumnOrder(dispatch, showErrorBoundary, boards, boardId, draggableId, source.index, destination.index)
-    return
-  }
+  if (type === 'column')
+    return changeColumnOrder(dispatch, showErrorBoundary, boards, boardId, draggableId, source.index, destination.index)
 
   dispatch({
     type: 'idOfCardBeingDraggedChanged',
@@ -37,10 +33,8 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
   })
 
   // Moving a card within the same column
-  if (columns[source.droppableId] === columns[destination.droppableId]) {
-    moveCardWithinColumn(dispatch, showErrorBoundary, columns, draggableId, source, destination)
-    return
-  }
+  if (columns[source.droppableId] === columns[destination.droppableId])
+    return moveCardWithinColumn(dispatch, showErrorBoundary, columns, draggableId, source, destination)
 
   // Moving cards between columns
   moveCardAcrossColumns(dispatch, showErrorBoundary, columns, draggableId, source, destination)
@@ -50,7 +44,6 @@ type OnDragStartFunction = (dragStartObj: DragStart, dispatch: PlannerDispatchCo
 
 export const handleOnDragStart: OnDragStartFunction = (dragStartObj, dispatch) => {
   if (dragStartObj.type === 'subtask') {
-    // const { setIsSubTaskBeingDragged } = plannerContext!
     dispatch({
       type: 'subTaskDragStatusChanged',
       payload: true,
