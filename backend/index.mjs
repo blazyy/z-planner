@@ -9,12 +9,6 @@ import subtasks from './routes/planner/subtasks.mjs'
 const PORT = process.env.PORT || 5050
 const app = express()
 
-const logger = (req, res, next) => {
-  // console.log('log')
-  next()
-}
-app.use(logger)
-
 app.use(cors())
 app.use(express.json())
 

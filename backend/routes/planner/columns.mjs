@@ -1,9 +1,10 @@
 import express from 'express'
 import db from '../../db/conn.mjs'
+import { errorHandler, getUsername } from '../../middleware/index.mjs'
 
 const router = express.Router()
 
-// Add new column to board
+// Add new column to board TODO:
 router.post('/planner/boards/:boardId/columns', async (req, res) => {
   try {
     const { boardId } = req.params
@@ -15,19 +16,18 @@ router.post('/planner/boards/:boardId/columns', async (req, res) => {
 })
 
 // Reorder column within board
-router.put('/planner/boards/:boardId/columns/reorder', async (req, res) => {
-  try {
-    const username = 'user1'
-    const { boardId } = req.params
-    const { newColumnOrder } = req.body
-    const filter = { username, [`boards.${boardId}.id`]: boardId }
-    const update = { $set: { [`boards.${boardId}.columns`]: newColumnOrder } }
-    await db.collection('planner').updateOne(filter, update)
-    res.status(204).end() // No Content
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('Internal Server Error')
-  }
-})
+const changeColumnOrder = async (req, res) => {
+  const username = getUsername(req)
+  const { boardId } = req.params
+  const { newColumnOrder } = req.body
+  await db
+    .collection('planner')
+    .updateOne(
+      { username, [`boards.${boardId}.id`]: boardId },
+      { $set: { [`boards.${boardId}.columns`]: newColumnOrder } }
+    )
+}
+
+router.patch('/planner/boards/:boardId/columns/reorder', errorHandler(changeColumnOrder))
 
 export default router

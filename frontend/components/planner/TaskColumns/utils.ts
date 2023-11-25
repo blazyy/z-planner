@@ -2,7 +2,7 @@
 import moveCardAcrossColumns from '@/app/utils/plannerUtils/cardUtils/moveCardAcrossColumns'
 import moveCardWithinColumn from '@/app/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils'
-import { reorderSubTasks } from '@/app/utils/plannerUtils/subTaskUtils'
+import { reorderSubTasks } from '@/app/utils/plannerUtils/subTaskUtils/reorderSubtasks'
 import { ErrorBoundaryType } from '@/app/utils/plannerUtils/types'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'

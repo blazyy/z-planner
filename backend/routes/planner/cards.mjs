@@ -1,47 +1,124 @@
 import express from 'express'
 import db from '../../db/conn.mjs'
+import { errorHandler, getUsername } from '../../middleware/index.mjs'
 
 const router = express.Router()
 
-// New card added
+const addNewCardToColumn = async (req, res) => {
+  const username = getUsername(req)
+  const { columnId } = req.params
+  const { newTaskCardDetails: newCard, updatedTaskCards } = req.body
+  await db.collection('planner').updateOne(
+    { username },
+    {
+      $set: {
+        [`columns.${columnId}.taskCards`]: updatedTaskCards,
+        [`taskCards.${newCard.id}`]: newCard,
+      },
+    }
+  )
+  res.status(201).end()
+}
 
-// Card moved within column
-router.put('/planner/columns/:columnId/cards/move', async (req, res) => {
-  try {
-    const username = 'user1'
-    const { columnId } = req.params
-    const { reorderedCardIds } = req.body
-    const filter = { username, [`columns.${columnId}.id`]: columnId }
-    const query = { $set: { [`columns.${columnId}.taskCards`]: reorderedCardIds } }
-    await db.collection('planner').updateOne(filter, query)
-    res.status(204).end() // No Content
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('Internal Server Error')
-  }
-})
+const changeCardCheckedStatus = async (req, res) => {
+  const username = getUsername(req)
+  const { taskCardId } = req.params
+  const { isChecked } = req.body
+  await db.collection('planner').updateOne(
+    { username },
+    {
+      $set: {
+        [`taskCards.${taskCardId}.checked`]: isChecked,
+      },
+    }
+  )
+  res.status(204).end()
+}
 
-// Card moved across different columns
-router.put('/planner/columns/move', async (req, res) => {
-  try {
-    const username = 'user1'
-    const { sourceColumnId, destColumnId, sourceColumnTaskCardIds, destColumnTaskCardIds } = req.body
-    const filter = {
+const changeCardTitle = async (req, res) => {
+  const username = getUsername(req)
+  const { taskCardId } = req.params
+  const { newTitle } = req.body
+  await db.collection('planner').updateOne(
+    { username },
+    {
+      $set: {
+        [`taskCards.${taskCardId}.title`]: newTitle,
+      },
+    }
+  )
+  res.status(204).end()
+}
+
+const changeCardContent = async (req, res) => {
+  const username = getUsername(req)
+  const { taskCardId } = req.params
+  const { newContent } = req.body
+  await db.collection('planner').updateOne(
+    { username },
+    {
+      $set: {
+        [`taskCards.${taskCardId}.content`]: newContent,
+      },
+    }
+  )
+  res.status(204).end()
+}
+
+const moveCardWithinColumn = async (req, res) => {
+  const username = getUsername(req)
+  const { columnId } = req.params
+  const { reorderedCardIds } = req.body
+  await db
+    .collection('planner')
+    .updateOne(
+      { username, [`columns.${columnId}.id`]: columnId },
+      { $set: { [`columns.${columnId}.taskCards`]: reorderedCardIds } }
+    )
+  res.status(204).end()
+}
+
+// Function to move a card across different columns
+const moveCardAcrossColumns = async (req, res) => {
+  const username = getUsername(req)
+  const { sourceColumnId, destColumnId, sourceColumnTaskCardIds, destColumnTaskCardIds } = req.body
+  await db.collection('planner').updateMany(
+    {
       username,
       $or: [{ [`columns.${sourceColumnId}.id`]: sourceColumnId }, { [`columns.${destColumnId}.id`]: destColumnId }],
-    }
-    const query = {
+    },
+    {
       $set: {
         [`columns.${sourceColumnId}.taskCards`]: sourceColumnTaskCardIds,
         [`columns.${destColumnId}.taskCards`]: destColumnTaskCardIds,
       },
     }
-    await db.collection('planner').updateMany(filter, query)
-    res.status(204).end()
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('Internal Server Error')
-  }
-})
+  )
+  res.status(204).end()
+}
+
+const deleteCard = async (req, res) => {
+  const username = getUsername(req)
+  const { columnId, taskCardId } = req.params
+
+  // Remove the task from the taskCards object using $unset
+  await db.collection('planner').updateOne({ username }, { $unset: { [`taskCards.${taskCardId}`]: '' } })
+  // Remove the task from the taskCards list within the specified column using $pull
+  await db
+    .collection('planner')
+    .updateOne(
+      { username, [`columns.${columnId}.id`]: columnId },
+      { $pull: { [`columns.${columnId}.taskCards`]: taskCardId } }
+    )
+  res.status(204).end()
+}
+
+router.post('/planner/columns/:columnId/cards', errorHandler(addNewCardToColumn))
+router.patch('/planner/cards/:taskCardId/checked', errorHandler(changeCardCheckedStatus))
+router.patch('/planner/cards/:taskCardId/title', errorHandler(changeCardTitle))
+router.patch('/planner/cards/:taskCardId/content', errorHandler(changeCardContent))
+router.patch('/planner/columns/:columnId/cards/move', errorHandler(moveCardWithinColumn)) // CHANGE
+router.patch('/planner/columns/move', errorHandler(moveCardAcrossColumns))
+router.delete('/planner/columns/:columnId/cards/:taskCardId/delete', errorHandler(deleteCard))
 
 export default router

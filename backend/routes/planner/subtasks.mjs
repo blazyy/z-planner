@@ -1,23 +1,23 @@
 import express from 'express'
 import db from '../../db/conn.mjs'
+import { errorHandler } from '../../middleware/index.mjs'
 
 const router = express.Router()
 
 // Subtask moved within card
-router.put('/planner/cards/:taskCardId/subtasks/move', async (req, res) => {
-  try {
-    const username = 'user1'
-    const { taskCardId } = req.params
-    const { reorderedSubTasks } = req.body
-    console.log(taskCardId, reorderedSubTasks)
-    const filter = { username, [`taskCards.${taskCardId}.id`]: taskCardId }
-    const query = { $set: { [`taskCards.${taskCardId}.subTasks`]: reorderedSubTasks } }
-    await db.collection('planner').updateOne(filter, query)
-    res.status(204).end() // No Content
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('Internal Server Error')
-  }
-})
+const moveSubtaskWithinCard = async (req, res) => {
+  const username = 'user1'
+  const { taskCardId } = req.params
+  const { reorderedSubTasks } = req.body
+  await db
+    .collection('planner')
+    .updateOne(
+      { username, [`taskCards.${taskCardId}.id`]: taskCardId },
+      { $set: { [`taskCards.${taskCardId}.subTasks`]: reorderedSubTasks } }
+    )
+  res.status(204).end()
+}
+
+router.patch('/planner/cards/:taskCardId/subtasks/move', errorHandler(moveSubtaskWithinCard))
 
 export default router

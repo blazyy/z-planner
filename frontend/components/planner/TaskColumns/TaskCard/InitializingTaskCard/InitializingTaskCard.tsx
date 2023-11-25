@@ -27,7 +27,7 @@ const formSchema = z.object({
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
-  const { taskCardBeingInitialized } = usePlanner()
+  const { columns, taskCardBeingInitialized } = usePlanner()
   const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,7 +60,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
       category: selectedCategory,
       content: values.taskCardDesc,
     }
-    addNewCardToColumn(dispatch, showBoundary, columnId, newTaskCardDetails)
+    addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch, showBoundary)
   }
 
   return (

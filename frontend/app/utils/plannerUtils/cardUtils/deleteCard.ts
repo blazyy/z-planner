@@ -17,6 +17,6 @@ export default async function deleteCard(
   })
 
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}/cards/${taskCardId}`)
+    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}/cards/${taskCardId}/delete`)
     .catch((error) => showErrorBoundary(error))
 }

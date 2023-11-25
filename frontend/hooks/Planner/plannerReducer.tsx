@@ -47,36 +47,36 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.columns[destColumnId].taskCards = destColumnTaskCardIds
       break
     }
-    // DONE
+    // NO NEED
     case 'idOfCardBeingDraggedChanged': {
       draft.idOfCardBeingDragged = action.payload
       break
     }
-    // DONE
+    // NO NEED
     case 'taskCardInitializationCancelled': {
       draft.taskCardBeingInitialized = null
       break
     }
-    // DONE
+    // NO NEED
     case 'newTaskCardInitialized': {
       draft.taskCardBeingInitialized = action.payload
       break
     }
-    // DONE
+    // NO NEED
     case 'taskCardBeingInitializedHighlightStatusChange': {
       draft.taskCardBeingInitialized!.isHighlighted = action.payload
       break
     }
-    // DONE
+    // NO NEED
     case 'dataEnteredInTaskCardBeingInitializedStatusChanged': {
       draft.dataEnteredInTaskCardBeingInitialized = action.payload
       break
     }
     // DONE
     case 'newTaskCardAdded': {
-      const { columnId, newTaskCardDetails: newTaskCard } = action.payload
+      const { columnId, newTaskCardDetails: newTaskCard, updatedTaskCards } = action.payload
       draft.taskCards[newTaskCard.id] = newTaskCard
-      draft.columns[columnId].taskCards.unshift(newTaskCard.id)
+      draft.columns[columnId].taskCards = updatedTaskCards
       draft.dataEnteredInTaskCardBeingInitialized = false
       draft.taskCardBeingInitialized = null
       break
@@ -99,6 +99,7 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.taskCards[taskCardId].content = newContent
       break
     }
+    // DONE
     case 'taskCardDeleted': {
       const { columnId, taskCardId } = action.payload
       draft.columns[columnId].taskCards = draft.columns[columnId].taskCards.filter(
@@ -107,10 +108,12 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       delete draft.taskCards[taskCardId]
       break
     }
+    // NO NEED
     case 'subTaskDragStatusChanged': {
       draft.isSubTaskBeingDragged = action.payload
       break
     }
+    // DONE
     case 'subTasksReordered': {
       const { taskCardId, reorderedSubTasks } = action.payload
       draft.taskCards[taskCardId].subTasks = reorderedSubTasks
@@ -124,6 +127,12 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     case 'subTaskTitleChanged': {
       const { subTaskId, newTitle } = action.payload
       draft.subTasks[subTaskId].title = newTitle
+      break
+    }
+    case 'newSubTaskAdded': {
+      const { taskCardId, newSubTaskDetails, newSubTasksOrder } = action.payload
+      draft.taskCards[taskCardId].subTasks = newSubTasksOrder
+      draft.subTasks[newSubTaskDetails.id] = newSubTaskDetails
       break
     }
     case 'newSubTaskAddedOnEnterKeydown': {

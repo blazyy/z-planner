@@ -1,37 +1,25 @@
+import { addNewSubTaskOnButtonClick } from '@/app/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { SubTaskInfoType } from '@/hooks/Planner/types'
 import { GripVertical, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 
 type AddNewSubTaskButtonProps = {
   taskCardId: string
 }
 
-export const getTotalSubTasksCount = (subTasks: { [subTaskId: string]: SubTaskInfoType }): number => {
-  return Object.keys(subTasks).length
-}
-
 export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) => {
-  const dispatch = usePlannerDispatch()!
+  const dispatch = usePlannerDispatch()
   const [isHoveringOver, setIsHoveringOver] = useState(false)
-  const { subTasks, isSubTaskBeingDragged } = usePlanner()
-  const numTotalNumSubTasks = getTotalSubTasksCount(subTasks)
-  const newSubTaskId: string = `$subtask-${numTotalNumSubTasks + 1}`
+  const { taskCards, isSubTaskBeingDragged } = usePlanner()
+  const { showBoundary } = useErrorBoundary()
 
   return (
     <div
       className='mt-1 flex gap-2 items-center hover:cursor-pointer'
       onMouseEnter={() => setIsHoveringOver(true)}
       onMouseLeave={() => setIsHoveringOver(false)}
-      onClick={() =>
-        dispatch({
-          type: 'newSubTaskAddedOnButtonClick',
-          payload: {
-            taskCardId,
-            newSubTaskId,
-          },
-        })
-      }
+      onClick={() => addNewSubTaskOnButtonClick(taskCards[taskCardId], dispatch, showBoundary)}
     >
       <GripVertical size={12} className='invisible' />
       <PlusCircle

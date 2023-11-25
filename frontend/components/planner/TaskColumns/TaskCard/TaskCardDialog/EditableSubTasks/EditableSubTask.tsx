@@ -5,6 +5,7 @@ import { SubTaskInfoType } from '@/hooks/Planner/types'
 import { DraggableProvided } from '@hello-pangea/dnd'
 import { GripVertical } from 'lucide-react'
 import { useState } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 import { handleKeyDownOnSubTask } from './utils'
 
 type EditableSubTaskProps = {
@@ -19,6 +20,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
   const { isSubTaskBeingDragged, taskCards, subTasks } = usePlanner()
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = usePlannerDispatch()!
+  const { showBoundary } = useErrorBoundary()
   return (
     <div
       ref={provided.innerRef}
@@ -53,7 +55,9 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         type='text'
         value={subTask.title}
         className='h-1 my-1 text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
-        onKeyDown={(event) => handleKeyDownOnSubTask(event, taskCards, subTasks, dispatch, taskCardId, subTask)}
+        onKeyDown={(event) =>
+          handleKeyDownOnSubTask(event, taskCards, subTasks, dispatch, taskCardId, subTask, showBoundary)
+        }
         onChange={(event) => {
           dispatch({
             type: 'subTaskTitleChanged',
