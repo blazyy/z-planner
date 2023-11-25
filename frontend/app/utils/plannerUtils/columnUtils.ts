@@ -46,7 +46,7 @@ export const changeColumnOrder = async (
     },
   })
   axios
-    .put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns/reorder`, {
+    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns/reorder`, {
       newColumnOrder,
     })
     .catch((error) => showErrorBoundary(error))

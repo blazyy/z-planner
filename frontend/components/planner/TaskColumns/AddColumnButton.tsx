@@ -15,7 +15,7 @@ type AddNewColumnFormProps = {
 }
 
 const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps) => {
-  const { showBoundary: showErrorBoundary } = useErrorBoundary()
+  const { showBoundary } = useErrorBoundary()
   const dispatch = usePlannerDispatch()!
 
   const formSchema = z.object({
@@ -32,7 +32,7 @@ const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps)
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addNewColumn(dispatch, showErrorBoundary, boardId, values.columnName)
+    addNewColumn(dispatch, showBoundary, boardId, values.columnName)
     setIsAddingColumn(false)
   }
 

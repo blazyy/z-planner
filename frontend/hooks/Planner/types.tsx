@@ -74,7 +74,6 @@ export type BoardsType = {
 
 export type PlannerType = {
   hasLoaded: boolean
-  showErrorBoundary: (error: Error) => void
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null

@@ -1,11 +1,6 @@
 import { Card, CardHeader } from '@/components/ui/card'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { TaskCardsType } from '@/hooks/Planner/types'
 import { PlusCircle } from 'lucide-react'
-
-const getTotalTaskCardsCount = (taskCards: TaskCardsType): number => {
-  return Object.keys(taskCards).length
-}
 
 type AddTaskCardButtonProps = {
   columnId: string
@@ -27,8 +22,7 @@ export const AddTaskCardButton = ({ columnId }: AddTaskCardButtonProps) => {
             !dataEnteredInTaskCardBeingInitialized &&
             taskCardBeingInitialized.columnId !== columnId)
         ) {
-          const currentTaskCardsCount = getTotalTaskCardsCount(taskCards)
-          const newTaskCardId = `taskcard-${currentTaskCardsCount + 1}`
+          const newTaskCardId = crypto.randomUUID()
           dispatch({
             type: 'newTaskCardInitialized',
             payload: {

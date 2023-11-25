@@ -27,7 +27,7 @@ export const reorderSubTasks = async (
     payload: false,
   })
   axios
-    .put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks/move`, {
+    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks/move`, {
       reorderedSubTasks,
     })
     .catch((error) => showErrorBoundary(error))

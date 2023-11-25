@@ -6,7 +6,6 @@ import { PlannerType } from './types'
 
 const initialEmptyState: PlannerType = {
   hasLoaded: false,
-  showErrorBoundary: () => {},
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
@@ -31,7 +30,7 @@ export const usePlannerDispatch = () => {
 }
 
 export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-  const { showBoundary: showErrorBoundary } = useErrorBoundary()
+  const { showBoundary } = useErrorBoundary()
   const [plannerData, dispatch] = useReducer(plannerReducer, initialEmptyState)
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
             payload: {
               ...initialEmptyState,
               hasLoaded: true,
-              showErrorBoundary,
               boardOrder: data.boardOrder,
               boards: data.boards,
               columns: data.columns,
@@ -55,10 +53,10 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
             },
           })
         })
-        .catch((error) => showErrorBoundary(error))
+        .catch((error) => showBoundary(error))
     }
     fetchData()
-  }, [showErrorBoundary])
+  }, [showBoundary])
 
   return (
     <PlannerContext.Provider value={plannerData}>

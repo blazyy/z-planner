@@ -1,9 +1,11 @@
+import changeCardCheckedStatus from '@/app/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { Draggable } from '@hello-pangea/dnd'
+import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from './CategoryBadge'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
@@ -49,7 +51,8 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
 
-  const plannerDispatch = usePlannerDispatch()!
+  const plannerDispatch = usePlannerDispatch()
+  const { showBoundary } = useErrorBoundary()
   const { taskCards, idOfCardBeingDragged } = usePlanner()
   const task = taskCards[taskCardId]
 
@@ -77,13 +80,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
             onClick={(event) => {
               event.preventDefault() // Needed to prevent dialog from triggering
               const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-              plannerDispatch({
-                type: 'taskCardCheckedStatusChanged',
-                payload: {
-                  taskCardId: task.id,
-                  isChecked: !isChecked,
-                },
-              })
+              changeCardCheckedStatus(plannerDispatch, showBoundary, taskCardId, !isChecked)
             }}
           />
         </CardFooter>

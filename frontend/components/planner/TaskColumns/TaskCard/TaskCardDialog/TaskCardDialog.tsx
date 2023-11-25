@@ -1,8 +1,12 @@
+import changeCardCheckedStatus from '@/app/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
+import changeCardContent from '@/app/utils/plannerUtils/cardUtils/changeCardContent'
+import changeCardTitle from '@/app/utils/plannerUtils/cardUtils/changeCardTitle'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
@@ -11,6 +15,7 @@ type TaskCardDialogProps = {
 }
 
 export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
+  const { showBoundary } = useErrorBoundary()
   const plannerDispatch = usePlannerDispatch()!
   const { taskCards } = usePlanner()
   const task = taskCards[id]
@@ -22,30 +27,14 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
             <Textarea
               value={task.title}
               className='p-3 min-h-fit text-2xl border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-              onChange={(event) => {
-                plannerDispatch({
-                  type: 'taskCardTitleChanged',
-                  payload: {
-                    taskCardId: id,
-                    newTitle: event.target.value,
-                  },
-                })
-              }}
+              onChange={(event) => changeCardTitle(plannerDispatch, showBoundary, id, event.target.value)}
             />
           </CardTitle>
           <CardDescription className='m-0'>
             <Textarea
               value={task.content}
               className='p-3 min-h-fit border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-              onChange={(event) => {
-                plannerDispatch({
-                  type: 'taskCardContentChanged',
-                  payload: {
-                    taskCardId: id,
-                    newContent: event.target.value,
-                  },
-                })
-              }}
+              onChange={(event) => changeCardContent(plannerDispatch, showBoundary, id, event.target.value)}
             />
           </CardDescription>
         </CardHeader>
@@ -57,15 +46,9 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
           <Checkbox
             className='h-5 w-5'
             checked={task.checked}
-            onCheckedChange={(isChecked) => {
-              plannerDispatch({
-                type: 'taskCardCheckedStatusChanged',
-                payload: {
-                  taskCardId: id,
-                  isChecked: Boolean(isChecked),
-                },
-              })
-            }}
+            onCheckedChange={(isChecked) =>
+              changeCardCheckedStatus(plannerDispatch, showBoundary, id, Boolean(isChecked))
+            }
           />
         </CardFooter>
       </Card>

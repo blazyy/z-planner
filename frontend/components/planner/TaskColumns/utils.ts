@@ -1,7 +1,9 @@
 'use client'
-import { moveCardAcrossColumns, moveCardWithinColumn } from '@/app/utils/plannerUtils/cardUtils'
+import moveCardAcrossColumns from '@/app/utils/plannerUtils/cardUtils/moveCardAcrossColumns'
+import moveCardWithinColumn from '@/app/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils'
 import { reorderSubTasks } from '@/app/utils/plannerUtils/subTaskUtils'
+import { ErrorBoundaryType } from '@/app/utils/plannerUtils/types'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 
@@ -9,12 +11,13 @@ type OnDragEndFunc = (
   result: DropResult,
   dispatch: PlannerDispatchContextType,
   plannerContext: PlannerType,
+  showErrorBoundary: ErrorBoundaryType,
   boardId: string
 ) => void
 
-export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext, boardId) => {
+export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext, showErrorBoundary, boardId) => {
   const { destination, source, draggableId, type } = result
-  const { showErrorBoundary, boards, columns, taskCards } = plannerContext
+  const { boards, columns, taskCards } = plannerContext
 
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
   if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
@@ -34,7 +37,15 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
 
   // Moving a card within the same column
   if (columns[source.droppableId] === columns[destination.droppableId])
-    return moveCardWithinColumn(dispatch, showErrorBoundary, columns, draggableId, source, destination)
+    return moveCardWithinColumn(
+      columns,
+      source.droppableId,
+      draggableId,
+      source.index,
+      destination.index,
+      dispatch,
+      showErrorBoundary
+    )
 
   // Moving cards between columns
   moveCardAcrossColumns(dispatch, showErrorBoundary, columns, draggableId, source, destination)

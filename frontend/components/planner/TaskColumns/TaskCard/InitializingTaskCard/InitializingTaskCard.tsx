@@ -1,3 +1,4 @@
+import { addNewCardToColumn } from '@/app/utils/plannerUtils/cardUtils/addNewCardToColumn'
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -6,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { CancelButton } from './CancelButton'
@@ -23,7 +25,8 @@ const formSchema = z.object({
 })
 
 export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
-  const dispatch = usePlannerDispatch()!
+  const dispatch = usePlannerDispatch()
+  const { showBoundary } = useErrorBoundary()
   const { taskCardBeingInitialized } = usePlanner()
   const [selectedCategory, setSelectedCategory] = useState('Unassigned')
 
@@ -51,16 +54,13 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    dispatch({
-      type: 'newTaskCardAdded',
-      payload: {
-        columnId: columnId,
-        taskCardId: taskCardBeingInitialized?.taskCardId,
-        title: values.taskCardTitle,
-        content: `${values.taskCardDesc}`,
-        category: selectedCategory,
-      },
-    })
+    const newTaskCardDetails = {
+      id: taskCardBeingInitialized!.taskCardId,
+      title: values.taskCardTitle,
+      category: selectedCategory,
+      content: values.taskCardDesc,
+    }
+    addNewCardToColumn(dispatch, showBoundary, columnId, newTaskCardDetails)
   }
 
   return (
