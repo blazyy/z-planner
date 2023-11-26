@@ -25,7 +25,7 @@ export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`flex flex-col transition ease grow p-3 rounded-lg ${
+                className={`flex flex-col transition ease grow p-3 rounded-lg gap-3 ${
                   snapshot.isDraggingOver ? 'bg-neutral-400' : 'bg-neutral-300'
                 }`}
               >

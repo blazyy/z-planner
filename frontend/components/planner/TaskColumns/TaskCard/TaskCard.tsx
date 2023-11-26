@@ -7,6 +7,7 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { Draggable } from '@hello-pangea/dnd'
 import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from './CategoryBadge'
+import { DueDateIndicator } from './DueDateIndicator'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
 import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
@@ -50,7 +51,6 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   // was in the wrapper component. There was no straightforward way to pass that info down to it's children (i.e. TaskCard).
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
-
   const plannerDispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const { taskCards, idOfCardBeingDragged } = usePlanner()
@@ -59,12 +59,17 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   return (
     <TaskCardWrapper index={index} columnId={columnId} taskCardId={taskCardId}>
       <Card
-        className={`border-stone-200 mb-2 ${
-          idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''
-        } ${task.checked ? 'opacity-50' : ''}`}
+        className={`border-stone-200 ${idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''} ${
+          task.checked ? 'opacity-50' : ''
+        } p-0`}
       >
         <CardHeader>
-          <CardTitle>{task.title}</CardTitle>
+          <div className='flex flex-col gap-4 items-start justify-between mb-3'>
+            <div className='flex justify-between min-w-full'>
+              <CardTitle>{task.title}</CardTitle>
+              <DueDateIndicator />
+            </div>
+          </div>
           <CardDescription>{task.content}</CardDescription>
         </CardHeader>
         {task.subTasks.length > 0 && (
@@ -73,7 +78,6 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
           </CardContent>
         )}
         <CardFooter className='flex justify-between'>
-          <CategoryBadge taskCardId={taskCardId} />
           <Checkbox
             className='h-5 w-5'
             checked={task.checked}
@@ -83,6 +87,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
               changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
             }}
           />
+          <CategoryBadge taskCardId={taskCardId} />
         </CardFooter>
       </Card>
     </TaskCardWrapper>
