@@ -23,7 +23,7 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`flex flex-col transition ease grow p-3 rounded-lg gap-3 ${
+                className={`flex flex-col transition ease grow p-1 px-2 rounded-lg ${
                   snapshot.isDraggingOver ? 'bg-neutral-400' : 'bg-neutral-300'
                 }`}
               >
@@ -31,7 +31,15 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
                   <InitializingTaskCard columnId={columnInfo.id} />
                 )}
                 {columnInfo.taskCards.map((taskCardId, index) => {
-                  return <TaskCard key={taskCardId} index={index} columnId={columnId} taskCardId={taskCardId} />
+                  return (
+                    <TaskCard
+                      key={taskCardId}
+                      index={index}
+                      boardId={boardId}
+                      columnId={columnId}
+                      taskCardId={taskCardId}
+                    />
+                  )
                 })}
                 {provided.placeholder}
               </div>

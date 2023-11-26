@@ -14,6 +14,7 @@ import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
 
 type TaskCardProps = {
   index: number
+  boardId: string
   columnId: string
   taskCardId: string
 }
@@ -29,7 +30,7 @@ const TaskCardWrapper = ({ index, columnId, taskCardId, children }: TaskCardWrap
   return (
     <Draggable draggableId={taskCardId} index={index}>
       {(provided) => (
-        <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+        <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1'>
           <Dialog>
             <TaskCardDialog id={taskCardId} />
             <ContextMenu>
@@ -46,7 +47,7 @@ const TaskCardWrapper = ({ index, columnId, taskCardId, children }: TaskCardWrap
   )
 }
 
-export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
+export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps) => {
   // idOfCardBeingDragged is consumed from a context due to the fact that the snapshot object (which has an isDragging flag),
   // was in the wrapper component. There was no straightforward way to pass that info down to it's children (i.e. TaskCard).
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
@@ -67,7 +68,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
           <div className='flex flex-col items-start justify-between mb-1'>
             <div className='flex justify-between min-w-full'>
               <CardTitle className='text-xl'>{task.title}</CardTitle>
-              <DueDateIndicator />
+              <CategoryBadge taskCardId={taskCardId} />
             </div>
           </div>
           <CardDescription>{task.content}</CardDescription>
@@ -87,7 +88,8 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
               changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
             }}
           />
-          <CategoryBadge taskCardId={taskCardId} />
+          <DueDateIndicator />
+          {/* <BoardNameIndicator boardId={boardId} /> */}
         </CardFooter>
       </Card>
     </TaskCardWrapper>

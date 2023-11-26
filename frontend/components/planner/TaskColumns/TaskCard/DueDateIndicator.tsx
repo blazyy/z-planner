@@ -16,8 +16,8 @@ export const DueDateIndicator = () => {
         }}
       >
         <div className='flex flex-row items-center p-1 border-solid border-[1px] rounded-lg border-slate-300'>
-          <MdCalendarToday className='mr-2 text-slate-500' />
-          <span className='text-xs text-slate-500'>{date ? format(date, 'PP') : 'Pick a date'}</span>
+          <MdCalendarToday className='mr-1 text-slate-500' />
+          <span className='text-xs text-slate-500'>{date ? format(date, 'do MMM') : 'Pick a date'}</span>
         </div>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0' align='start'>
