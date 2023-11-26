@@ -1,7 +1,7 @@
 import { addNewColumn } from '@/app/utils/plannerUtils/columnUtils/addNewColumn'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
@@ -17,6 +17,7 @@ type AddNewColumnFormProps = {
 const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps) => {
   const { showBoundary } = useErrorBoundary()
   const dispatch = usePlannerDispatch()!
+  const { boards } = usePlanner()
 
   const formSchema = z.object({
     columnName: z.string().min(2, {
@@ -32,7 +33,7 @@ const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps)
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addNewColumn(dispatch, showBoundary, boardId, values.columnName)
+    addNewColumn(boards[boardId], values.columnName, dispatch, showBoundary)
     setIsAddingColumn(false)
   }
 
@@ -45,7 +46,7 @@ const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps)
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='Column title' {...field} />
+                <Input className='h-10' placeholder='Column title' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

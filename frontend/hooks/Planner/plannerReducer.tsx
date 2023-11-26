@@ -19,13 +19,16 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     }
     // DONE
     case 'newColumnAdded': {
-      const { boardId, newColumnId, newColumnName } = action.payload
-      draft.boards[boardId].columns.push(newColumnId)
-      draft.columns[newColumnId] = {
-        id: newColumnId,
-        name: newColumnName,
-        taskCards: [],
-      }
+      const { boardId, newColumnDetails, updatedColumns } = action.payload
+      draft.boards[boardId].columns = updatedColumns
+      draft.columns[newColumnDetails.id] = newColumnDetails
+      break
+    }
+    // DONE
+    case 'columnDeleted': {
+      const { boardId, columnId } = action.payload
+      draft.boards[boardId].columns = draft.boards[boardId].columns.filter((colId: string) => colId !== columnId)
+      delete draft.columns[columnId]
       break
     }
     // DONE

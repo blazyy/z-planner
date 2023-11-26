@@ -25,7 +25,7 @@ export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
         {(provided) => (
           <div className='flex flex-row' {...provided.droppableProps} ref={provided.innerRef}>
             {boards[boardId].columns.map((columnId, index) => (
-              <TaskColumn key={columnId} index={index} columnId={columnId} />
+              <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
             ))}
             {provided.placeholder}
             <AddNewColumnButton boardId={boardId} />

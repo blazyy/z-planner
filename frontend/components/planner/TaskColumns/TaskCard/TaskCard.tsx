@@ -61,12 +61,12 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
       <Card
         className={`border-stone-200 ${idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''} ${
           task.checked ? 'opacity-50' : ''
-        } p-0`}
+        }`}
       >
         <CardHeader>
-          <div className='flex flex-col gap-4 items-start justify-between mb-3'>
+          <div className='flex flex-col items-start justify-between mb-1'>
             <div className='flex justify-between min-w-full'>
-              <CardTitle>{task.title}</CardTitle>
+              <CardTitle className='text-xl'>{task.title}</CardTitle>
               <DueDateIndicator />
             </div>
           </div>

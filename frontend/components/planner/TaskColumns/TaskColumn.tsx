@@ -6,20 +6,18 @@ import { TaskCard } from './TaskCard/TaskCard'
 
 type TaskColumnProps = {
   index: number
+  boardId: string
   columnId: string
 }
 
-export const TaskColumn = ({ index, columnId }: TaskColumnProps) => {
+export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
   const { columns, taskCardBeingInitialized } = usePlanner()
   const columnInfo = columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
         <div className={`task-column flex flex-col mx-2 gap-2`} {...provided.draggableProps} ref={provided.innerRef}>
-          <h1 className='text-2xl text-bold text-center' {...provided.dragHandleProps}>
-            {columnInfo.name}
-          </h1>
-          <AddTaskCardButton columnId={columnInfo.id} />
+          <AddTaskCardButton boardId={boardId} columnId={columnInfo.id} dragHandleProps={provided.dragHandleProps} />
           <Droppable droppableId={columnInfo.id} type='card'>
             {(provided, snapshot) => (
               <div
