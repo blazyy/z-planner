@@ -8,6 +8,7 @@ import { Draggable } from '@hello-pangea/dnd'
 import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from './CategoryBadge'
 import { DueDateIndicator } from './DueDateIndicator'
+import { ProgressBar } from './ProgressBar'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
 import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
@@ -73,6 +74,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
         {task.subTasks.length > 0 && (
           <CardContent className='flex flex-col gap-2 px-4'>
             <SubTasks taskCardId={task.id} />
+            <ProgressBar taskCardId={taskCardId} />
           </CardContent>
         )}
         <CardFooter className='flex justify-between px-4 pb-4'>
