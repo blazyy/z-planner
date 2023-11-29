@@ -14,9 +14,9 @@ export const AddTaskCardButton = ({ boardId, columnId, dragHandleProps }: AddTas
   const { columns, taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlanner()
   const dispatch = usePlannerDispatch()!
   return (
-    <Card {...dragHandleProps} className='mb-2 cursor-pointer'>
-      <CardHeader className='p-2 h-10'>
-        <div className=' flex flex-row items-center justify-between gap-2'>
+    <Card {...dragHandleProps} className='mb-2 cursor-pointer border-2 border-indigo-300 bg-indigo-200'>
+      <CardHeader className='p-1'>
+        <div className='flex flex-row items-center justify-between gap-2 px-2'>
           <FaPlus
             onClick={() => {
               // Only allow an initializing task card to be added in an existing task card doesn't already exist,
@@ -45,7 +45,7 @@ export const AddTaskCardButton = ({ boardId, columnId, dragHandleProps }: AddTas
               }
             }}
           />
-          <div className='text-gray-500 text-lg'>{columns[columnId].name}</div>
+          <div className='text-gray-700 text-lg'>{columns[columnId].name}</div>
           <ColumnsDropdownOptionsMenu boardId={boardId} columnId={columnId} />
         </div>
       </CardHeader>

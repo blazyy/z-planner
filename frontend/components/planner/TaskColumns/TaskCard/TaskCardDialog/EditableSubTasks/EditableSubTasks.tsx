@@ -27,7 +27,7 @@ export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
   return (
     <Droppable droppableId={taskCardId} type='subtask'>
       {(provided) => (
-        <div ref={provided.innerRef} {...provided.droppableProps} className='p-1 flex flex-col rounded-md'>
+        <div ref={provided.innerRef} {...provided.droppableProps} className='px-0 flex flex-col rounded-md'>
           {subTasksUnderTaskCard.map((subTask, index) => (
             <Draggable key={subTask.id} draggableId={`${taskCardId}~${subTask.id}`} index={index}>
               {(provided, snapshot) => {

@@ -16,7 +16,11 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
-        <div className={`task-column flex flex-col mx-2 gap-2`} {...provided.draggableProps} ref={provided.innerRef}>
+        <div
+          className={`task-column flex flex-col mx-2 gap-2 w-96 h-[400px]`}
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+        >
           <AddTaskCardButton boardId={boardId} columnId={columnInfo.id} dragHandleProps={provided.dragHandleProps} />
           <Droppable droppableId={columnInfo.id} type='card'>
             {(provided, snapshot) => (

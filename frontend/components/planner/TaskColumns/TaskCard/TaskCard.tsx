@@ -1,5 +1,5 @@
 import changeCardCheckedStatus from '@/app/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -30,7 +30,7 @@ const TaskCardWrapper = ({ index, columnId, taskCardId, children }: TaskCardWrap
   return (
     <Draggable draggableId={taskCardId} index={index}>
       {(provided) => (
-        <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1'>
+        <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1 w-full'>
           <Dialog>
             <TaskCardDialog id={taskCardId} />
             <ContextMenu>
@@ -60,35 +60,35 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
   return (
     <TaskCardWrapper index={index} columnId={columnId} taskCardId={taskCardId}>
       <Card
-        className={`border-stone-200 ${idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''} ${
-          task.checked ? 'opacity-50' : ''
-        }`}
+        className={`border-2 border-stone-300 ${
+          idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''
+        } ${task.checked ? 'opacity-50' : ''}`}
       >
-        <CardHeader>
-          <div className='flex flex-col items-start justify-between mb-1'>
-            <div className='flex justify-between min-w-full'>
-              <CardTitle className='text-xl'>{task.title}</CardTitle>
-              <CategoryBadge taskCardId={taskCardId} />
-            </div>
+        <CardHeader className='p-4'>
+          <div className='flex flex-col items-start justify-between'>
+            <CardTitle className='text-xl'>{task.title}</CardTitle>
           </div>
-          <CardDescription>{task.content}</CardDescription>
+          {/* <CardDescription>{task.content}</CardDescription> */}
         </CardHeader>
         {task.subTasks.length > 0 && (
-          <CardContent className='flex flex-col gap-2'>
+          <CardContent className='flex flex-col gap-2 px-4'>
             <SubTasks taskCardId={task.id} />
           </CardContent>
         )}
-        <CardFooter className='flex justify-between'>
-          <Checkbox
-            className='h-5 w-5'
-            checked={task.checked}
-            onClick={(event) => {
-              event.preventDefault() // Needed to prevent dialog from triggering
-              const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-              changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
-            }}
-          />
-          <DueDateIndicator />
+        <CardFooter className='flex justify-between px-4 pb-4'>
+          <div className='flex items-center gap-2'>
+            <Checkbox
+              className='h-5 w-5'
+              checked={task.checked}
+              onClick={(event) => {
+                event.preventDefault() // Needed to prevent dialog from triggering
+                const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
+                changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
+              }}
+            />
+            <DueDateIndicator />
+          </div>
+          <CategoryBadge taskCardId={taskCardId} />
           {/* <BoardNameIndicator boardId={boardId} /> */}
         </CardFooter>
       </Card>

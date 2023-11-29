@@ -15,8 +15,8 @@ export const DueDateIndicator = () => {
           e.stopPropagation()
         }}
       >
-        <div className='flex flex-row items-center p-1 border-solid border-[1px] rounded-lg border-slate-300'>
-          <MdCalendarToday className='mr-1 text-slate-500' />
+        <div className='flex flex-row items-center p-1'>
+          <MdCalendarToday className='mr-1 text-slate-500 h-5 w-5' />
           <span className='text-xs text-slate-500'>{date ? format(date, 'do MMM') : 'Pick a date'}</span>
         </div>
       </PopoverTrigger>

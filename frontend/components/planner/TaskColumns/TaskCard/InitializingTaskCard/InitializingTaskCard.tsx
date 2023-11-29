@@ -65,7 +65,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
 
   return (
     <Card
-      className={`${taskCardBeingInitialized?.isHighlighted ? 'border-4 border-red-500/50' : 'border-stone-400'} mb-2`}
+      className={`${taskCardBeingInitialized?.isHighlighted ? 'border-4 border-red-500/50' : 'border-stone-400'} my-1`}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>

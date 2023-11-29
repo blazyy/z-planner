@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from '../CategoryBadge'
+import { DueDateIndicator } from '../DueDateIndicator'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
 type TaskCardDialogProps = {
@@ -21,34 +22,43 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
   const task = taskCards[id]
   return (
     <DialogContent className='p-0'>
-      <Card>
-        <CardHeader className='p-4'>
+      <Card className='border-2 border-gray-400 p-2'>
+        <CardHeader className='pb-0 pl-7 gap-2'>
+          <div className='flex gap-2'>
+            <CategoryBadge taskCardId={id} />
+            <DueDateIndicator />
+          </div>
           <CardTitle>
-            <Textarea
-              value={task.title}
-              className='p-3 min-h-fit text-2xl border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-              onChange={(event) => changeCardTitle(id, event.target.value, dispatch, showBoundary)}
-            />
+            <div className='flex flex-col gap-4'>
+              <div className='flex items-center gap-2'>
+                <Checkbox
+                  className='h-5 w-5'
+                  checked={task.checked}
+                  onCheckedChange={(isChecked) =>
+                    changeCardCheckedStatus(id, Boolean(isChecked), dispatch, showBoundary)
+                  }
+                />
+                <Textarea
+                  value={task.title}
+                  className='h-[10px] p-0 items-center text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+                  onChange={(event) => changeCardTitle(id, event.target.value, dispatch, showBoundary)}
+                />
+              </div>
+            </div>
           </CardTitle>
-          <CardDescription className='m-0'>
-            <Textarea
-              value={task.content}
-              className='p-3 min-h-fit border-2 focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-              onChange={(event) => changeCardContent(id, event.target.value, dispatch, showBoundary)}
-            />
-          </CardDescription>
         </CardHeader>
         <CardContent className='flex flex-col gap-2 px-2'>
           <EditableSubTasks taskCardId={id} />
+          <CardDescription className='m-0'>
+            <Textarea
+              placeholder='Notes...'
+              value={task.content}
+              className='m-1 bg-neutral-200 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+              onChange={(event) => changeCardContent(id, event.target.value, dispatch, showBoundary)}
+            />
+          </CardDescription>
         </CardContent>
-        <CardFooter className='flex justify-between'>
-          <CategoryBadge taskCardId={id} />
-          <Checkbox
-            className='h-5 w-5'
-            checked={task.checked}
-            onCheckedChange={(isChecked) => changeCardCheckedStatus(id, Boolean(isChecked), dispatch, showBoundary)}
-          />
-        </CardFooter>
+        <CardFooter className='flex justify-between'>{/* <CategoryBadge taskCardId={id} /> */}</CardFooter>
       </Card>
     </DialogContent>
   )
