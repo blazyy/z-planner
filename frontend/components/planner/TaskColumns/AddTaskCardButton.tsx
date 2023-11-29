@@ -14,7 +14,7 @@ export const AddTaskCardButton = ({ boardId, columnId, dragHandleProps }: AddTas
   const { columns, taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlanner()
   const dispatch = usePlannerDispatch()!
   return (
-    <Card {...dragHandleProps} className='mb-2 cursor-pointer border-2 border-indigo-300 bg-indigo-200'>
+    <Card {...dragHandleProps} className='mb-2 cursor-pointer border-2 transition-all hover:bg-muted '>
       <CardHeader className='p-1'>
         <div className='flex flex-row items-center justify-between gap-2 px-2'>
           <FaPlus

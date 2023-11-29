@@ -7,14 +7,15 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     case 'dataFetchedFromDatabase': {
       return action.payload
     }
+    // DONE
+    case 'selectedBoardChanged': {
+      draft.selectedBoard = action.payload.boardId
+      break
+    }
     case 'newBoardAdded': {
-      const { boardId, boardName } = action.payload
-      draft.boardOrder.push(boardId)
-      draft.boards[boardId] = {
-        id: boardId,
-        name: boardName,
-        columns: [],
-      }
+      const { newBoardOrder, newBoardDetails } = action.payload
+      draft.boardOrder = newBoardOrder
+      draft.boards[newBoardDetails.id] = newBoardDetails
       break
     }
     // DONE

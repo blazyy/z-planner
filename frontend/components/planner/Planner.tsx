@@ -3,15 +3,20 @@ import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
 // import { ProtectedRoute } from '../global/ProtectedRoute'
 import { AddBoardCallout } from './AddBoardCallout'
 import { Board } from './Board/Board'
+import { Sidebar } from './Sidebar/Sidebar'
 
 export const Planner = () => {
-  const data = usePlanner()
-
+  const { hasLoaded, boardOrder } = usePlanner()
   return (
     <main className='flex min-h-screen flex-col justify-center items-center gap-8'>
-      {!data.hasLoaded && <LoadingSpinner />}
-      {data.hasLoaded && data.boardOrder.length === 0 && <AddBoardCallout />}
-      {data.hasLoaded && data.boardOrder.length > 0 && <Board />}
+      {!hasLoaded && <LoadingSpinner />}
+      {hasLoaded && boardOrder.length === 0 && <AddBoardCallout />}
+      {hasLoaded && boardOrder.length > 0 && (
+        <div className='flex gap-12'>
+          <Sidebar />
+          <Board />
+        </div>
+      )}
     </main>
   )
 }

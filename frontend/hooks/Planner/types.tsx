@@ -74,6 +74,7 @@ export type BoardsType = {
 
 export type PlannerType = {
   hasLoaded: boolean
+  selectedBoard: string
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null

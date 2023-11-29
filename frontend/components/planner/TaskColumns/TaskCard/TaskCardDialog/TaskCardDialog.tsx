@@ -40,7 +40,7 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
                 />
                 <Textarea
                   value={task.title}
-                  className='h-[10px] p-0 items-center text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+                  className='h-[35px] border-none p-0 items-center text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
                   onChange={(event) => changeCardTitle(id, event.target.value, dispatch, showBoundary)}
                 />
               </div>
