@@ -1,4 +1,5 @@
 import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { AddTaskCardButton } from './AddTaskCardButton'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
@@ -11,13 +12,14 @@ type TaskColumnProps = {
 }
 
 export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
-  const { columns, taskCardBeingInitialized } = usePlanner()
+  const { columns, taskCards, taskCardBeingInitialized } = usePlanner()
+  const { selectedCategories } = usePlannerFilters()
   const columnInfo = columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
         <div
-          className={`task-column flex flex-col mx-2 gap-2 w-96 h-[400px]`}
+          className={`task-column flex flex-col mr-2 gap-2 w-96 h-[400px]`}
           {...provided.draggableProps}
           ref={provided.innerRef}
         >
@@ -35,15 +37,18 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
                   <InitializingTaskCard columnId={columnInfo.id} />
                 )}
                 {columnInfo.taskCards.map((taskCardId, index) => {
-                  return (
-                    <TaskCard
-                      key={taskCardId}
-                      index={index}
-                      boardId={boardId}
-                      columnId={columnId}
-                      taskCardId={taskCardId}
-                    />
-                  )
+                  const doesTaskCardBelongToSelectedCategories =
+                    selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
+                  if (doesTaskCardBelongToSelectedCategories)
+                    return (
+                      <TaskCard
+                        key={taskCardId}
+                        index={index}
+                        boardId={boardId}
+                        columnId={columnId}
+                        taskCardId={taskCardId}
+                      />
+                    )
                 })}
                 {provided.placeholder}
               </div>

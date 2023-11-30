@@ -15,11 +15,11 @@ const formSchema = z.object({
   }),
 })
 
-type AddNewBoardButtonProps = {
+type AddNewBoardFormProps = {
   setAddingNewBoard: Dispatch<SetStateAction<boolean>>
 }
 
-export const AddNewBoardButton = ({ setAddingNewBoard }: AddNewBoardButtonProps) => {
+export const AddNewBoardForm = ({ setAddingNewBoard }: AddNewBoardFormProps) => {
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const { boardOrder } = usePlanner()

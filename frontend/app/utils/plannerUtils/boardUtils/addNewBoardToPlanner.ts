@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { Dispatch } from 'react'
 import { ErrorBoundaryType } from '../types'
 
@@ -22,10 +23,10 @@ export const addNewBoardToPlanner = async (
     },
   })
 
-  //   axios
-  //     .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`, {
-  //       newBoardOrder,
-  //       newBoardDetails,
-  //     })
-  //     .catch((error) => showErrorBoundary(error))
+  axios
+    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`, {
+      newBoardOrder,
+      newBoardDetails,
+    })
+    .catch((error) => showErrorBoundary(error))
 }
