@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
 import { AddNewBoardForm } from './AddNewBoardForm'
 import { EventCalendar } from './EventCalendar'
+import { LiveDate } from './LiveDate'
 import { ManageBoardsButton } from './ManageBoardsButton'
 
 type BoardButtonProps = {
@@ -33,7 +34,10 @@ export const Sidebar = () => {
 
   return (
     <div className='flex flex-col gap-8 items-start w-80'>
-      <EventCalendar />
+      <div className='flex flex-col gap-2 items-start justify-center'>
+        <LiveDate />
+        <EventCalendar />
+      </div>
       <div className='flex flex-col w-full mr-12 gap-2 '>
         <span className='mb-4 text-xl font-bold'>Boards</span>
         {boardOrder.map((boardId, i) => (

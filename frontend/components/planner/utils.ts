@@ -1,4 +1,5 @@
 'use client'
+import addTaskToCalendar from '@/app/utils/plannerUtils/cardUtils/addTaskToCalendar'
 import moveCardAcrossColumns from '@/app/utils/plannerUtils/cardUtils/moveCardAcrossColumns'
 import moveCardWithinColumn from '@/app/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils/changeColumnOrder'
@@ -34,6 +35,11 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
     type: 'idOfCardBeingDraggedChanged',
     payload: '',
   })
+
+  if (destination.droppableId === 'calendar') {
+    addTaskToCalendar(draggableId, dispatch, showErrorBoundary)
+    return
+  }
 
   // Moving a card within the same column
   if (columns[source.droppableId] === columns[destination.droppableId])

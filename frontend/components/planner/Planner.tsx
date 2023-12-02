@@ -1,21 +1,35 @@
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
 // import { ProtectedRoute } from '../global/ProtectedRoute'
+import { DragDropContext } from '@hello-pangea/dnd'
+import { useErrorBoundary } from 'react-error-boundary'
 import { AddBoardCallout } from './AddBoardCallout'
 import { Board } from './Board/Board'
+import { CalendarColumn } from './CalendarColumn/CalendarColumn'
 import { Sidebar } from './Sidebar/Sidebar'
+import { handleOnDragEnd, handleOnDragStart } from './utils'
 
 export const Planner = () => {
-  const { hasLoaded, boardOrder } = usePlanner()
+  const plannerContext = usePlanner()
+  const plannerDispatch = usePlannerDispatch()
+  const { showBoundary } = useErrorBoundary()
   return (
     <main className='flex min-h-screen flex-col justify-center items-center gap-8'>
-      {!hasLoaded && <LoadingSpinner />}
-      {hasLoaded && boardOrder.length === 0 && <AddBoardCallout />}
-      {hasLoaded && boardOrder.length > 0 && (
-        <div className='flex gap-12'>
-          <Sidebar />
-          <Board />
-        </div>
+      {!plannerContext.hasLoaded && <LoadingSpinner />}
+      {plannerContext.hasLoaded && plannerContext.boardOrder.length === 0 && <AddBoardCallout />}
+      {plannerContext.hasLoaded && plannerContext.boardOrder.length > 0 && (
+        <DragDropContext
+          onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
+          onDragEnd={(result) =>
+            handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
+          }
+        >
+          <div className='flex gap-12'>
+            <Sidebar />
+            <Board boardId={plannerContext.selectedBoard} />
+            <CalendarColumn />
+          </div>
+        </DragDropContext>
       )}
     </main>
   )

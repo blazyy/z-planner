@@ -23,6 +23,6 @@ const badgeClassNames: BadgeClassNamesObj = {
   rose: 'bg-rose-500 hover:bg-rose-600 text-white',
 }
 
-export const getCategoryBadgeClassNames = (color: string): string => {
-  return badgeClassNames[color]
+export const getCategoryBadgeClassNames = (color: string, clickable: boolean = true): string => {
+  return `${badgeClassNames[color]} ${!clickable ? 'cursor-default' : 'cursor-pointer'}`
 }

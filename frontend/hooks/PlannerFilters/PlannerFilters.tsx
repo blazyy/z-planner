@@ -9,10 +9,17 @@ type PlannerFiltersType = {
 const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action) => {
   switch (action.type) {
     case 'selectedCategoriesChanged':
-      console.log('yoopo')
       const { clickedCategory } = action.payload
       if (draft.selectedCategories.indexOf(clickedCategory) === -1) draft.selectedCategories.push(clickedCategory)
       else draft.selectedCategories = draft.selectedCategories.filter((cat: string) => cat != clickedCategory)
+      break
+    case 'searchQueryChanged':
+      const { searchQuery } = action.payload
+      draft.searchQuery = searchQuery
+      break
+    case 'filtersReset':
+      draft.searchQuery = ''
+      draft.selectedCategories = []
       break
   }
 })

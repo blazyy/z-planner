@@ -11,6 +11,7 @@ const initialEmptyState: PlannerType = {
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
   dataEnteredInTaskCardBeingInitialized: false,
+  scheduledTaskCards: [],
   boardOrder: [],
   boards: {},
   columns: {},
@@ -45,6 +46,7 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
             payload: {
               ...initialEmptyState,
               hasLoaded: true,
+              // scheduledTaskCards: data.scheduledTaskCards,
               selectedBoard: data.boardOrder.length > 0 ? data.boardOrder[0] : '',
               boardOrder: data.boardOrder,
               boards: data.boards,

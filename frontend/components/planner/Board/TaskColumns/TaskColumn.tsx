@@ -13,7 +13,7 @@ type TaskColumnProps = {
 
 export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
   const { columns, taskCards, taskCardBeingInitialized } = usePlanner()
-  const { selectedCategories } = usePlannerFilters()
+  const { searchQuery, selectedCategories } = usePlannerFilters()
   const columnInfo = columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
@@ -37,18 +37,13 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
                   <InitializingTaskCard columnId={columnInfo.id} />
                 )}
                 {columnInfo.taskCards.map((taskCardId, index) => {
+                  const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase())
                   const doesTaskCardBelongToSelectedCategories =
                     selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
-                  if (doesTaskCardBelongToSelectedCategories)
-                    return (
-                      <TaskCard
-                        key={taskCardId}
-                        index={index}
-                        boardId={boardId}
-                        columnId={columnId}
-                        taskCardId={taskCardId}
-                      />
-                    )
+                  if (doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories)
+                    return <TaskCard key={taskCardId} index={index} columnId={columnId} taskCardId={taskCardId} />
                 })}
                 {provided.placeholder}
               </div>

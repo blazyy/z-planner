@@ -79,6 +79,7 @@ export type PlannerType = {
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   dataEnteredInTaskCardBeingInitialized: boolean
+  scheduledTaskCards: string[]
   boardOrder: string[]
   boards: BoardsType
   columns: ColumnsType

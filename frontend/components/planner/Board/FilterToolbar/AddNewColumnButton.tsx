@@ -1,4 +1,5 @@
 import { addNewColumn } from '@/app/utils/plannerUtils/columnUtils/addNewColumn'
+import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
@@ -64,13 +65,13 @@ type AddNewColumnButtonProps = {
 export const AddNewColumnButton = ({ boardId }: AddNewColumnButtonProps) => {
   const [isAddingColumn, setIsAddingColumn] = useState(false)
   return (
-    <div className='task-column flex flex-col mx-2 gap-2'>
+    <div className='flex flex-col gap-2'>
       {!isAddingColumn && (
         <div className='flex justify-center items-center gap-2 cursor-pointer'>
-          <h1 className='text-xl text-bold text-center' onClick={() => setIsAddingColumn(true)}>
+          <Button variant='secondary' onClick={() => setIsAddingColumn(true)}>
             Add New Column
-          </h1>
-          <MdAdd fontSize='1.5rem' />
+            <MdAdd className='h-5 w-5 ml-2' />
+          </Button>
         </div>
       )}
       {isAddingColumn && <AddNewColumnForm boardId={boardId} setIsAddingColumn={setIsAddingColumn} />}

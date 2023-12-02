@@ -51,6 +51,11 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.columns[destColumnId].taskCards = destColumnTaskCardIds
       break
     }
+    case 'cardScheduledOnCalendar': {
+      const { taskCardId } = action.payload
+      if (draft.scheduledTaskCards.indexOf(taskCardId) === -1) draft.scheduledTaskCards.push(taskCardId)
+      break
+    }
     // NO NEED
     case 'idOfCardBeingDraggedChanged': {
       draft.idOfCardBeingDragged = action.payload
