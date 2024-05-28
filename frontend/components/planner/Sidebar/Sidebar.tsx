@@ -2,11 +2,10 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { BoardInfoType } from '@/hooks/Planner/types'
+import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
 import { AddNewBoardForm } from './AddNewBoardForm'
-import { EventCalendar } from './EventCalendar'
-import { LiveDate } from './LiveDate'
 import { ManageBoardsButton } from './ManageBoardsButton'
 
 type BoardButtonProps = {
@@ -16,12 +15,16 @@ type BoardButtonProps = {
 const BoardButton = ({ board }: BoardButtonProps) => {
   const { selectedBoard } = usePlanner()
   const dispatch = usePlannerDispatch()
+  const filtersDispatch = usePlannerFiltersDispatch()
   const isCurrentlySelectedBoard = selectedBoard === board.id
   return (
     <Button
       variant={isCurrentlySelectedBoard ? 'secondary' : 'ghost'}
       className={`w-full justify-start ${isCurrentlySelectedBoard ? 'border-l-4 border-green-500' : ''}`}
-      onClick={() => dispatch({ type: 'selectedBoardChanged', payload: { boardId: board.id } })}
+      onClick={() => {
+        dispatch({ type: 'selectedBoardChanged', payload: { boardId: board.id } })
+        filtersDispatch({ type: 'filtersReset' })
+      }}
     >
       {board.name}
     </Button>
@@ -33,12 +36,12 @@ export const Sidebar = () => {
   const { boardOrder, boards } = usePlanner()
 
   return (
-    <div className='flex flex-col gap-8 items-start w-80'>
-      <div className='flex flex-col gap-2 items-start justify-center'>
+    <div className='flex flex-col w-2/12 gap-8 items-start'>
+      {/* <div className='flex flex-col gap-2 items-start justify-center'>
         <LiveDate />
         <EventCalendar />
-      </div>
-      <div className='flex flex-col w-full mr-12 gap-2 '>
+      </div> */}
+      <div className='flex flex-col w-full gap-2'>
         <span className='mb-4 text-xl font-bold'>Boards</span>
         {boardOrder.map((boardId, i) => (
           <BoardButton key={i} board={boards[boardId]} />

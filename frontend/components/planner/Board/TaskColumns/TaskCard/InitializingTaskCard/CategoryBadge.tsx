@@ -31,6 +31,7 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Badge className={getCategoryBadgeClassNames(categories[selectedCategory].color)}>{selectedCategory}</Badge>
+        {/* <Badge className={getCategoryBadgeClassNames(categories[selectedCategory].color)}>{selectedCategory}</Badge> */}
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
         {allCategoryNames.map((categoryName, index) => (

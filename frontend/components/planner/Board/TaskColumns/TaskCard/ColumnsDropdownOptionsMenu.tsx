@@ -4,6 +4,7 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useErrorBoundary } from 'react-error-boundary'
 import { FiTrash2 } from 'react-icons/fi'
 import { SlOptionsVertical } from 'react-icons/sl'
+import { COLUMN_ACTION_ICON_COLOR } from '../ColumnHeader'
 
 type ColumnsDropdownOptionsMenuProps = {
   boardId: string
@@ -18,7 +19,7 @@ export const ColumnsDropdownOptionsMenu = ({ boardId, columnId }: ColumnsDropdow
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <SlOptionsVertical />
+        <SlOptionsVertical className={`${COLUMN_ACTION_ICON_COLOR}`} />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem

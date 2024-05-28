@@ -60,9 +60,9 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   return (
     <TaskCardWrapper index={index} columnId={columnId} taskCardId={taskCardId}>
       <Card
-        className={`border-2 border-stone-300 ${
-          idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''
-        } ${task.checked ? 'opacity-50' : ''}`}
+        className={`${idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''} ${
+          task.checked ? 'opacity-50' : ''
+        }`}
       >
         <CardHeader className='p-4'>
           <div className='flex flex-col items-start justify-between'>
@@ -90,7 +90,6 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
             <DueDateIndicator />
           </div>
           <CategoryBadge taskCardId={taskCardId} />
-          {/* <BoardNameIndicator boardId={boardId} /> */}
         </CardFooter>
       </Card>
     </TaskCardWrapper>
