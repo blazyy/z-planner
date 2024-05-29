@@ -1,6 +1,7 @@
-import { DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { PickerExample } from './GradientPicker'
+import { AddNewCategoryButton } from './AddNewCategoryButton'
+import { CategoryColorPicker } from './CategoryColorPicker'
 
 export const ManageCategoriesDialog = () => {
   const { categories } = usePlanner()
@@ -12,17 +13,15 @@ export const ManageCategoriesDialog = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Manage Categories</DialogTitle>
-          {/* <DialogDescription>
-            This action cannot be undone. This will permanently delete your account and remove your data from our
-            servers.
-          </DialogDescription> */}
+          <DialogDescription>You can add a maximum of 10 categories to your planner.</DialogDescription>
         </DialogHeader>
         {Object.keys(categories).map((category) => (
           <div className='flex items-center' key={category}>
             <p className='text-sm w-48'>{category}</p>
-            <PickerExample />
+            <CategoryColorPicker category={category} />
           </div>
         ))}
+        <AddNewCategoryButton />
       </DialogContent>
     </>
   )
