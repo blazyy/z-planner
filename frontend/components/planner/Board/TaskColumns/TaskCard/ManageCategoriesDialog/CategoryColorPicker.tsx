@@ -1,29 +1,10 @@
+import { changeCategoryColor } from '@/app/utils/plannerUtils/changeCategoryColor'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
-import { useState } from 'react'
-
-const availableColors = [
-  'slate',
-  'stone',
-  'red',
-  'orange',
-  'yellow',
-  'lime',
-  'green',
-  'emerald',
-  'teal',
-  'cyan',
-  'sky',
-  'blue',
-  'indigo',
-  'violet',
-  'purple',
-  'fuchsia',
-  'pink',
-  'rose',
-]
+import { useErrorBoundary } from 'react-error-boundary'
+import { availableColors, BADGE_COLOR_POWER } from '../utils'
 
 export const getTailwindClassName = (color: string, power: number) => `bg-${color}-${power}`
 
@@ -33,10 +14,12 @@ export const getCapitalizedColorName = (color: string) => {
 }
 
 export const CategoryColorPicker = ({ category }: { category: string }) => {
+  const dispatch = usePlannerDispatch()
+  const { showBoundary } = useErrorBoundary()
+
   const { categories } = usePlanner()
   const baseColor = categories[category].color
-  const tailwindColorClassName = getTailwindClassName(baseColor, 500)
-  const [colorClassName, setColorClass] = useState(tailwindColorClassName)
+  const tailwindColorClassName = getTailwindClassName(baseColor, BADGE_COLOR_POWER)
   const cannotChangeColor = category === 'Unassigned'
 
   return (
@@ -48,20 +31,20 @@ export const CategoryColorPicker = ({ category }: { category: string }) => {
           disabled={cannotChangeColor}
         >
           <div className='w-full flex items-center gap-2'>
-            <div className={cn('h-4 w-4 rounded !bg-center !bg-cover transition-all', colorClassName)}></div>
-            <div className=''>{getCapitalizedColorName(colorClassName)}</div>
+            <div className={cn('h-4 w-4 rounded !bg-center !bg-cover transition-all', tailwindColorClassName)}></div>
+            <div className=''>{getCapitalizedColorName(tailwindColorClassName)}</div>
           </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-128'>
         <div className='flex gap-1'>
           {availableColors.map((color) => {
-            const className = getTailwindClassName(color, 500)
+            const className = getTailwindClassName(color, BADGE_COLOR_POWER)
             return (
               <div
                 key={color}
                 className={cn('rounded-md h-6 w-6 cursor-pointer', className)}
-                onClick={() => setColorClass(className)}
+                onClick={() => changeCategoryColor(category, color, dispatch, showBoundary)}
               />
             )
           })}
