@@ -13,7 +13,7 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { Settings } from 'lucide-react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { ManageCategoriesDialog } from './ManageCategoriesDialog/ManageCategoriesDialog'
-import { getCategoryBadgeClassNames } from './utils'
+import { badgeClassNames } from './utils'
 
 type CategoryBadgeProps = {
   taskCardId: string
@@ -29,9 +29,7 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Badge className={getCategoryBadgeClassNames(categories[selectedCategoryName].color)}>
-            {selectedCategoryName}
-          </Badge>
+          <Badge className={badgeClassNames[categories[selectedCategoryName].color]}>{selectedCategoryName}</Badge>
         </DropdownMenuTrigger>
         <DropdownMenuContent className='w-56'>
           {allCategoryNames.map((categoryName, index) => (
@@ -43,7 +41,7 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
                 changeCardCategory(taskCardId, categoryName, dispatch, showBoundary)
               }}
             >
-              <Badge className={getCategoryBadgeClassNames(categories[categoryName].color)}>{categoryName}</Badge>
+              <Badge className={badgeClassNames[categories[categoryName].color]}>{categoryName}</Badge>
             </DropdownMenuCheckboxItem>
           ))}
           <DropdownMenuSeparator />

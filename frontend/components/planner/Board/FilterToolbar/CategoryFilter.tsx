@@ -8,7 +8,7 @@ import { usePlanner } from '@/hooks/Planner/Planner'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFilters, usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { FiPlusCircle } from 'react-icons/fi'
-import { getCategoryBadgeClassNames } from '../TaskColumns/TaskCard/utils'
+import { badgeClassNames } from '../TaskColumns/TaskCard/utils'
 
 const getTaskCardBelongingToCategoryCount = (taskCards: TaskCardInfoType[], category: string) =>
   taskCards.filter((taskCard) => taskCard.category === category).length
@@ -34,10 +34,7 @@ export const CategoryFilter = () => {
               <>
                 <Separator orientation='vertical' className='mx-2 h-4' />
                 {selectedCategories.map((category, i) => (
-                  <Badge
-                    key={`filterbadge-${i}`}
-                    className={getCategoryBadgeClassNames(allCategories[category].color, false)}
-                  >
+                  <Badge key={`filterbadge-${i}`} className={badgeClassNames[allCategories[category].color]}>
                     {category}
                   </Badge>
 

@@ -11,7 +11,7 @@ import {
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { Plus } from 'lucide-react'
 import { Dispatch, SetStateAction } from 'react'
-import { getCategoryBadgeClassNames } from '../utils'
+import { badgeClassNames } from '../utils'
 
 export type TaskCategoryType = {
   [name: string]: {
@@ -30,8 +30,7 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Badge className={getCategoryBadgeClassNames(categories[selectedCategory].color)}>{selectedCategory}</Badge>
-        {/* <Badge className={getCategoryBadgeClassNames(categories[selectedCategory].color)}>{selectedCategory}</Badge> */}
+        <Badge className={badgeClassNames[categories[selectedCategory].color]}>{selectedCategory}</Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
         {allCategoryNames.map((categoryName, index) => (
@@ -43,7 +42,7 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
               setSelectedCategory(categoryName)
             }}
           >
-            <Badge className={getCategoryBadgeClassNames(categories[categoryName].color)}>{categoryName}</Badge>
+            <Badge className={badgeClassNames[categories[categoryName].color]}>{categoryName}</Badge>
           </DropdownMenuCheckboxItem>
         ))}
         <DropdownMenuSeparator />
