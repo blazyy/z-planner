@@ -21,7 +21,7 @@ const BoardButton = ({ board }: BoardButtonProps) => {
   return (
     <Button
       variant={isCurrentlySelectedBoard ? 'secondary' : 'ghost'}
-      className={`w-full justify-start ${isCurrentlySelectedBoard ? 'border-l-4 border-green-500' : ''}`}
+      className={`${isCurrentlySelectedBoard ? 'border-l-4 border-green-500' : ''}`}
       onClick={() => {
         dispatch({ type: 'selectedBoardChanged', payload: { boardId: board.id } })
         filtersDispatch({ type: 'filtersReset' })

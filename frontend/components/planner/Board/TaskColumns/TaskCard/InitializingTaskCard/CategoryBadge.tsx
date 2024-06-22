@@ -3,13 +3,9 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { Plus } from 'lucide-react'
 import { Dispatch, SetStateAction } from 'react'
 import { badgeClassNames } from '../utils'
 
@@ -45,16 +41,6 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
             <Badge className={badgeClassNames[categories[categoryName].color]}>{categoryName}</Badge>
           </DropdownMenuCheckboxItem>
         ))}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={(event) => {
-            event.preventDefault()
-          }}
-        >
-          <Plus className='mr-2 h-4 w-4' />
-          <span>New Category</span>
-          <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

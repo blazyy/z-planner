@@ -1,18 +1,16 @@
-import { changeCategoryColor } from '@/app/utils/plannerUtils/changeCategoryColor'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
-import { useErrorBoundary } from 'react-error-boundary'
+import { Dispatch, SetStateAction } from 'react'
 import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
 import { getCapitalizedColorName } from './CategoryColorPickers'
 
-export const ExistingCategoryColorPicker = ({ category }: { category: string }) => {
-  const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
-  const { categories } = usePlanner()
-  const categoryColor = categories[category].color
+type ExistingCategoryColorPickerProps = {
+  categoryColor: string
+  setCategoryColor: Dispatch<SetStateAction<string>>
+}
 
+export const ExistingCategoryColorPicker = ({ categoryColor, setCategoryColor }: ExistingCategoryColorPickerProps) => {
   return (
     <Popover modal={true}>
       <PopoverTrigger>
@@ -33,7 +31,7 @@ export const ExistingCategoryColorPicker = ({ category }: { category: string }) 
               <div
                 key={color}
                 className={cn('rounded-md h-6 w-6 cursor-pointer', className)}
-                onClick={() => changeCategoryColor(category, color, dispatch, showBoundary)}
+                onClick={() => setCategoryColor(color)}
               />
             )
           })}
