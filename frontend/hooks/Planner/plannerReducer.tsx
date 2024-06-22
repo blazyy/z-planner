@@ -8,8 +8,19 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       return action.payload
     }
     // DONE
+    case 'isManagingBoard': {
+      draft.currentView = 'board'
+      break
+    }
+    // DONE
+    case 'isManagingCategories': {
+      draft.currentView = 'manageCategories'
+      break
+    }
+    // DONE
     case 'selectedBoardChanged': {
       draft.selectedBoard = action.payload.boardId
+      draft.currentView = 'board'
       break
     }
     case 'newBoardAdded': {

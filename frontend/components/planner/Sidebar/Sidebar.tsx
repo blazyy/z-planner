@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
 import { AddNewBoardForm } from './AddNewBoardForm'
 import { ManageBoardsButton } from './ManageBoardsButton'
+import { ManageCategoriesButton } from './ManageCategoriesButton'
 
 type BoardButtonProps = {
   board: BoardInfoType
@@ -26,7 +27,9 @@ const BoardButton = ({ board }: BoardButtonProps) => {
         filtersDispatch({ type: 'filtersReset' })
       }}
     >
-      {board.name}
+      <div className='flex justify-between gap-2 w-full'>
+        <div className='flex'>{board.name}</div>
+      </div>
     </Button>
   )
 }
@@ -36,25 +39,26 @@ export const Sidebar = () => {
   const { boardOrder, boards } = usePlanner()
 
   return (
-    <div className='flex flex-col w-2/12 gap-8 items-start'>
-      {/* <div className='flex flex-col gap-2 items-start justify-center'>
+    <div className='flex flex-col items-start gap-8 w-2/12'>
+      {/* <div className='flex flex-col justify-center items-start gap-2'>
         <LiveDate />
         <EventCalendar />
       </div> */}
-      <div className='flex flex-col w-full gap-2'>
-        <span className='mb-4 text-xl font-bold'>Boards</span>
+      <div className='flex flex-col gap-2 w-full'>
+        <span className='mb-4 font-bold text-xl'>Boards</span>
         {boardOrder.map((boardId, i) => (
           <BoardButton key={i} board={boards[boardId]} />
         ))}
         {addingNewBoard && <AddNewBoardForm setAddingNewBoard={setAddingNewBoard} />}
         <Separator />
-        <Button variant='ghost' className='w-full justify-start' onClick={() => setAddingNewBoard(true)}>
-          <div className='flex gap-2 items-center'>
-            <HiOutlinePlus className='h-5 w-5' />
+        <Button variant='ghost' className='justify-start w-full' onClick={() => setAddingNewBoard(true)}>
+          <div className='flex items-center gap-2'>
+            <HiOutlinePlus className='w-5 h-5' />
             Add New Board
           </div>
         </Button>
         {boardOrder.length > 0 && <ManageBoardsButton />}
+        <ManageCategoriesButton />
       </div>
     </div>
   )

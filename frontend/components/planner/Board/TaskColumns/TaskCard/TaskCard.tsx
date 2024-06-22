@@ -4,10 +4,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { cn } from '@/lib/utils'
 import { Draggable } from '@hello-pangea/dnd'
 import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from './CategoryBadge'
-import { DueDateIndicator } from './DueDateIndicator'
 import { ProgressBar } from './ProgressBar'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
@@ -32,7 +32,6 @@ const TaskCardWrapper = ({ index, columnId, taskCardId, children }: TaskCardWrap
       {(provided) => (
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1 w-full'>
           <Dialog>
-            <TaskCardDialog id={taskCardId} />
             <ContextMenu>
               <TaskCardContextMenu columnId={columnId} taskCardId={taskCardId} />
               <ContextMenuTrigger>
@@ -40,6 +39,7 @@ const TaskCardWrapper = ({ index, columnId, taskCardId, children }: TaskCardWrap
                 <DialogTrigger asChild>{children}</DialogTrigger>
               </ContextMenuTrigger>
             </ContextMenu>
+            <TaskCardDialog id={taskCardId} />
           </Dialog>
         </div>
       )}
@@ -60,12 +60,13 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
   return (
     <TaskCardWrapper index={index} columnId={columnId} taskCardId={taskCardId}>
       <Card
-        className={`${idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : ''} ${
+        className={cn(
+          idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : '',
           task.checked ? 'opacity-50' : ''
-        }`}
+        )}
       >
         <CardHeader className='p-4'>
-          <div className='flex flex-col items-start justify-between'>
+          <div className='flex flex-col justify-between items-start'>
             <CardTitle className='text-xl'>{task.title}</CardTitle>
           </div>
           {/* <CardDescription>{task.content}</CardDescription> */}
@@ -79,7 +80,7 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
         <CardFooter className='flex justify-between px-4 pb-4'>
           <div className='flex items-center gap-2'>
             <Checkbox
-              className='h-5 w-5'
+              className='w-5 h-5'
               checked={task.checked}
               onClick={(event) => {
                 event.preventDefault() // Needed to prevent dialog from triggering
@@ -87,7 +88,6 @@ export const TaskCard = ({ index, columnId, taskCardId }: TaskCardProps) => {
                 changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
               }}
             />
-            <DueDateIndicator />
           </div>
           <CategoryBadge taskCardId={taskCardId} />
         </CardFooter>

@@ -55,6 +55,8 @@ export type BoardsType = {
   [boardId: string]: BoardInfoType
 }
 
+export type ManagingViewType = 'board' | 'manageCategories'
+
 // isSubTaskBeingDragged - Used to hide/show drag handles on subtasks on a TaskCard Dialog. Handles should only be shown when
 // hovered over (and not actively dragging a subtask), or, when actively dragging a subtask. The only
 // way to handle this is using onDragStart and onDragEnd handlers, which are only available on the
@@ -74,6 +76,7 @@ export type BoardsType = {
 
 export type PlannerType = {
   hasLoaded: boolean
+  currentView: ManagingViewType
   selectedBoard: string
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string

@@ -1,18 +1,13 @@
 import changeCardCategory from '@/app/utils/plannerUtils/cardUtils/changeCardCategory'
 import { Badge } from '@/components/ui/badge'
-import { Dialog } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { Settings } from 'lucide-react'
 import { useErrorBoundary } from 'react-error-boundary'
-import { ManageCategoriesDialog } from './ManageCategoriesDialog/ManageCategoriesDialog'
 import { badgeClassNames } from './utils'
 
 type CategoryBadgeProps = {
@@ -26,35 +21,24 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
   const selectedCategoryName = taskCards[taskCardId].category
   const allCategoryNames = Object.keys(categories).sort()
   return (
-    <Dialog>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Badge className={badgeClassNames[categories[selectedCategoryName].color]}>{selectedCategoryName}</Badge>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className='w-56'>
-          {allCategoryNames.map((categoryName, index) => (
-            <DropdownMenuCheckboxItem
-              key={index}
-              checked={selectedCategoryName === categoryName}
-              onClick={(event) => {
-                event.preventDefault()
-                changeCardCategory(taskCardId, categoryName, dispatch, showBoundary)
-              }}
-            >
-              <Badge className={badgeClassNames[categories[categoryName].color]}>{categoryName}</Badge>
-            </DropdownMenuCheckboxItem>
-          ))}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={(event): void => {
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Badge className={badgeClassNames[categories[selectedCategoryName].color]}>{selectedCategoryName}</Badge>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className='w-56'>
+        {allCategoryNames.map((categoryName, index) => (
+          <DropdownMenuCheckboxItem
+            key={index}
+            checked={selectedCategoryName === categoryName}
+            onClick={(event) => {
               event.preventDefault()
+              changeCardCategory(taskCardId, categoryName, dispatch, showBoundary)
             }}
           >
-            <Settings className='mr-2 h-4 w-4' />
-            <ManageCategoriesDialog />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </Dialog>
+            <Badge className={badgeClassNames[categories[categoryName].color]}>{categoryName}</Badge>
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

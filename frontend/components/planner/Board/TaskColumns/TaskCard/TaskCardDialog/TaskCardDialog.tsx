@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from '../CategoryBadge'
-import { DueDateIndicator } from '../DueDateIndicator'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
 type TaskCardDialogProps = {
@@ -22,17 +21,16 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
   const task = taskCards[id]
   return (
     <DialogContent className='p-0'>
-      <Card className='border-2 border-gray-400 p-2'>
-        <CardHeader className='pb-0 pl-7 gap-2'>
+      <Card className='p-2'>
+        <CardHeader className='gap-2 pb-0 pl-7'>
           <div className='flex gap-2'>
             <CategoryBadge taskCardId={id} />
-            <DueDateIndicator />
           </div>
           <CardTitle>
             <div className='flex flex-col gap-4'>
               <div className='flex items-center gap-2'>
                 <Checkbox
-                  className='h-5 w-5'
+                  className='w-5 h-5'
                   checked={task.checked}
                   onCheckedChange={(isChecked) =>
                     changeCardCheckedStatus(id, Boolean(isChecked), dispatch, showBoundary)
@@ -40,7 +38,7 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
                 />
                 <Textarea
                   value={task.title}
-                  className='h-[35px] border-none p-0 items-center text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+                  className='items-center p-0 border-none h-[35px] text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
                   onChange={(event) => changeCardTitle(id, event.target.value, dispatch, showBoundary)}
                 />
               </div>
@@ -53,7 +51,7 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
             <Textarea
               placeholder='Notes...'
               value={task.content}
-              className='m-1 bg-neutral-200 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+              className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
               onChange={(event) => changeCardContent(id, event.target.value, dispatch, showBoundary)}
             />
           </CardDescription>
