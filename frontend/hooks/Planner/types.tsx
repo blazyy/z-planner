@@ -28,16 +28,19 @@ export type TaskCardBeingInitializedType = {
 }
 
 export type TaskCategoryType = {
-  [id: string]: {
-    name: string
-    color: string
-  }
+  id: string
+  name: string
+  color: string
 }
 
 export type BoardInfoType = {
   id: string
   name: string
   columns: string[]
+}
+
+export type CategoriesType = {
+  [id: string]: TaskCategoryType
 }
 
 export type TaskCardsType = {
@@ -87,7 +90,7 @@ export type PlannerType = {
   boardOrder: string[]
   boards: BoardsType
   columns: ColumnsType
-  categories: TaskCategoryType
+  categories: CategoriesType
   taskCards: TaskCardsType
   subTasks: SubTasksType
 }

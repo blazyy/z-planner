@@ -3,23 +3,22 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils'
 import { Dispatch, SetStateAction } from 'react'
 import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
-import { getCapitalizedColorName } from './CategoryColorPickers'
 
-type ExistingCategoryColorPickerProps = {
-  categoryColor: string
-  setCategoryColor: Dispatch<SetStateAction<string>>
+export const getCapitalizedColorName = (color: string) => color.charAt(0).toUpperCase() + color.slice(1)
+
+type CategoryColorPickerProps = {
+  color: string
+  setColor: Dispatch<SetStateAction<string>>
 }
 
-export const ExistingCategoryColorPicker = ({ categoryColor, setCategoryColor }: ExistingCategoryColorPickerProps) => {
+export const CategoryColorPicker = ({ color, setColor }: CategoryColorPickerProps) => {
   return (
     <Popover modal={true}>
       <PopoverTrigger>
         <Button variant='outline' className='justify-start w-[220px] font-normal text-left'>
           <div className='flex items-center gap-2 w-full'>
-            <div
-              className={cn('h-4 w-4 rounded !bg-center !bg-cover transition-all', badgeClassNames[categoryColor])}
-            ></div>
-            <div>{getCapitalizedColorName(categoryColor)}</div>
+            <div className={cn('h-4 w-4 rounded !bg-center !bg-cover transition-all', badgeClassNames[color])}></div>
+            <div>{getCapitalizedColorName(color)}</div>
           </div>
         </Button>
       </PopoverTrigger>
@@ -31,7 +30,7 @@ export const ExistingCategoryColorPicker = ({ categoryColor, setCategoryColor }:
               <div
                 key={color}
                 className={cn('rounded-md h-6 w-6 cursor-pointer', className)}
-                onClick={() => setCategoryColor(color)}
+                onClick={() => setColor(color)}
               />
             )
           })}

@@ -1,21 +1,20 @@
-import { changeCategoryInfo } from '@/app/utils/plannerUtils/changeCategoryInfo'
+import { addNewCategory } from '@/app/utils/plannerUtils/addNewCategory'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
 import { CategoryColorPicker } from './CategoryColorPicker'
 
-type ModifyCategoryDialogContentProps = {
-  categoryId: string
+type AddNewCategoryDialogContentProps = {
   closeDialog: () => void
-  setCategoryBeingModified: Dispatch<SetStateAction<string>>
 }
 
 const formSchema = z.object({
@@ -24,12 +23,13 @@ const formSchema = z.object({
   }),
 })
 
-export const ModifyCategoryDialogContent = ({
-  categoryId,
-  closeDialog,
-  setCategoryBeingModified,
-}: ModifyCategoryDialogContentProps) => {
-  const { categories } = usePlanner()
+function getRandomBadgeClassName() {
+  const keys = Object.keys(badgeClassNames)
+  const randomIndex = Math.floor(Math.random() * keys.length)
+  return keys[randomIndex]
+}
+
+export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialogContentProps) => {
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
 
@@ -37,21 +37,26 @@ export const ModifyCategoryDialogContent = ({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      categoryName: categories[categoryId].name,
+      categoryName: '',
     },
   })
 
-  const [categoryColor, setCategoryColor] = useState(categories[categoryId].color)
+  const [categoryColor, setCategoryColor] = useState(getRandomBadgeClassName)
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    setCategoryBeingModified('') // Used to reset the category being modified because once onSubmit is called, the category no longer exists
-    changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, showBoundary)
+    const newCategoryDetails = {
+      id: crypto.randomUUID(),
+      name: values.categoryName,
+      color: categoryColor,
+    }
+    addNewCategory(newCategoryDetails, dispatch, showBoundary)
+    closeDialog()
   }
 
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle className='mb-5'>Modify Category</DialogTitle>
+        <DialogTitle className='mb-5'>Add New Category</DialogTitle>
         <DialogDescription>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
