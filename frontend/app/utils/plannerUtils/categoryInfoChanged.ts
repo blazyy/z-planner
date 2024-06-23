@@ -3,7 +3,7 @@ import { Dispatch } from 'react'
 import { ErrorBoundaryType } from './types'
 
 export const categoryInfoChanged = async (
-  category: string,
+  categoryId: string,
   newName: string,
   newColor: string,
   dispatch: Dispatch<any>,
@@ -12,14 +12,14 @@ export const categoryInfoChanged = async (
   dispatch({
     type: 'categoryInfoChanged',
     payload: {
-      category,
+      categoryId,
       newName,
       newColor,
     },
   })
 
   axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/categories/${category}`, {
+    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/categories/${categoryId}`, {
       newName,
       newColor,
     })

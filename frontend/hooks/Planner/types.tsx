@@ -28,7 +28,8 @@ export type TaskCardBeingInitializedType = {
 }
 
 export type TaskCategoryType = {
-  [name: string]: {
+  [id: string]: {
+    name: string
     color: string
   }
 }

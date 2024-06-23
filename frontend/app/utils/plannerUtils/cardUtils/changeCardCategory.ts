@@ -4,7 +4,7 @@ import { ErrorBoundaryType } from '../types'
 
 export default async function changeCardCategory(
   taskCardId: string,
-  newCategory: string,
+  newCategoryId: string,
   dispatch: Dispatch<any>,
   showErrorBoundary: ErrorBoundaryType
 ) {
@@ -12,12 +12,12 @@ export default async function changeCardCategory(
     type: 'taskCategoryChanged',
     payload: {
       taskCardId,
-      newCategory,
+      newCategoryId,
     },
   })
   axios
     .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/category`, {
-      newCategory,
+      newCategoryId,
     })
     .catch((error) => showErrorBoundary(error))
 }

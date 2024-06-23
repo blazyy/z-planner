@@ -13,7 +13,7 @@ import { z } from 'zod'
 import { ExistingCategoryColorPicker } from './ExistingCategoryColorPicker'
 
 type ModifyCategoryDialogContentProps = {
-  category: string
+  categoryId: string
   closeDialog: () => void
   setCategoryBeingModified: Dispatch<SetStateAction<string>>
 }
@@ -25,7 +25,7 @@ const formSchema = z.object({
 })
 
 export const ModifyCategoryDialogContent = ({
-  category,
+  categoryId,
   closeDialog,
   setCategoryBeingModified,
 }: ModifyCategoryDialogContentProps) => {
@@ -37,17 +37,17 @@ export const ModifyCategoryDialogContent = ({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      categoryName: category,
+      categoryName: categories[categoryId].name,
     },
   })
 
-  const [categoryColor, setCategoryColor] = useState(categories[category].color)
+  const [categoryColor, setCategoryColor] = useState(categories[categoryId].color)
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     // addNewColumn(boards[boardId], values.columnName, dispatch, showBoundary)
     // setIsAddingCategory(false)
     setCategoryBeingModified('') // Used to reset the category being modified because once onSubmit is called, the category no longer exists
-    categoryInfoChanged(category, values.categoryName, categoryColor, dispatch, showBoundary)
+    categoryInfoChanged(categoryId, values.categoryName, categoryColor, dispatch, showBoundary)
   }
 
   return (

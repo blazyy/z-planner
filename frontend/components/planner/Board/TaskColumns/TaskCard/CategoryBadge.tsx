@@ -18,24 +18,29 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
   const dispatch = usePlannerDispatch()!
   const { taskCards, categories } = usePlanner()
   const { showBoundary } = useErrorBoundary()
-  const selectedCategoryName = taskCards[taskCardId].category
-  const allCategoryNames = Object.keys(categories).sort()
+
+  const categoryInfo = categories[taskCards[taskCardId].category]
+
+  const sortedIds = Object.entries(categories)
+    .sort(([, a], [, b]) => a.name.localeCompare(b.name))
+    .map(([id]) => id)
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Badge className={badgeClassNames[categories[selectedCategoryName].color]}>{selectedCategoryName}</Badge>
+        <Badge className={badgeClassNames[categoryInfo.color]}>{categoryInfo.name}</Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
-        {allCategoryNames.map((categoryName, index) => (
+        {sortedIds.map((categoryId, index) => (
           <DropdownMenuCheckboxItem
             key={index}
-            checked={selectedCategoryName === categoryName}
+            checked={categoryInfo.name === categories[categoryId].name}
             onClick={(event) => {
               event.preventDefault()
-              changeCardCategory(taskCardId, categoryName, dispatch, showBoundary)
+              changeCardCategory(taskCardId, categoryId, dispatch, showBoundary) // TODO
             }}
           >
-            <Badge className={badgeClassNames[categories[categoryName].color]}>{categoryName}</Badge>
+            <Badge className={badgeClassNames[categories[categoryId].color]}>{categories[categoryId].name}</Badge>
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>
