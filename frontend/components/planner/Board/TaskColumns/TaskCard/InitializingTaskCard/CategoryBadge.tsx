@@ -26,7 +26,9 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Badge className={badgeClassNames[categories[selectedCategory].color]}>{selectedCategory}</Badge>
+        <Badge className={badgeClassNames[categories[selectedCategory].color]}>
+          {categories[selectedCategory].name}
+        </Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
         {allCategoryNames.map((categoryName, index) => (
@@ -38,7 +40,7 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
               setSelectedCategory(categoryName)
             }}
           >
-            <Badge className={badgeClassNames[categories[categoryName].color]}>{categoryName}</Badge>
+            <Badge className={badgeClassNames[categories[categoryName].color]}>{categories[categoryName].name}</Badge>
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

@@ -28,7 +28,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const { columns, taskCardBeingInitialized } = usePlanner()
-  const [selectedCategory, setSelectedCategory] = useState('Unassigned')
+  const [selectedCategory, setSelectedCategory] = useState('unassigned')
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -97,7 +97,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
           </CardHeader>
           <CardFooter className='flex justify-between'>
             <div className='flex gap-2'>
-              <Button type='submit' size='sm'>
+              <Button type='submit' size='sm' disabled={!form.formState.isValid}>
                 Add
               </Button>
               <CancelButton isFormEmpty={isFormEmpty} />
