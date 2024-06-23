@@ -83,7 +83,7 @@ export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialo
             <Button size='sm' variant='secondary' onClick={closeDialog}>
               Cancel
             </Button>
-            <Button size='sm' onClick={() => onSubmit(form.getValues())}>
+            <Button size='sm' onClick={() => onSubmit(form.getValues())} disabled={!form.formState.isValid}>
               Save
             </Button>
           </div>

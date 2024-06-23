@@ -27,7 +27,7 @@ export const CategoryFilter = () => {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant='outline' className='border-dashed'>
-          <div className='flex gap-2 items-center'>
+          <div className='flex items-center gap-2'>
             <FiPlusCircle className='w-4 h-4' />
             <span>Category</span>
             {selectedCategories.length > 0 && (
@@ -38,7 +38,7 @@ export const CategoryFilter = () => {
                     {category}
                   </Badge>
 
-                  // <Badge variant='secondary' className='rounded-sm px-1 font-normal' key={`filterbadge-${i}`}>
+                  // <Badge variant='secondary' className='px-1 rounded-sm font-normal' key={`filterbadge-${i}`}>
                   //   {category}
                   // </Badge>
                 ))}
@@ -56,14 +56,14 @@ export const CategoryFilter = () => {
               {Object.keys(allCategories).map((category, i) => (
                 <CommandItem key={`commanditem-${i}`}>
                   <div
-                    className='flex gap-2 items-center justify-between w-full'
+                    className='flex justify-between items-center gap-2 w-full'
                     onClick={() =>
                       dispatch({ type: 'selectedCategoriesChanged', payload: { clickedCategory: category } })
                     }
                   >
                     <Checkbox checked={selectedCategories.indexOf(category) !== -1} id='terms' />
                     <span>{category}</span>
-                    <span className='ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs'>
+                    <span className='flex justify-center items-center ml-auto w-4 h-4 font-mono text-xs'>
                       {getTaskCardBelongingToCategoryCount(allTaskCardsUnderAllColumns, category)}
                     </span>
                   </div>
