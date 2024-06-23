@@ -1,9 +1,9 @@
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
 // import { ProtectedRoute } from '../global/ProtectedRoute'
 import { PlannerFiltersProvider } from '@/hooks/PlannerFilters/PlannerFilters'
 import { DragDropContext } from '@hello-pangea/dnd'
 import { useErrorBoundary } from 'react-error-boundary'
+import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
 import { AddBoardCallout } from './AddBoardCallout'
 import { Board } from './Board/Board'
 import { ManagingView } from './Board/ManagingView/ManagingView'
@@ -16,7 +16,7 @@ export const Planner = () => {
   const { showBoundary } = useErrorBoundary()
   const { currentView } = usePlanner()
   return (
-    <main className='flex flex-col justify-start mt-32 w-full min-h-screen'>
+    <main className='flex flex-col justify-center items-center w-full min-h-screen'>
       {!plannerContext.hasLoaded && <LoadingSpinner />}
       {plannerContext.hasLoaded && plannerContext.boardOrder.length === 0 && <AddBoardCallout />}
       {plannerContext.hasLoaded && plannerContext.boardOrder.length > 0 && (
@@ -26,7 +26,7 @@ export const Planner = () => {
             handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
           }
         >
-          <div className='flex justify-between gap-2 w-full h-full'>
+          <div className='flex justify-between gap-2 mt-32 w-full h-full'>
             <PlannerFiltersProvider>
               <Sidebar />
               {currentView === 'board' ? <Board boardId={plannerContext.selectedBoard} /> : <ManagingView />}

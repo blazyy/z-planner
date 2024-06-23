@@ -1,4 +1,4 @@
-import { changeCategoryInfo } from '@/app/utils/plannerUtils/changeCategoryInfo'
+import { changeCategoryInfo } from '@/app/utils/plannerUtils/categoryUtils/changeCategoryInfo'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -11,6 +11,7 @@ import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { CategoryColorPicker } from './CategoryColorPicker'
+import { DeleteCategoryConfirmDialog } from './DeleteCategoryConfirmDialog'
 
 type ModifyCategoryDialogContentProps = {
   categoryId: string
@@ -74,13 +75,20 @@ export const ModifyCategoryDialogContent = ({
             <Label htmlFor='categoryColor'>Color</Label>
             <CategoryColorPicker color={categoryColor} setColor={setCategoryColor} />
           </div>
-          <div className='flex justify-end gap-1'>
-            <Button size='sm' variant='secondary' onClick={closeDialog}>
-              Cancel
-            </Button>
-            <Button size='sm' onClick={() => onSubmit(form.getValues())}>
-              Save
-            </Button>
+          <div className='flex justify-between mt-5'>
+            <DeleteCategoryConfirmDialog
+              categoryId={categoryId}
+              closeDialog={closeDialog}
+              setCategoryBeingModified={setCategoryBeingModified}
+            />
+            <span className='flex gap-1'>
+              <Button size='sm' variant='secondary' onClick={closeDialog}>
+                Cancel
+              </Button>
+              <Button size='sm' onClick={() => onSubmit(form.getValues())}>
+                Save
+              </Button>
+            </span>
           </div>
         </DialogDescription>
       </DialogHeader>

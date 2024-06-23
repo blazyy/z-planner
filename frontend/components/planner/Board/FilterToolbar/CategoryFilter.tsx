@@ -37,10 +37,6 @@ export const CategoryFilter = () => {
                   <Badge key={`filterbadge-${i}`} className={badgeClassNames[allCategories[category].color]}>
                     {category}
                   </Badge>
-
-                  // <Badge variant='secondary' className='px-1 rounded-sm font-normal' key={`filterbadge-${i}`}>
-                  //   {category}
-                  // </Badge>
                 ))}
               </>
             )}

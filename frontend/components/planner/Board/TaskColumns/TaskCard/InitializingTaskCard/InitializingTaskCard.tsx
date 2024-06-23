@@ -4,6 +4,7 @@ import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -28,7 +29,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const { columns, taskCardBeingInitialized } = usePlanner()
-  const [selectedCategory, setSelectedCategory] = useState('unassigned')
+  const [selectedCategory, setSelectedCategory] = useState(UNASSIGNED_CATEGORY_ID)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

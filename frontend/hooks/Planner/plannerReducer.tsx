@@ -1,3 +1,4 @@
+import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { Draft, produce } from 'immer'
 import { PlannerType } from './types'
 
@@ -178,6 +179,16 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     case 'categoryInfoChanged': {
       const { categoryDetails } = action.payload
       draft.categories[categoryDetails.id] = categoryDetails
+      break
+    }
+    case 'categoryDeleted': {
+      const { categoryId } = action.payload
+      for (const taskCardId in draft.taskCards) {
+        if (draft.taskCards[taskCardId].category === categoryId) {
+          draft.taskCards[taskCardId].category = UNASSIGNED_CATEGORY_ID
+        }
+      }
+      delete draft.categories[categoryId]
       break
     }
   }

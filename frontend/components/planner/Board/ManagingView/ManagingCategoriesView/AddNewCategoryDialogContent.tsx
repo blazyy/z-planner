@@ -1,4 +1,4 @@
-import { addNewCategory } from '@/app/utils/plannerUtils/addNewCategory'
+import { addNewCategory } from '@/app/utils/plannerUtils/categoryUtils/addNewCategory'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

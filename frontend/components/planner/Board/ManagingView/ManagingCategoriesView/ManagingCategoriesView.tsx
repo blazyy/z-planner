@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
+import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
@@ -25,7 +26,7 @@ export const ManagingCategoriesView = () => {
         .sort()
         .map((id: string, i: number) => {
           const category = categories[id]
-          if (category.name !== 'Unassigned')
+          if (category.name !== UNASSIGNED_CATEGORY_NAME)
             return (
               <div key={`${category.name}-${i}`}>
                 <DialogTrigger asChild>
