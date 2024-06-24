@@ -1,3 +1,4 @@
+import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { Draft, produce } from 'immer'
 import { PlannerType } from './types'
 
@@ -7,25 +8,40 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     case 'dataFetchedFromDatabase': {
       return action.payload
     }
+    // DONE
+    case 'isManagingBoard': {
+      draft.currentView = 'board'
+      break
+    }
+    // DONE
+    case 'isManagingCategories': {
+      draft.currentView = 'manageCategories'
+      break
+    }
+    // DONE
+    case 'selectedBoardChanged': {
+      draft.selectedBoard = action.payload.boardId
+      draft.currentView = 'board'
+      break
+    }
     case 'newBoardAdded': {
-      const { boardId, boardName } = action.payload
-      draft.boardOrder.push(boardId)
-      draft.boards[boardId] = {
-        id: boardId,
-        name: boardName,
-        columns: [],
-      }
+      const { newBoardOrder, newBoardDetails } = action.payload
+      draft.boardOrder = newBoardOrder
+      draft.boards[newBoardDetails.id] = newBoardDetails
       break
     }
     // DONE
     case 'newColumnAdded': {
-      const { boardId, newColumnId, newColumnName } = action.payload
-      draft.boards[boardId].columns.push(newColumnId)
-      draft.columns[newColumnId] = {
-        id: newColumnId,
-        name: newColumnName,
-        taskCards: [],
-      }
+      const { boardId, newColumnDetails, updatedColumns } = action.payload
+      draft.boards[boardId].columns = updatedColumns
+      draft.columns[newColumnDetails.id] = newColumnDetails
+      break
+    }
+    // DONE
+    case 'columnDeleted': {
+      const { boardId, columnId } = action.payload
+      draft.boards[boardId].columns = draft.boards[boardId].columns.filter((colId: string) => colId !== columnId)
+      delete draft.columns[columnId]
       break
     }
     // DONE
@@ -45,6 +61,11 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       const { sourceColumnId, destColumnId, sourceColumnTaskCardIds, destColumnTaskCardIds } = action.payload
       draft.columns[sourceColumnId].taskCards = sourceColumnTaskCardIds
       draft.columns[destColumnId].taskCards = destColumnTaskCardIds
+      break
+    }
+    case 'cardScheduledOnCalendar': {
+      const { taskCardId } = action.payload
+      if (draft.scheduledTaskCards.indexOf(taskCardId) === -1) draft.scheduledTaskCards.push(taskCardId)
       break
     }
     // NO NEED
@@ -146,8 +167,28 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'taskCategoryChanged': {
-      const { taskCardId, newCategory } = action.payload
-      draft.taskCards[taskCardId].category = newCategory
+      const { taskCardId, newCategoryId } = action.payload
+      draft.taskCards[taskCardId].category = newCategoryId
+      break
+    }
+    case 'newCategoryAdded': {
+      const { newCategoryDetails } = action.payload
+      draft.categories[newCategoryDetails.id] = newCategoryDetails
+      break
+    }
+    case 'categoryInfoChanged': {
+      const { categoryDetails } = action.payload
+      draft.categories[categoryDetails.id] = categoryDetails
+      break
+    }
+    case 'categoryDeleted': {
+      const { categoryId } = action.payload
+      for (const taskCardId in draft.taskCards) {
+        if (draft.taskCards[taskCardId].category === categoryId) {
+          draft.taskCards[taskCardId].category = UNASSIGNED_CATEGORY_ID
+        }
+      }
+      delete draft.categories[categoryId]
       break
     }
   }

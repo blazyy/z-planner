@@ -68,12 +68,12 @@ const changeCardContent = async (req, res) => {
 const changeCardCategory = async (req, res) => {
   const username = getUsername(req)
   const { taskCardId } = req.params
-  const { newCategory } = req.body
+  const { newCategoryId } = req.body
   await db.collection('planner').updateOne(
     { username },
     {
       $set: {
-        [`taskCards.${taskCardId}.category`]: newCategory,
+        [`taskCards.${taskCardId}.category`]: newCategoryId,
       },
     }
   )

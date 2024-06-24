@@ -6,10 +6,13 @@ import { PlannerType } from './types'
 
 const initialEmptyState: PlannerType = {
   hasLoaded: false,
+  currentView: 'board',
+  selectedBoard: '',
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
   dataEnteredInTaskCardBeingInitialized: false,
+  scheduledTaskCards: [],
   boardOrder: [],
   boards: {},
   columns: {},
@@ -44,6 +47,8 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
             payload: {
               ...initialEmptyState,
               hasLoaded: true,
+              // scheduledTaskCards: data.scheduledTaskCards,
+              selectedBoard: data.boardOrder.length > 0 ? data.boardOrder[0] : '',
               boardOrder: data.boardOrder,
               boards: data.boards,
               columns: data.columns,

@@ -1,7 +1,15 @@
-import { usePlanner } from '@/hooks/Planner/Planner'
-import { TaskColumns } from '../TaskColumns/TaskColumns'
+import { FilterToolbar } from './FilterToolbar/FilterToolbar'
+import { TaskColumns } from './TaskColumns/TaskColumns'
 
-export const Board = () => {
-  const { boardOrder } = usePlanner()
-  return <TaskColumns boardId={boardOrder[0]} />
+type BoardProps = {
+  boardId: string
+}
+
+export const Board = ({ boardId }: BoardProps) => {
+  return (
+    <div className='flex flex-col w-10/12 h-full'>
+      <FilterToolbar boardId={boardId} />
+      <TaskColumns boardId={boardId} />
+    </div>
+  )
 }
