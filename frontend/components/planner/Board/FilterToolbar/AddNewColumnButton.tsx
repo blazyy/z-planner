@@ -70,7 +70,7 @@ export const AddNewColumnButton = ({ boardId }: AddNewColumnButtonProps) => {
         <div className='flex justify-center items-center gap-2 cursor-pointer'>
           <Button variant='secondary' onClick={() => setIsAddingColumn(true)}>
             Add New Column
-            <MdAdd className='h-5 w-5 ml-2' />
+            <MdAdd className='ml-2 w-5 h-5' />
           </Button>
         </div>
       )}

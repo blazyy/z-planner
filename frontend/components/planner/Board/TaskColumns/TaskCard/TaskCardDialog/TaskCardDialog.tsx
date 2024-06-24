@@ -1,9 +1,10 @@
 import changeCardCheckedStatus from '@/app/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import changeCardContent from '@/app/utils/plannerUtils/cardUtils/changeCardContent'
 import changeCardTitle from '@/app/utils/plannerUtils/cardUtils/changeCardTitle'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent } from '@/components/ui/dialog'
+import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useErrorBoundary } from 'react-error-boundary'
@@ -45,16 +46,15 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent className='flex flex-col gap-2 px-2'>
+        <CardContent className='flex flex-col gap-6 px-4'>
           <EditableSubTasks taskCardId={id} />
-          <CardDescription className='m-0'>
-            <Textarea
-              placeholder='Notes...'
-              value={task.content}
-              className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-              onChange={(event) => changeCardContent(id, event.target.value, dispatch, showBoundary)}
-            />
-          </CardDescription>
+          <Separator />
+          <Textarea
+            placeholder='Notes...'
+            value={task.content}
+            className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+            onChange={(event) => changeCardContent(id, event.target.value, dispatch, showBoundary)}
+          />
         </CardContent>
         <CardFooter className='flex justify-between'>{/* <CategoryBadge taskCardId={id} /> */}</CardFooter>
       </Card>

@@ -16,7 +16,7 @@ export const Planner = () => {
   const { showBoundary } = useErrorBoundary()
   const { currentView } = usePlanner()
   return (
-    <main className='flex flex-col justify-center items-center w-full min-h-screen'>
+    <main className='flex flex-col justify-start items-center w-full min-h-screen'>
       {!plannerContext.hasLoaded && <LoadingSpinner />}
       {plannerContext.hasLoaded && plannerContext.boardOrder.length === 0 && <AddBoardCallout />}
       {plannerContext.hasLoaded && plannerContext.boardOrder.length > 0 && (

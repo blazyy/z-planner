@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
@@ -65,9 +66,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
   }
 
   return (
-    <Card
-      className={`${taskCardBeingInitialized?.isHighlighted ? 'border-4 border-red-500/50' : 'border-stone-400'} my-1`}
-    >
+    <Card className={cn(taskCardBeingInitialized?.isHighlighted ? 'border-2 border-red-500/70' : '', 'my-1')}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
           <CardHeader className='p-4'>

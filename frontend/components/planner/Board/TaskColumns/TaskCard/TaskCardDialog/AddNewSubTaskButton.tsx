@@ -16,7 +16,7 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
 
   return (
     <div
-      className='mt-1 flex gap-2 items-center hover:cursor-pointer'
+      className='flex items-center gap-2 mt-1 hover:cursor-pointer'
       onMouseEnter={() => setIsHoveringOver(true)}
       onMouseLeave={() => setIsHoveringOver(false)}
       onClick={() => addNewSubTaskOnButtonClick(taskCards[taskCardId], dispatch, showBoundary)}
