@@ -44,6 +44,11 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       delete draft.columns[columnId]
       break
     }
+    case 'columnNameChanged': {
+      const { columnId, newName } = action.payload
+      draft.columns[columnId].name = newName
+      break
+    }
     // DONE
     case 'columnsReordered': {
       const { boardId, newColumnOrder } = action.payload

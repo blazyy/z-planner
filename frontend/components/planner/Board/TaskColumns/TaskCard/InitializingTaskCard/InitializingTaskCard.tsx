@@ -69,7 +69,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
     <Card className={cn(taskCardBeingInitialized?.isHighlighted ? 'border-2 border-red-500/70' : '', 'my-1')}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-          <CardHeader className='p-4'>
+          <CardHeader className='p-3'>
             <FormField
               control={form.control}
               name='taskCardTitle'
@@ -95,7 +95,7 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
               )}
             />
           </CardHeader>
-          <CardFooter className='flex justify-between'>
+          <CardFooter className='flex justify-between p-3'>
             <div className='flex gap-2'>
               <Button type='submit' size='sm' disabled={!form.formState.isValid}>
                 Add

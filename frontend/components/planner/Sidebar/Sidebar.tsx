@@ -14,10 +14,10 @@ type BoardButtonProps = {
 }
 
 const BoardButton = ({ board }: BoardButtonProps) => {
-  const { selectedBoard } = usePlanner()
+  const { selectedBoard, currentView } = usePlanner()
   const dispatch = usePlannerDispatch()
   const filtersDispatch = usePlannerFiltersDispatch()
-  const isCurrentlySelectedBoard = selectedBoard === board.id
+  const isCurrentlySelectedBoard = selectedBoard === board.id && currentView === 'board'
   return (
     <Button
       variant={isCurrentlySelectedBoard ? 'secondary' : 'ghost'}

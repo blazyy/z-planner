@@ -50,6 +50,22 @@ const deleteColumn = async (req, res) => {
   res.status(204).end()
 }
 
+const changeColumnName = async (req, res) => {
+  const username = getUsername(req)
+  const { columnId } = req.params
+  const { newName } = req.body
+  await db.collection('planner').updateOne(
+    { username },
+    {
+      $set: {
+        [`columns.${columnId}.name`]: newName,
+      },
+    }
+  )
+  res.status(204).end()
+}
+
+router.patch('/planner/columns/:columnId', errorHandler(changeColumnName))
 router.post('/planner/boards/:boardId/columns', errorHandler(addNewColumn))
 router.patch('/planner/boards/:boardId/columns/reorder', errorHandler(changeColumnOrder))
 router.delete('/planner/boards/:boardId/columns/:columnId/delete', errorHandler(deleteColumn))

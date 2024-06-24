@@ -35,7 +35,7 @@ export const CategoryFilter = () => {
                 <Separator orientation='vertical' className='mx-2 h-4' />
                 {selectedCategories.map((category, i) => (
                   <Badge key={`filterbadge-${i}`} className={badgeClassNames[allCategories[category].color]}>
-                    {category}
+                    {allCategories[category].name}
                   </Badge>
                 ))}
               </>
@@ -58,7 +58,7 @@ export const CategoryFilter = () => {
                     }
                   >
                     <Checkbox checked={selectedCategories.indexOf(category) !== -1} id='terms' />
-                    <span>{category}</span>
+                    <span>{allCategories[category].name}</span>
                     <span className='flex justify-center items-center ml-auto w-4 h-4 font-mono text-xs'>
                       {getTaskCardBelongingToCategoryCount(allTaskCardsUnderAllColumns, category)}
                     </span>
