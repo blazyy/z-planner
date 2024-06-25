@@ -58,7 +58,11 @@ export const CategoryFilter = () => {
                     }
                   >
                     <Checkbox checked={selectedCategories.indexOf(category) !== -1} id='terms' />
-                    <span>{allCategories[category].name}</span>
+                    <span>
+                      <Badge className={badgeClassNames[allCategories[category].color]}>
+                        {allCategories[category].name}
+                      </Badge>
+                    </span>
                     <span className='flex justify-center items-center ml-auto w-4 h-4 font-mono text-xs'>
                       {getTaskCardBelongingToCategoryCount(allTaskCardsUnderAllColumns, category)}
                     </span>
