@@ -11,7 +11,7 @@ type TaskColumnProps = {
   columnId: string
 }
 
-const ColumnTasks = ({ columnId }: { columnId: string }) => {
+const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string }) => {
   const { columns, taskCards, taskCardBeingInitialized } = usePlanner()
   const { searchQuery, selectedCategories } = usePlannerFilters()
   const columnInfo = columns[columnId]
@@ -36,7 +36,15 @@ const ColumnTasks = ({ columnId }: { columnId: string }) => {
             const doesTaskCardBelongToSelectedCategories =
               selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
             if (doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories)
-              return <TaskCard key={taskCardId} index={index} columnId={columnId} taskCardId={taskCardId} />
+              return (
+                <TaskCard
+                  key={taskCardId}
+                  index={index}
+                  boardId={boardId}
+                  columnId={columnId}
+                  taskCardId={taskCardId}
+                />
+              )
           })}
           {provided.placeholder}
         </div>
@@ -53,7 +61,7 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
       {(provided) => (
         <div className={`task-column flex flex-col gap-2 w-96`} {...provided.draggableProps} ref={provided.innerRef}>
           <ColumnHeader boardId={boardId} columnId={columnInfo.id} dragHandleProps={provided.dragHandleProps} />
-          <ColumnTasks columnId={columnInfo.id} />
+          <ColumnTasks boardId={boardId} columnId={columnInfo.id} />
         </div>
       )}
     </Draggable>

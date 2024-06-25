@@ -1,4 +1,4 @@
-body {
+#planner {
   padding: 1% !important; /* The important is needed because the dialog component was messing up the body padding for some weird reason */
 }
 

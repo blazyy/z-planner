@@ -5,12 +5,13 @@ import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
 import { AddNewCategoryButton } from './AddNewCategoryButton'
 import { ModifyCategoryDialogContent } from './ModifyCategoryDialogContent'
 
 export const ManagingCategoriesView = () => {
-  const { taskCards, categories } = usePlanner()
+  const { categories } = usePlanner()
   const [categoryBeingModified, setCategoryBeingModified] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [key, setKey] = useState(0)
@@ -34,7 +35,9 @@ export const ManagingCategoriesView = () => {
                     className='w-2/12'
                     variant='ghost'
                     onClick={() => {
-                      setCategoryBeingModified(id)
+                      flushSync(() => {
+                        setCategoryBeingModified(id)
+                      })
                       setIsDialogOpen(true)
                     }}
                   >

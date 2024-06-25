@@ -12,9 +12,8 @@ export const MoveToTopContextMenuItem = () => {
   const { columns } = usePlanner()
   const { columnId, taskCardId, iconProps, contextMenuItemProps } = useContext(ContextMenuItemContext)!
   const index = columns[columnId].taskCards.indexOf(taskCardId)
-  if (index === 0) return <></> // Don't show option if card is already at top
   return (
-    <ContextMenuItem>
+    <ContextMenuItem disabled={index === 0}>
       <div
         {...contextMenuItemProps}
         onClick={() => moveCardWithinColumn(columns, columnId, taskCardId, index, 0, dispatch, showBoundary)}

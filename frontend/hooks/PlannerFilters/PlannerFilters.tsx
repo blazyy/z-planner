@@ -2,6 +2,7 @@ import { Draft, produce } from 'immer'
 import { Dispatch, createContext, useContext, useReducer } from 'react'
 
 type PlannerFiltersType = {
+  dateFilter: Date | null
   searchQuery: string
   selectedCategories: string[]
 }
@@ -20,11 +21,17 @@ const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action)
     case 'filtersReset':
       draft.searchQuery = ''
       draft.selectedCategories = []
+      draft.dateFilter = null
+      break
+    case 'dateFilterChanged':
+      const { newDate } = action.payload
+      draft.dateFilter = newDate
       break
   }
 })
 
 const initialPlannerFilterEmptyState: PlannerFiltersType = {
+  dateFilter: null,
   searchQuery: '',
   selectedCategories: [],
 }

@@ -1,7 +1,7 @@
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { TaskFilterSearchBar } from '../TaskFilterSearchBar'
-import { AddNewColumnButton } from './AddNewColumnButton'
 import { CategoryFilter } from './CategoryFilter'
+import { DateFilterDisplay } from './DateFilterDisplay'
 import { ResetButton } from './ResetButton'
 
 type FilterToolbarProps = {
@@ -13,15 +13,15 @@ export const FilterToolbar = ({ boardId }: FilterToolbarProps) => {
   const numTaskCardsInBoard = boards[boardId].columns.reduce((acc, col) => acc + columns[col].taskCards.length, 0)
 
   return (
-    <div className='flex gap-2 ml-2'>
+    <div className='flex items-center gap-2 ml-2'>
       {numTaskCardsInBoard > 0 && (
         <>
           <TaskFilterSearchBar />
+          <DateFilterDisplay />
           <CategoryFilter />
           <ResetButton />
         </>
       )}
-      <AddNewColumnButton key={boardId} boardId={boardId} />
     </div>
   )
 }

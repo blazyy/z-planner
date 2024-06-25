@@ -1,12 +1,12 @@
-import { AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { ContextMenuContent, ContextMenuItem } from '@/components/ui/context-menu'
-import { Trash2 } from 'lucide-react'
+import { ContextMenuContent } from '@/components/ui/context-menu'
 import { createContext } from 'react'
 import { ContextMenuWrapper } from './ContextMenuWrapper'
+import { DeleteCardContextMenuItem } from './DeleteCardContextMenuItem'
 import { MoveToBottomContextMenuItem } from './MoveToBottomContextMenuItem'
 import { MoveToTopContextMenuItem } from './MoveToTopContextMenuItem'
 
 type TaskCardContextMenuProps = {
+  boardId: string
   columnId: string
   taskCardId: string
 }
@@ -27,32 +27,27 @@ type ContentMenuItemContextType = {
   contextMenuItemProps: ContextMenuItemPropsType
 }
 
+export const contextMenuItemProps = {
+  className: 'flex gap-2 items-center',
+}
+
+export const iconProps = {
+  className: 'text-gray-500',
+  size: 18,
+}
+
 export const ContextMenuItemContext = createContext<ContentMenuItemContextType | null>(null)
 
-export const TaskCardContextMenu = ({ columnId, taskCardId }: TaskCardContextMenuProps) => {
-  const iconProps = {
-    className: 'text-gray-500',
-    size: 18,
-  }
-  const contextMenuItemProps = {
-    className: 'flex gap-2 items-center',
-  }
-
+export const TaskCardContextMenu = ({ boardId, columnId, taskCardId }: TaskCardContextMenuProps) => {
   return (
     <ContextMenuWrapper columnId={columnId} taskCardId={taskCardId}>
       <ContextMenuItemContext.Provider value={{ columnId, taskCardId, iconProps, contextMenuItemProps }}>
-        <ContextMenuContent>
-          <ContextMenuItem>
-            {/* The delete functionality is in the ContextMenuWrapper since it connects to a confirmation alert dialog */}
-            <AlertDialogTrigger>
-              <div {...contextMenuItemProps}>
-                <Trash2 {...iconProps} />
-                <span>Delete task</span>
-              </div>
-            </AlertDialogTrigger>
-          </ContextMenuItem>
+        <ContextMenuContent className='w-48'>
+          {/* The delete functionality is in the ContextMenuWrapper since it connects to a confirmation alert dialog */}
+          <DeleteCardContextMenuItem />
           <MoveToBottomContextMenuItem />
           <MoveToTopContextMenuItem />
+          {/* <MoveCardToOtherBoardContextMenuItem boardId={boardId} /> */}
         </ContextMenuContent>
       </ContextMenuItemContext.Provider>
     </ContextMenuWrapper>

@@ -13,9 +13,8 @@ export const MoveToBottomContextMenuItem = () => {
   const { columnId, taskCardId, iconProps, contextMenuItemProps } = useContext(ContextMenuItemContext)!
   const index = columns[columnId].taskCards.indexOf(taskCardId)
   const lastIndex = columns[columnId].taskCards.length - 1
-  if (index === lastIndex) return <></> // Don't show option if card is already at bottom
   return (
-    <ContextMenuItem>
+    <ContextMenuItem disabled={index === lastIndex}>
       <div
         {...contextMenuItemProps}
         onClick={() => moveCardWithinColumn(columns, columnId, taskCardId, index, lastIndex, dispatch, showBoundary)}

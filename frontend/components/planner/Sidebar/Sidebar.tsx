@@ -6,6 +6,8 @@ import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters
 import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
 import { AddNewBoardForm } from './AddNewBoardForm'
+import { EventCalendar } from './EventCalendar'
+import { LiveDate } from './LiveDate'
 import { ManageBoardsButton } from './ManageBoardsButton'
 import { ManageCategoriesButton } from './ManageCategoriesButton'
 
@@ -39,11 +41,9 @@ export const Sidebar = () => {
   const { boardOrder, boards } = usePlanner()
 
   return (
-    <div className='flex flex-col items-start gap-8 w-2/12'>
-      {/* <div className='flex flex-col justify-center items-start gap-2'>
-        <LiveDate />
-        <EventCalendar />
-      </div> */}
+    <div className='flex flex-col items-start gap-8 w-72'>
+      <LiveDate />
+      <EventCalendar />
       <div className='flex flex-col gap-2 w-full'>
         <span className='mb-4 font-bold text-xl'>Boards</span>
         {boardOrder.map((boardId, i) => (
