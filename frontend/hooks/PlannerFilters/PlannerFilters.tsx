@@ -2,7 +2,7 @@ import { Draft, produce } from 'immer'
 import { Dispatch, createContext, useContext, useReducer } from 'react'
 
 type PlannerFiltersType = {
-  dateFilter: Date | null
+  dateFilter: Date
   searchQuery: string
   selectedCategories: string[]
 }
@@ -11,8 +11,11 @@ const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action)
   switch (action.type) {
     case 'selectedCategoriesChanged':
       const { clickedCategory } = action.payload
-      if (draft.selectedCategories.indexOf(clickedCategory) === -1) draft.selectedCategories.push(clickedCategory)
-      else draft.selectedCategories = draft.selectedCategories.filter((cat: string) => cat != clickedCategory)
+      if (draft.selectedCategories.indexOf(clickedCategory) === -1) {
+        draft.selectedCategories.push(clickedCategory)
+      } else {
+        draft.selectedCategories = draft.selectedCategories.filter((cat: string) => cat != clickedCategory)
+      }
       break
     case 'searchQueryChanged':
       const { searchQuery } = action.payload
@@ -21,7 +24,7 @@ const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action)
     case 'filtersReset':
       draft.searchQuery = ''
       draft.selectedCategories = []
-      draft.dateFilter = null
+      draft.dateFilter = new Date()
       break
     case 'dateFilterChanged':
       const { newDate } = action.payload
@@ -31,7 +34,7 @@ const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action)
 })
 
 const initialPlannerFilterEmptyState: PlannerFiltersType = {
-  dateFilter: null,
+  dateFilter: new Date(),
   searchQuery: '',
   selectedCategories: [],
 }

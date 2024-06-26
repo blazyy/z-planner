@@ -6,9 +6,9 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { Draggable } from '@hello-pangea/dnd'
-import { Clock5Icon } from 'lucide-react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from './CategoryBadge'
+import { DueDateIndicator } from './DueDateIndicator'
 import { ProgressBar } from './ProgressBar'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
@@ -91,12 +91,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
                 changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
               }}
             />
-            <div className='flex items-center gap-2 text-slate-400 hover:text-slate-500'>
-              <span className='text-xs'>Dec 23rd</span>
-              <span>
-                <Clock5Icon className='w-4 h-4' />
-              </span>
-            </div>
+            <DueDateIndicator taskCardId={taskCardId} />
           </div>
           <CategoryBadge taskCardId={taskCardId} />
         </CardFooter>

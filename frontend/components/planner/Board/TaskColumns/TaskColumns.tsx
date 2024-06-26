@@ -8,8 +8,7 @@ type TaskColumnsPropsType = {
 }
 
 export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
-  const plannerContext = usePlanner()
-  const { boards } = plannerContext
+  const { boards } = usePlanner()
   return (
     <div className='flex mt-1 p-2 overflow-x-scroll'>
       {/* droppableId doesn't matter here because it won't be interacting with other droppables */}

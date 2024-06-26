@@ -4,6 +4,7 @@ import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { ColumnHeader } from './ColumnHeader'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 import { TaskCard } from './TaskCard/TaskCard'
+import { areDatesEqual } from './helpers'
 
 type TaskColumnProps = {
   index: number
@@ -13,7 +14,7 @@ type TaskColumnProps = {
 
 const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string }) => {
   const { columns, taskCards, taskCardBeingInitialized } = usePlanner()
-  const { searchQuery, selectedCategories } = usePlannerFilters()
+  const { searchQuery, selectedCategories, dateFilter } = usePlannerFilters()
   const columnInfo = columns[columnId]
   return (
     <Droppable droppableId={columnInfo.id} type='card'>
@@ -33,9 +34,19 @@ const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string 
             const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
               .toLowerCase()
               .includes(searchQuery.toLowerCase())
+
             const doesTaskCardBelongToSelectedCategories =
               selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
-            if (doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories)
+
+            const doesTaskCardBelongToDateFilter =
+              areDatesEqual(new Date(), dateFilter) ||
+              areDatesEqual(new Date(taskCards[taskCardId].dueDate), dateFilter)
+
+            if (
+              doesTaskCardContentMatchSearchQuery &&
+              doesTaskCardBelongToSelectedCategories &&
+              doesTaskCardBelongToDateFilter
+            )
               return (
                 <TaskCard
                   key={taskCardId}

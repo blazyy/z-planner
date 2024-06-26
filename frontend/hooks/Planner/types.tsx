@@ -19,6 +19,7 @@ export type TaskCardInfoType = {
   content: string
   checked: boolean
   subTasks: string[]
+  dueDate: string
 }
 
 export type TaskCardBeingInitializedType = {

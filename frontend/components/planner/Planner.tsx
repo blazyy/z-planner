@@ -28,7 +28,7 @@ export const Planner = () => {
             handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
           }
         >
-          <div className='flex justify-between gap-4 mt-16 w-full h-full'>
+          <div className='flex justify-between gap-4 w-full h-full'>
             <PlannerFiltersProvider>
               <Sidebar />
               {currentView === 'board' ? <Board boardId={plannerContext.selectedBoard} /> : <ManagingView />}
