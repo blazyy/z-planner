@@ -1,6 +1,7 @@
 import { Navbar } from '@/components/global/Navbar'
 import { ThemeProvider } from '@/components/theme-provider'
 import { cn } from '@/lib/utils'
+import { ClerkProvider } from '@clerk/nextjs'
 import { Quicksand } from 'next/font/google'
 import localFont from 'next/font/local'
 import './globals.css'
@@ -13,13 +14,15 @@ export const calsans = localFont({
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
-    <html lang='en'>
-      <body className={cn(quicksand.className)}>
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <Navbar />
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang='en'>
+        <body className={cn(quicksand.className)}>
+          <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+            <Navbar />
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
