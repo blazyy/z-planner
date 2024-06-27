@@ -14,25 +14,33 @@ export const Planner = () => {
   const plannerContext = usePlanner()
   const plannerDispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
+
+  return <LoadingSpinner />
+
+  if (!plannerContext.hasLoaded) {
+    return <LoadingSpinner />
+  }
+
   return (
-    <main id='planner' className='flex flex-col justify-start items-center w-full min-h-screen'>
-      {!plannerContext.hasLoaded && <LoadingSpinner />}
-      {plannerContext.hasLoaded && plannerContext.boardOrder.length === 0 && <AddBoardCallout />}
-      {plannerContext.hasLoaded && plannerContext.boardOrder.length > 0 && (
-        <DragDropContext
-          onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
-          onDragEnd={(result) =>
-            handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
-          }
-        >
-          <div className='flex justify-between gap-2 w-full h-full'>
-            <PlannerFiltersProvider>
-              <Sidebar />
-              <Board boardId={plannerContext.selectedBoard} />
-            </PlannerFiltersProvider>
-          </div>
-        </DragDropContext>
-      )}
-    </main>
+    <>
+      <main id='planner' className='flex flex-col justify-start items-center w-full min-h-screen'>
+        {plannerContext.boardOrder.length === 0 && <AddBoardCallout />}
+        {plannerContext.boardOrder.length > 0 && (
+          <DragDropContext
+            onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
+            onDragEnd={(result) =>
+              handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
+            }
+          >
+            <div className='flex justify-between gap-2 w-full h-full'>
+              <PlannerFiltersProvider>
+                <Sidebar />
+                <Board boardId={plannerContext.selectedBoard} />
+              </PlannerFiltersProvider>
+            </div>
+          </DragDropContext>
+        )}
+      </main>
+    </>
   )
 }

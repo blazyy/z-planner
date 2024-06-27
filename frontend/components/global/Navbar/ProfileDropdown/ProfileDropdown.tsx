@@ -8,12 +8,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { SignedIn, SignedOut, SignInButton, SignOutButton } from '@clerk/nextjs'
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 import { LogIn, LogOut, User } from 'lucide-react'
 import { getInitials } from './utils'
 
 export const ProfileDropdown = async () => {
-  const { userId } = auth()
   const user = await currentUser()
 
   return (
