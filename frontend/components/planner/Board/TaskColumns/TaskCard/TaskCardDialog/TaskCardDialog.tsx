@@ -12,10 +12,11 @@ import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
 type TaskCardDialogProps = {
+  boardId: string
   id: string
 }
 
-export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
+export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
   const { showBoundary } = useErrorBoundary()
   const dispatch = usePlannerDispatch()!
   const { taskCards } = usePlanner()
@@ -25,7 +26,7 @@ export const TaskCardDialog = ({ id }: TaskCardDialogProps) => {
       <Card className='p-2'>
         <CardHeader className='gap-2 pb-0 pl-7'>
           <div className='flex gap-2'>
-            <CategoryBadge taskCardId={id} />
+            <CategoryBadge boardId={boardId} taskCardId={id} />
           </div>
           <CardTitle>
             <div className='flex flex-col gap-4'>

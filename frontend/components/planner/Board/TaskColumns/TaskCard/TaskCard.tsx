@@ -42,7 +42,7 @@ const TaskCardWrapper = ({ index, boardId, columnId, taskCardId, children }: Tas
                 <DialogTrigger asChild>{children}</DialogTrigger>
               </ContextMenuTrigger>
             </ContextMenu>
-            <TaskCardDialog id={taskCardId} />
+            <TaskCardDialog boardId={boardId} id={taskCardId} />
           </Dialog>
         </div>
       )}

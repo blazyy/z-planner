@@ -28,7 +28,7 @@ const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string 
           }`}
         >
           {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
-            <InitializingTaskCard columnId={columnInfo.id} />
+            <InitializingTaskCard boardId={boardId} columnId={columnId} />
           )}
 
           {columnInfo.taskCards

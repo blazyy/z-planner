@@ -16,13 +16,15 @@ export type TaskCategoryType = {
 }
 
 type CategoryBadgeProps = {
+  boardId: string
   selectedCategory: string
   setSelectedCategory: Dispatch<SetStateAction<string>>
 }
 
-export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: CategoryBadgeProps) => {
-  const { categories } = usePlanner()
-  const allCategoryNames = Object.keys(categories).sort()
+export const CategoryBadge = ({ boardId, selectedCategory, setSelectedCategory }: CategoryBadgeProps) => {
+  const { boards, categories } = usePlanner()
+  const categoriesInBoard = boards[boardId].categories
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -31,16 +33,16 @@ export const CategoryBadge = ({ selectedCategory, setSelectedCategory }: Categor
         </Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
-        {allCategoryNames.map((categoryName, index) => (
+        {categoriesInBoard.map((id: string) => (
           <DropdownMenuCheckboxItem
-            key={index}
-            checked={selectedCategory === categoryName}
+            key={id}
+            checked={selectedCategory === categories[id].name}
             onClick={(event) => {
               event.preventDefault()
-              setSelectedCategory(categoryName)
+              setSelectedCategory(id)
             }}
           >
-            <Badge className={badgeClassNames[categories[categoryName].color]}>{categories[categoryName].name}</Badge>
+            <Badge className={badgeClassNames[categories[id].color]}>{categories[id].name}</Badge>
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

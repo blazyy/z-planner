@@ -16,6 +16,7 @@ import { CancelButton } from './CancelButton'
 import { CategoryBadge } from './CategoryBadge'
 
 type InitializingTaskCardProps = {
+  boardId: string
   columnId: string
 }
 
@@ -26,7 +27,7 @@ const formSchema = z.object({
   taskCardDesc: z.string().optional(),
 })
 
-export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) => {
+export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const { columns, taskCardBeingInitialized } = usePlanner()
@@ -102,7 +103,11 @@ export const InitializingTaskCard = ({ columnId }: InitializingTaskCardProps) =>
               </Button>
               <CancelButton isFormEmpty={isFormEmpty} />
             </div>
-            <CategoryBadge selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+            <CategoryBadge
+              boardId={boardId}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
           </CardFooter>
         </form>
       </Form>
