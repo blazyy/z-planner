@@ -22,6 +22,7 @@ frontend/.next/
 # misc
 .DS_Store
 *.pem
+.VSCodeCounter/
 
 # debug
 npm-debug.log*
@@ -32,7 +33,6 @@ yarn-error.log*
 .env*.local
 backend/.env
 .env
-
 
 node_modules/
 
