@@ -9,11 +9,11 @@ export const logError = (error: Error, info: { componentStack: string }) => {
 
 export const AlertCard = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (
-    <main className='flex min-h-screen flex-col justify-center items-center gap-8'>
+    <main className='flex flex-col justify-center items-center gap-8 min-h-screen'>
       <Alert className='w-fit' variant='destructive'>
-        <AlertCircle className='h-4 w-4' />
+        <AlertCircle className='w-4 h-4' />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>Sorry about that! Something went wrong.</AlertDescription>
+        <AlertDescription>Sorry about that! Something went wrong. [{error.message}]</AlertDescription>
         {/* <Button onClick={resetErrorBoundary}>Reload</Button> */}
       </Alert>
     </main>

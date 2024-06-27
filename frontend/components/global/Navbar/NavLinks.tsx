@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ModeToggle } from '../ModeToggle'
 
 export const NavLinks = () => {
   const pathname = usePathname() // Used to highlight which route the website is currently on
@@ -26,7 +25,7 @@ export const NavLinks = () => {
           )
         })}
       </div>
-      <ModeToggle />
+      {/* <ModeToggle /> */}
     </>
   )
 }

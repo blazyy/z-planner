@@ -1,5 +1,4 @@
 import { Navbar } from '@/components/global/Navbar'
-// import { AuthProvider } from '@/hooks/Auth'
 import { ThemeProvider } from '@/components/theme-provider'
 import { cn } from '@/lib/utils'
 import { Quicksand } from 'next/font/google'
@@ -17,11 +16,8 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
     <html lang='en'>
       <body className={cn(quicksand.className)}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          {/* <AuthProvider> */}
           <Navbar />
           {children}
-
-          {/* </AuthProvider> */}
         </ThemeProvider>
       </body>
     </html>

@@ -7,18 +7,17 @@ import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
 import { AddNewBoardForm } from './AddNewBoardForm'
 import { EventCalendar } from './EventCalendar'
-import { ManageCategoriesButton } from './ManageCategoriesButton'
-import { ManagePlannerButton } from './ManagePlannerButton'
+import { ManageCategoriesSheetTrigger } from './ManageCategoriesSheetTrigger'
 
 type BoardButtonProps = {
   board: BoardInfoType
 }
 
 const BoardButton = ({ board }: BoardButtonProps) => {
-  const { selectedBoard, currentView } = usePlanner()
+  const { selectedBoard } = usePlanner()
   const dispatch = usePlannerDispatch()
   const filtersDispatch = usePlannerFiltersDispatch()
-  const isCurrentlySelectedBoard = selectedBoard === board.id && currentView === 'board'
+  const isCurrentlySelectedBoard = selectedBoard === board.id
   return (
     <Button
       variant={isCurrentlySelectedBoard ? 'secondary' : 'ghost'}
@@ -56,8 +55,7 @@ export const Sidebar = () => {
             Add New Board
           </div>
         </Button>
-        <ManagePlannerButton />
-        <ManageCategoriesButton />
+        <ManageCategoriesSheetTrigger />
       </div>
     </div>
   )

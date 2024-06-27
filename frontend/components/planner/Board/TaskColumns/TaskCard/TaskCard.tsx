@@ -93,7 +93,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
             />
             <DueDateIndicator taskCardId={taskCardId} />
           </div>
-          <CategoryBadge taskCardId={taskCardId} />
+          <CategoryBadge boardId={boardId} taskCardId={taskCardId} />
         </CardFooter>
       </Card>
     </TaskCardWrapper>

@@ -14,9 +14,10 @@ import { CategoryColorPicker } from './CategoryColorPicker'
 import { DeleteCategoryConfirmDialog } from './DeleteCategoryConfirmDialog'
 
 type ModifyCategoryDialogContentProps = {
+  boardId: string
   categoryId: string
   closeDialog: () => void
-  setCategoryBeingModified: Dispatch<SetStateAction<string>>
+  setDetailsOfCategoryBeingModified: Dispatch<SetStateAction<{ boardId: string; categoryId: string }>>
 }
 
 const formSchema = z.object({
@@ -26,9 +27,10 @@ const formSchema = z.object({
 })
 
 export const ModifyCategoryDialogContent = ({
+  boardId,
   categoryId,
   closeDialog,
-  setCategoryBeingModified,
+  setDetailsOfCategoryBeingModified,
 }: ModifyCategoryDialogContentProps) => {
   const { categories } = usePlanner()
   const dispatch = usePlannerDispatch()
@@ -45,7 +47,10 @@ export const ModifyCategoryDialogContent = ({
   const [categoryColor, setCategoryColor] = useState(categories[categoryId].color)
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    setCategoryBeingModified('') // Used to reset the category being modified because once onSubmit is called, the category no longer exists
+    setDetailsOfCategoryBeingModified({
+      boardId: '',
+      categoryId: '',
+    }) // Used to reset the category being modified because once onSubmit is called, the category no longer exists
     changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, showBoundary)
   }
 
@@ -77,9 +82,10 @@ export const ModifyCategoryDialogContent = ({
           </div>
           <div className='flex justify-between mt-5'>
             <DeleteCategoryConfirmDialog
+              boardId={boardId}
               categoryId={categoryId}
               closeDialog={closeDialog}
-              setCategoryBeingModified={setCategoryBeingModified}
+              setDetailsOfCategoryBeingModified={setDetailsOfCategoryBeingModified}
             />
             <span className='flex gap-1'>
               <Button size='sm' variant='secondary' onClick={closeDialog}>

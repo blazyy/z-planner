@@ -6,7 +6,6 @@ import { PlannerType } from './types'
 
 const initialEmptyState: PlannerType = {
   hasLoaded: false,
-  currentView: 'board',
   selectedBoard: '',
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',

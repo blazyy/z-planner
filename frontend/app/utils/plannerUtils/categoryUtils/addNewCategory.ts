@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from './types'
+import { ErrorBoundaryType } from '../types'
 
 export const addNewCategory = async (
+  boardId: string,
   newCategoryDetails: {
     id: string
     name: string
@@ -14,12 +15,13 @@ export const addNewCategory = async (
   dispatch({
     type: 'newCategoryAdded',
     payload: {
+      boardId,
       newCategoryDetails,
     },
   })
 
   axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/categories`, {
+    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories`, {
       newCategoryDetails,
     })
     .catch((error) => showErrorBoundary(error))

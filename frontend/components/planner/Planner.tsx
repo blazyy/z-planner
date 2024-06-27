@@ -7,8 +7,6 @@ import { useErrorBoundary } from 'react-error-boundary'
 import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
 import { AddBoardCallout } from './AddBoardCallout'
 import { Board } from './Board/Board'
-import { ManagingView } from './Board/ManagingView/ManagingView'
-import { RightSideBar } from './RightSideBar/RightSideBar'
 import { Sidebar } from './Sidebar/Sidebar'
 import { handleOnDragEnd, handleOnDragStart } from './utils'
 
@@ -16,7 +14,6 @@ export const Planner = () => {
   const plannerContext = usePlanner()
   const plannerDispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
-  const { currentView } = usePlanner()
   return (
     <main id='planner' className='flex flex-col justify-start items-center w-full min-h-screen'>
       {!plannerContext.hasLoaded && <LoadingSpinner />}
@@ -28,15 +25,14 @@ export const Planner = () => {
             handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
           }
         >
-          <div className='flex justify-between gap-4 w-full h-full'>
+          <div className='flex justify-between gap-2 w-full h-full'>
             <PlannerFiltersProvider>
               <Sidebar />
-              {currentView === 'board' ? <Board boardId={plannerContext.selectedBoard} /> : <ManagingView />}
+              <Board boardId={plannerContext.selectedBoard} />
             </PlannerFiltersProvider>
           </div>
         </DragDropContext>
       )}
-      <RightSideBar />
     </main>
   )
 }

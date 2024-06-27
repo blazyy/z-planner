@@ -4,13 +4,14 @@ import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/c
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
+import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 import { CategoryColorPicker } from './CategoryColorPicker'
 
 type AddNewCategoryDialogContentProps = {
@@ -18,6 +19,7 @@ type AddNewCategoryDialogContentProps = {
 }
 
 const formSchema = z.object({
+  boardId: z.string(),
   categoryName: z.string().min(2, {
     message: 'Category name must be at least 2 characters.',
   }),
@@ -30,6 +32,7 @@ function getRandomBadgeClassName() {
 }
 
 export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialogContentProps) => {
+  const { boardOrder, boards } = usePlanner()
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
 
@@ -37,6 +40,7 @@ export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialo
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
+      boardId: boardOrder[0],
       categoryName: '',
     },
   })
@@ -49,7 +53,7 @@ export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialo
       name: values.categoryName,
       color: categoryColor,
     }
-    addNewCategory(newCategoryDetails, dispatch, showBoundary)
+    addNewCategory(values.boardId, newCategoryDetails, dispatch, showBoundary)
     closeDialog()
   }
 
@@ -62,9 +66,33 @@ export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialo
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
+                name='boardId'
+                render={({ field }) => (
+                  <FormItem className='mb-4 w-1/2'>
+                    <FormLabel>Board</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select a board' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {boardOrder.map((boardId) => (
+                          <SelectItem key={boardId} value={boardId}>
+                            {boards[boardId].name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name='categoryName'
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='mb-4 w-1/2'>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input {...field} />

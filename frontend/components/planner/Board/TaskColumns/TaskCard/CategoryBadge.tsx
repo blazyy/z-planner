@@ -11,19 +11,17 @@ import { useErrorBoundary } from 'react-error-boundary'
 import { badgeClassNames } from './utils'
 
 type CategoryBadgeProps = {
+  boardId: string
   taskCardId: string
 }
 
-export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
+export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
   const dispatch = usePlannerDispatch()!
-  const { taskCards, categories } = usePlanner()
+  const { boards, taskCards, categories } = usePlanner()
   const { showBoundary } = useErrorBoundary()
 
   const categoryInfo = categories[taskCards[taskCardId].category]
-
-  const sortedIds = Object.entries(categories)
-    .sort(([, a], [, b]) => a.name.localeCompare(b.name))
-    .map(([id]) => id)
+  const categoriesInBoard = boards[boardId].categories
 
   return (
     <DropdownMenu>
@@ -31,7 +29,7 @@ export const CategoryBadge = ({ taskCardId }: CategoryBadgeProps) => {
         <Badge className={badgeClassNames[categoryInfo.color]}>{categoryInfo.name}</Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
-        {sortedIds.map((categoryId, index) => (
+        {categoriesInBoard.map((categoryId, index) => (
           <DropdownMenuCheckboxItem
             key={index}
             checked={categoryInfo.name === categories[categoryId].name}

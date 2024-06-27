@@ -18,14 +18,16 @@ import { Dispatch, SetStateAction } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 
 type DeleteCategoryConfirmDialogProps = {
+  boardId: string
   categoryId: string
-  setCategoryBeingModified: Dispatch<SetStateAction<string>>
+  setDetailsOfCategoryBeingModified: Dispatch<SetStateAction<{ boardId: string; categoryId: string }>>
   closeDialog: () => void
 }
 
 export const DeleteCategoryConfirmDialog = ({
+  boardId,
   categoryId,
-  setCategoryBeingModified,
+  setDetailsOfCategoryBeingModified,
   closeDialog,
 }: DeleteCategoryConfirmDialogProps) => {
   const dispatch = usePlannerDispatch()
@@ -50,8 +52,11 @@ export const DeleteCategoryConfirmDialog = ({
           <AlertDialogAction
             variant='destructive'
             onClick={() => {
-              setCategoryBeingModified('')
-              deleteCategory(categoryId, dispatch, showBoundary)
+              setDetailsOfCategoryBeingModified({
+                boardId: '',
+                categoryId: '',
+              })
+              deleteCategory(boardId, categoryId, dispatch, showBoundary)
               closeDialog()
             }}
           >

@@ -16,7 +16,9 @@ const getTaskCardBelongingToCategoryCount = (taskCards: TaskCardInfoType[], cate
 export const CategoryFilter = () => {
   const dispatch = usePlannerFiltersDispatch()
   const { selectedCategories } = usePlannerFilters()
-  const { categories: allCategories, boards, selectedBoard, columns, taskCards } = usePlanner()
+  const { categories, boards, selectedBoard, columns, taskCards } = usePlanner()
+
+  const categoriesInSelectedBoard = boards[selectedBoard].categories
 
   const allTaskCardsUnderAllColumns = boards[selectedBoard].columns
     .map((colId) => columns[colId].taskCards)
@@ -34,8 +36,8 @@ export const CategoryFilter = () => {
               <>
                 <Separator orientation='vertical' className='mx-2 h-4' />
                 {selectedCategories.map((category, i) => (
-                  <Badge key={`filterbadge-${i}`} className={badgeClassNames[allCategories[category].color]}>
-                    {allCategories[category].name}
+                  <Badge key={`filterbadge-${i}`} className={badgeClassNames[categories[category].color]}>
+                    {categories[category].name}
                   </Badge>
                 ))}
               </>
@@ -49,26 +51,28 @@ export const CategoryFilter = () => {
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
-              {Object.keys(allCategories).map((category, i) => (
-                <CommandItem key={`commanditem-${i}`}>
-                  <div
-                    className='flex justify-between items-center gap-2 w-full'
-                    onClick={() =>
-                      dispatch({ type: 'selectedCategoriesChanged', payload: { clickedCategory: category } })
-                    }
-                  >
-                    <Checkbox checked={selectedCategories.indexOf(category) !== -1} id='terms' />
-                    <span>
-                      <Badge className={badgeClassNames[allCategories[category].color]}>
-                        {allCategories[category].name}
-                      </Badge>
-                    </span>
-                    <span className='flex justify-center items-center ml-auto w-4 h-4 font-mono text-xs'>
-                      {getTaskCardBelongingToCategoryCount(allTaskCardsUnderAllColumns, category)}
-                    </span>
-                  </div>
-                </CommandItem>
-              ))}
+              {categoriesInSelectedBoard.map((categoryId) => {
+                return (
+                  <CommandItem key={`commanditem-${categoryId}`}>
+                    <div
+                      className='flex justify-between items-center gap-2 w-full'
+                      onClick={() =>
+                        dispatch({ type: 'selectedCategoriesChanged', payload: { clickedCategory: categoryId } })
+                      }
+                    >
+                      <Checkbox checked={selectedCategories.indexOf(categoryId) !== -1} id='terms' />
+                      <span>
+                        <Badge className={badgeClassNames[categories[categoryId].color]}>
+                          {categories[categoryId].name}
+                        </Badge>
+                      </span>
+                      <span className='flex justify-center items-center ml-auto w-4 h-4 font-mono text-xs'>
+                        {getTaskCardBelongingToCategoryCount(allTaskCardsUnderAllColumns, categoryId)}
+                      </span>
+                    </div>
+                  </CommandItem>
+                )
+              })}
             </CommandGroup>
           </CommandList>
         </Command>

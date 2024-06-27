@@ -9,19 +9,8 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       return action.payload
     }
     // DONE
-    case 'isManagingBoard': {
-      draft.currentView = 'board'
-      break
-    }
-    // DONE
-    case 'isManagingCategories': {
-      draft.currentView = 'manageCategories'
-      break
-    }
-    // DONE
     case 'selectedBoardChanged': {
       draft.selectedBoard = action.payload.boardId
-      draft.currentView = 'board'
       break
     }
     case 'newBoardAdded': {
@@ -177,7 +166,8 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'newCategoryAdded': {
-      const { newCategoryDetails } = action.payload
+      const { boardId, newCategoryDetails } = action.payload
+      draft.boards[boardId].categories.push(newCategoryDetails.id)
       draft.categories[newCategoryDetails.id] = newCategoryDetails
       break
     }
@@ -187,12 +177,15 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'categoryDeleted': {
-      const { categoryId } = action.payload
+      const { boardId, categoryId } = action.payload
       for (const taskCardId in draft.taskCards) {
         if (draft.taskCards[taskCardId].category === categoryId) {
           draft.taskCards[taskCardId].category = UNASSIGNED_CATEGORY_ID
         }
       }
+      draft.boards[boardId].categories = draft.boards[boardId].categories.filter((catId: string) => {
+        return catId !== categoryId
+      })
       delete draft.categories[categoryId]
       break
     }

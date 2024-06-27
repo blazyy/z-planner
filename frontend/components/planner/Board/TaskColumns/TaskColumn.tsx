@@ -13,8 +13,9 @@ type TaskColumnProps = {
 }
 
 const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string }) => {
-  const { columns, taskCards, taskCardBeingInitialized } = usePlanner()
+  const { boards, columns, taskCards, taskCardBeingInitialized } = usePlanner()
   const { searchQuery, selectedCategories, dateFilter } = usePlannerFilters()
+  const categoriesInBoard = boards[boardId].categories
   const columnInfo = columns[columnId]
   return (
     <Droppable droppableId={columnInfo.id} type='card'>
@@ -30,33 +31,35 @@ const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string 
             <InitializingTaskCard columnId={columnInfo.id} />
           )}
 
-          {columnInfo.taskCards.map((taskCardId, index) => {
-            const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
+          {columnInfo.taskCards
+            .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
+            .map((taskCardId, index) => {
+              const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
 
-            const doesTaskCardBelongToSelectedCategories =
-              selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
+              const doesTaskCardBelongToSelectedCategories =
+                selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
 
-            const doesTaskCardBelongToDateFilter =
-              areDatesEqual(new Date(), dateFilter) ||
-              areDatesEqual(new Date(taskCards[taskCardId].dueDate), dateFilter)
+              const doesTaskCardBelongToDateFilter =
+                areDatesEqual(new Date(), dateFilter) ||
+                (taskCards[taskCardId].dueDate && areDatesEqual(new Date(taskCards[taskCardId].dueDate), dateFilter))
 
-            if (
-              doesTaskCardContentMatchSearchQuery &&
-              doesTaskCardBelongToSelectedCategories &&
-              doesTaskCardBelongToDateFilter
-            )
-              return (
-                <TaskCard
-                  key={taskCardId}
-                  index={index}
-                  boardId={boardId}
-                  columnId={columnId}
-                  taskCardId={taskCardId}
-                />
+              if (
+                doesTaskCardContentMatchSearchQuery &&
+                doesTaskCardBelongToSelectedCategories &&
+                doesTaskCardBelongToDateFilter
               )
-          })}
+                return (
+                  <TaskCard
+                    key={taskCardId}
+                    index={index}
+                    boardId={boardId}
+                    columnId={columnId}
+                    taskCardId={taskCardId}
+                  />
+                )
+            })}
           {provided.placeholder}
         </div>
       )}
