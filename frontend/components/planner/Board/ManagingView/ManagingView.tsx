@@ -1,5 +1,5 @@
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { ManagingCategoriesView } from './ManagingCategoriesView/ManagingCategoriesView'
+import { ManagingCategoriesView } from '../../Sidebar/ManageCategoriesDialog/ManageCategoriesDialog'
 
 export const ManagingView = () => {
   const { currentView } = usePlanner()

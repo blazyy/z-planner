@@ -7,8 +7,7 @@ import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
 import { AddNewBoardForm } from './AddNewBoardForm'
 import { EventCalendar } from './EventCalendar'
-import { ManageCategoriesButton } from './ManageCategoriesButton'
-import { ManagePlannerButton } from './ManagePlannerButton'
+import { ManageCategoriesSheetTrigger } from './ManageCategoriesSheetTrigger'
 
 type BoardButtonProps = {
   board: BoardInfoType
@@ -56,8 +55,7 @@ export const Sidebar = () => {
             Add New Board
           </div>
         </Button>
-        <ManagePlannerButton />
-        <ManageCategoriesButton />
+        <ManageCategoriesSheetTrigger />
       </div>
     </div>
   )

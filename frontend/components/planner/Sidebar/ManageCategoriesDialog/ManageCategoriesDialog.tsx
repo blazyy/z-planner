@@ -1,23 +1,28 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import { Separator } from '@/components/ui/separator'
 import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
-import { useState } from 'react'
-import { flushSync } from 'react-dom'
-import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
+import { useEffect, useState } from 'react'
+import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 import { AddNewCategoryButton } from './AddNewCategoryButton'
 import { ModifyCategoryDialogContent } from './ModifyCategoryDialogContent'
 
-export const ManagingCategoriesView = () => {
+export const ManageCategoriesDialog = () => {
   const { categories } = usePlanner()
   const [categoryBeingModified, setCategoryBeingModified] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [key, setKey] = useState(0)
 
+  useEffect(() => {
+    if (categoryBeingModified) {
+      setIsDialogOpen(true)
+    }
+  }, [categoryBeingModified])
+
   const closeDialog = () => {
     setIsDialogOpen(false)
+    setCategoryBeingModified('')
     setKey((prevKey) => prevKey + 1) // Resets unsaved changes in dialog when cancel button is clicked
   }
 
@@ -32,13 +37,10 @@ export const ManagingCategoriesView = () => {
               <div key={`${category.name}-${i}`}>
                 <DialogTrigger asChild>
                   <Button
-                    className='w-2/12'
+                    className='pl-2 w-full'
                     variant='ghost'
                     onClick={() => {
-                      flushSync(() => {
-                        setCategoryBeingModified(id)
-                      })
-                      setIsDialogOpen(true)
+                      setCategoryBeingModified(id)
                     }}
                   >
                     <div className='flex justify-start items-center gap-2 w-full'>
@@ -55,17 +57,15 @@ export const ManagingCategoriesView = () => {
 
   return (
     <Dialog
+      modal={false}
       open={isDialogOpen}
       onOpenChange={(newOpen) => {
-        // Used to call custom closeDialog function when dialog is closed, this resets unsaved changes in dialog when closed
-        setIsDialogOpen(newOpen)
         if (!newOpen) {
           closeDialog()
         }
       }}
     >
-      <div className='flex flex-col justify-start gap-5 ml-10 w-full'>
-        <span className='mb-4 font-bold text-xl'>Manage Categories</span>
+      <div className='flex flex-col justify-start gap-5 w-full'>
         <Categories />
         {categoryBeingModified && (
           <ModifyCategoryDialogContent
@@ -75,7 +75,6 @@ export const ManagingCategoriesView = () => {
             setCategoryBeingModified={setCategoryBeingModified}
           />
         )}
-        <Separator />
         <AddNewCategoryButton />
       </div>
     </Dialog>

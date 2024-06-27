@@ -16,6 +16,7 @@ export const AddNewCategoryButton = () => {
 
   return (
     <Dialog
+      modal={false}
       open={isDialogOpen}
       onOpenChange={(newOpen) => {
         // Used to call custom closeDialog function when dialog is closed, this resets unsaved changes in dialog when closed
@@ -27,7 +28,7 @@ export const AddNewCategoryButton = () => {
     >
       <DialogTrigger>
         <div className='flex justify-between items-start'>
-          <Button className='w-48' variant='outline'>
+          <Button className='w-full' variant='outline'>
             <Plus className='mr-2 w-4 h-4' /> Add a new category
           </Button>
         </div>

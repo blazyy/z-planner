@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
+import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 import { CategoryColorPicker } from './CategoryColorPicker'
 
 type AddNewCategoryDialogContentProps = {

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { Dispatch, SetStateAction } from 'react'
-import { badgeClassNames } from '../../TaskColumns/TaskCard/utils'
+import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 
 export const getCapitalizedColorName = (color: string) => color.charAt(0).toUpperCase() + color.slice(1)
 
