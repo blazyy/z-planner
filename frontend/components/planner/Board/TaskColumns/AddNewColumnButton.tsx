@@ -1,11 +1,12 @@
-import { addNewColumn } from '@/app/utils/plannerUtils/columnUtils/addNewColumn'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
 import * as z from 'zod'
@@ -16,9 +17,9 @@ type AddNewColumnFormProps = {
 }
 
 const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps) => {
-  const { showBoundary } = useErrorBoundary()
   const dispatch = usePlannerDispatch()!
   const { boards } = usePlanner()
+  const { getToken } = useAuth()
 
   const formSchema = z.object({
     columnName: z.string().min(2, {
@@ -33,8 +34,54 @@ const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps)
     },
   })
 
+  const addNewColumnMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const token = await getToken()
+      const { newColumnDetails, updatedColumns } = data
+      return axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns`,
+        {
+          newColumnDetails,
+          updatedColumns,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (data) => {
+      const { newColumnDetails, updatedColumns } = data
+      dispatch({
+        type: 'newColumnAdded',
+        payload: {
+          boardId,
+          newColumnDetails,
+          updatedColumns,
+        },
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addNewColumn(boards[boardId], values.columnName, dispatch, showBoundary)
+    const newColumnId = crypto.randomUUID()
+    const newColumnDetails = {
+      id: newColumnId,
+      name: values.columnName,
+      taskCards: [],
+    }
+    const updatedColumns = Array.from(boards[boardId].columns)
+    updatedColumns.push(newColumnId)
+    addNewColumnMutation.mutate({
+      newColumnDetails,
+      updatedColumns,
+    })
     setIsAddingColumn(false)
   }
 
