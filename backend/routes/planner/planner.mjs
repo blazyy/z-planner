@@ -32,4 +32,30 @@ router.get('/planner', async (req, res) => {
   }
 })
 
+router.post('/planner/users/:email', async (req, res) => {
+  const email = req.params.email
+
+  const user = await db.collection('planner').findOne({ username: email })
+  if (user) {
+    return res.status(409).send('User already exists')
+  }
+
+  const newUser = {
+    username: email,
+    boardOrder: [],
+    boards: {},
+    columns: {},
+    categories: {},
+    taskCards: {},
+    subTasks: {},
+  }
+
+  try {
+    await db.collection('planner').insertOne(newUser)
+    res.status(201).send('User added successfully')
+  } catch (error) {
+    res.status(500).send('Error adding user')
+  }
+})
+
 export default router

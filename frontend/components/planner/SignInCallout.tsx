@@ -7,7 +7,7 @@ export const SignInCallout = () => {
       <div className='flex justify-center items-center'>
         <div className='gap-6 grid mx-auto w-[350px]'>
           <div className='gap-2 grid text-center'>
-            <h1 className='font-bold text-3xl'>Login</h1>
+            <h1 className='font-bold text-3xl'>Welcome.</h1>
             <p className='text-balance text-muted-foreground'>You need to login to access the planner.</p>
           </div>
           <div className='gap-4 grid'>
