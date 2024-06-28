@@ -16,12 +16,12 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
     <ClerkProvider>
       <html lang='en'>
-        <body className={cn(quicksand.className)}>
-          <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+          <body className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
             <Navbar />
             {children}
-          </ThemeProvider>
-        </body>
+          </body>
+        </ThemeProvider>
       </html>
     </ClerkProvider>
   )

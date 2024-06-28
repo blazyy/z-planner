@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from './types'
+import { ErrorBoundaryType } from '../types'
 
 export const changeCategoryInfo = async (
   categoryId: string,

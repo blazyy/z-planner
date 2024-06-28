@@ -15,15 +15,13 @@ export const Planner = () => {
   const plannerDispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
 
-  return <LoadingSpinner />
-
   if (!plannerContext.hasLoaded) {
     return <LoadingSpinner />
   }
 
   return (
     <>
-      <main id='planner' className='flex flex-col justify-start items-center w-full min-h-screen'>
+      <main id='planner' className='flex flex-col flex-1 justify-start items-center w-full'>
         {plannerContext.boardOrder.length === 0 && <AddBoardCallout />}
         {plannerContext.boardOrder.length > 0 && (
           <DragDropContext

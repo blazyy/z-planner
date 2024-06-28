@@ -19,6 +19,11 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.boards[newBoardDetails.id] = newBoardDetails
       break
     }
+    case 'boardNameChanged': {
+      const { boardId, newName } = action.payload
+      draft.boards[boardId].name = newName
+      break
+    }
     // DONE
     case 'newColumnAdded': {
       const { boardId, newColumnDetails, updatedColumns } = action.payload
