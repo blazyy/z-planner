@@ -25,6 +25,8 @@ export const ManageBoardsDialog = () => {
     setKey((prevKey) => prevKey + 1) // Resets unsaved changes in dialog when cancel button is clicked
   }
 
+  const clearBoardBeingModified = () => setBoardBeingModified('')
+
   return (
     <Dialog
       modal={false}
@@ -55,12 +57,7 @@ export const ManageBoardsDialog = () => {
           )
         })}
         {boardBeingModified && (
-          <ModifyBoardDialogContent
-            key={key}
-            closeDialog={closeDialog}
-            boardId={boardBeingModified}
-            setBoardBeingModified={setBoardBeingModified}
-          />
+          <ModifyBoardDialogContent key={key} closeDialog={closeDialog} boardId={boardBeingModified} />
         )}
         <AddNewBoardButton />
       </div>

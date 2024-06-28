@@ -13,20 +13,14 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { Dispatch, SetStateAction } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 
 type DeleteBoardConfirmDialogProps = {
   boardId: string
-  setBoardBeingModified: Dispatch<SetStateAction<string>>
   closeDialog: () => void
 }
 
-export const DeleteBoardConfirmDialog = ({
-  boardId,
-  setBoardBeingModified,
-  closeDialog,
-}: DeleteBoardConfirmDialogProps) => {
+export const DeleteBoardConfirmDialog = ({ boardId, closeDialog }: DeleteBoardConfirmDialogProps) => {
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const { boards, columns } = usePlanner()
@@ -66,7 +60,6 @@ export const DeleteBoardConfirmDialog = ({
           <AlertDialogAction
             variant='destructive'
             onClick={() => {
-              setBoardBeingModified('')
               deleteBoard(boardId, dispatch, showBoundary)
               closeDialog()
             }}

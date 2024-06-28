@@ -64,6 +64,7 @@ type AddNewColumnButtonProps = {
 
 export const AddNewColumnButton = ({ boardId }: AddNewColumnButtonProps) => {
   const [isAddingColumn, setIsAddingColumn] = useState(false)
+
   return (
     <div className='flex flex-col gap-2'>
       {!isAddingColumn && (

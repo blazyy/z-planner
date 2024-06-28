@@ -5,7 +5,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Dispatch, SetStateAction } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -14,7 +13,6 @@ import { DeleteBoardConfirmDialog } from './DeleteBoardConfirmDialog'
 type ModifyBoardDialogContentProps = {
   closeDialog: () => void
   boardId: string
-  setBoardBeingModified: Dispatch<SetStateAction<string>>
 }
 
 const formSchema = z.object({
@@ -23,11 +21,7 @@ const formSchema = z.object({
   }),
 })
 
-export const ModifyBoardDialogContent = ({
-  closeDialog,
-  boardId,
-  setBoardBeingModified,
-}: ModifyBoardDialogContentProps) => {
+export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDialogContentProps) => {
   const { boards } = usePlanner()
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
@@ -41,7 +35,7 @@ export const ModifyBoardDialogContent = ({
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    setBoardBeingModified('')
+    closeDialog()
     changeBoardInfo(boardId, values.boardName, dispatch, showBoundary)
   }
 
@@ -68,11 +62,7 @@ export const ModifyBoardDialogContent = ({
             </form>
           </Form>
           <div className='flex justify-between mt-5'>
-            <DeleteBoardConfirmDialog
-              boardId={boardId}
-              closeDialog={closeDialog}
-              setBoardBeingModified={setBoardBeingModified}
-            />
+            <DeleteBoardConfirmDialog boardId={boardId} closeDialog={closeDialog} />
             <span className='flex gap-1'>
               <Button size='sm' variant='secondary' onClick={closeDialog}>
                 Cancel
