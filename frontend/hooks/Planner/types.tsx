@@ -79,7 +79,6 @@ export type BoardsType = {
 // const initialState = useState(undefined)
 
 export type PlannerType = {
-  hasLoaded: boolean
   selectedBoard: string
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
