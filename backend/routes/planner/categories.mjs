@@ -1,15 +1,15 @@
 import express from 'express'
 import db from '../../db/conn.mjs'
-import { errorHandler, getUsername } from '../../middleware/index.mjs'
+import { errorHandler } from '../../middleware/index.mjs'
 
 const router = express.Router()
 
 const addNewCategory = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId } = req.params
   const { newCategoryDetails } = req.body
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`categories.${newCategoryDetails.id}`]: newCategoryDetails,
@@ -18,16 +18,16 @@ const addNewCategory = async (req, res) => {
   )
   await db
     .collection('planner')
-    .updateOne({ username }, { $push: { [`boards.${boardId}.categories`]: newCategoryDetails.id } })
+    .updateOne({ clerkUserId: userId }, { $push: { [`boards.${boardId}.categories`]: newCategoryDetails.id } })
   res.status(201).end()
 }
 
 const changeCategoryInfo = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { categoryId } = req.params
   const { newName, newColor } = req.body
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`categories.${categoryId}.name`]: newName,
@@ -39,9 +39,9 @@ const changeCategoryInfo = async (req, res) => {
 }
 
 const deleteCategory = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId, categoryId } = req.params
-  const docs = await db.collection('planner').findOne({ username })
+  const docs = await db.collection('planner').findOne({ clerkUserId: userId })
   const updateObject = {}
   for (const [key, value] of Object.entries(docs.taskCards)) {
     if (value.category === categoryId) {
@@ -51,9 +51,11 @@ const deleteCategory = async (req, res) => {
   if (Object.keys(updateObject).length === 0) {
     return
   }
-  await db.collection('planner').updateOne({ username: username }, { $set: updateObject })
-  await db.collection('planner').updateOne({ username }, { $unset: { [`categories.${categoryId}`]: '' } })
-  await db.collection('planner').updateOne({ username }, { $pull: { [`boards.${boardId}.categories`]: categoryId } })
+  await db.collection('planner').updateOne({ clerkUserId: userId }, { $set: updateObject })
+  await db.collection('planner').updateOne({ clerkUserId: userId }, { $unset: { [`categories.${categoryId}`]: '' } })
+  await db
+    .collection('planner')
+    .updateOne({ clerkUserId: userId }, { $pull: { [`boards.${boardId}.categories`]: categoryId } })
   res.status(204).end()
 }
 

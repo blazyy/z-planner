@@ -3,8 +3,8 @@ import { AddNewBoardForm } from './Sidebar/ManageBoardsDialog/AddNewBoardForm'
 
 export const AddBoardCallout = () => {
   return (
-    <div className='flex flex-col flex-1 justify-center items-center gap-4 w-full'>
-      <Card className='border-2 border-neutral-300 border-solid w-1/4'>
+    <div className='flex flex-col flex-1 justify-center items-center gap-4 p-4 w-full'>
+      <Card className='border-2 border-neutral-300 border-solid w-full md:w-1/2'>
         <CardHeader className='text-center'>
           <CardTitle>Create New Board</CardTitle>
           <CardDescription>

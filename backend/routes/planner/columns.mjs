@@ -1,15 +1,15 @@
 import express from 'express'
 import db from '../../db/conn.mjs'
-import { errorHandler, getUsername } from '../../middleware/index.mjs'
+import { errorHandler } from '../../middleware/index.mjs'
 
 const router = express.Router()
 
 const addNewColumn = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId } = req.params
   const { newColumnDetails: newColumn, updatedColumns } = req.body
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`boards.${boardId}.columns`]: updatedColumns,
@@ -21,23 +21,23 @@ const addNewColumn = async (req, res) => {
 }
 
 const changeColumnOrder = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId } = req.params
   const { newColumnOrder } = req.body
   await db
     .collection('planner')
     .updateOne(
-      { username, [`boards.${boardId}.id`]: boardId },
+      { clerkUserId: userId, [`boards.${boardId}.id`]: boardId },
       { $set: { [`boards.${boardId}.columns`]: newColumnOrder } }
     )
   res.status(204).end()
 }
 
 const deleteColumn = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId, columnId } = req.params
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $pull: {
         [`boards.${boardId}.columns`]: columnId,
@@ -51,11 +51,11 @@ const deleteColumn = async (req, res) => {
 }
 
 const changeColumnName = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { columnId } = req.params
   const { newName } = req.body
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`columns.${columnId}.name`]: newName,

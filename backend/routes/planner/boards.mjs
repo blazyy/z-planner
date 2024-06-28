@@ -1,15 +1,14 @@
 import express from 'express'
 import db from '../../db/conn.mjs'
-import { errorHandler, getUsername } from '../../middleware/index.mjs'
+import { errorHandler } from '../../middleware/index.mjs'
 
 const router = express.Router()
 
 const addNewBoard = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId, boardName, unassignedCategoryDetails } = req.body
-
   await db.collection('planner').updateMany(
-    { username },
+    { clerkUserId: userId },
     {
       $push: {
         boardOrder: boardId,
@@ -29,28 +28,25 @@ const addNewBoard = async (req, res) => {
 }
 
 const changeBoardName = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId } = req.params
   const { newName } = req.body
-
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`boards.${boardId}.name`]: newName,
       },
     }
   )
-
   res.status(200).end()
 }
 
 const deleteBoard = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { boardId } = req.params
-
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $pull: {
         boardOrder: boardId,
@@ -60,12 +56,11 @@ const deleteBoard = async (req, res) => {
       },
     }
   )
-
   res.status(204).end()
 }
 
-router.patch('/planner/boards/:boardId', errorHandler(changeBoardName))
 router.post('/planner/boards/', errorHandler(addNewBoard))
+router.patch('/planner/boards/:boardId', errorHandler(changeBoardName))
 router.delete('/planner/boards/:boardId', errorHandler(deleteBoard))
 
 export default router

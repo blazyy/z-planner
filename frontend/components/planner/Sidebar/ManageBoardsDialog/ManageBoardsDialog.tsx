@@ -7,9 +7,7 @@ import { ModifyBoardDialogContent } from './ModifyBoardDialogContent'
 
 export const ManageBoardsDialog = () => {
   const { boardOrder, boards } = usePlanner()
-
   const [boardBeingModified, setBoardBeingModified] = useState('')
-
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [key, setKey] = useState(0)
 

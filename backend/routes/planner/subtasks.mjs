@@ -1,15 +1,15 @@
 import express from 'express'
 import db from '../../db/conn.mjs'
-import { errorHandler, getUsername } from '../../middleware/index.mjs'
+import { errorHandler } from '../../middleware/index.mjs'
 
 const router = express.Router()
 
 const addNewSubTaskToCard = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { taskCardId } = req.params
   const { newSubTaskDetails: newSubTask, newSubTasksOrder } = req.body
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`taskCards.${taskCardId}.subTasks`]: newSubTasksOrder,
@@ -21,11 +21,11 @@ const addNewSubTaskToCard = async (req, res) => {
 }
 
 const changeSubTaskCheckedStatus = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { subTaskId } = req.params
   const { isChecked } = req.body
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`subTasks.${subTaskId}.checked`]: isChecked,
@@ -36,11 +36,11 @@ const changeSubTaskCheckedStatus = async (req, res) => {
 }
 
 const changeSubTaskTitle = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { subTaskId } = req.params
   const { newTitle } = req.body
   await db.collection('planner').updateOne(
-    { username },
+    { clerkUserId: userId },
     {
       $set: {
         [`subTasks.${subTaskId}.title`]: newTitle,
@@ -51,29 +51,28 @@ const changeSubTaskTitle = async (req, res) => {
 }
 
 const moveSubtaskWithinCard = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { taskCardId } = req.params
   const { reorderedSubTasks } = req.body
   await db
     .collection('planner')
     .updateOne(
-      { username, [`taskCards.${taskCardId}.id`]: taskCardId },
+      { clerkUserId: userId, [`taskCards.${taskCardId}.id`]: taskCardId },
       { $set: { [`taskCards.${taskCardId}.subTasks`]: reorderedSubTasks } }
     )
   res.status(204).end()
 }
 
 const deleteSubTask = async (req, res) => {
-  const username = getUsername(req)
+  const userId = req.auth.userId
   const { taskCardId, subTaskId } = req.params
-
   // Remove the subtask from the subtask object using $unset
-  await db.collection('planner').updateOne({ username }, { $unset: { [`subTasks.${subTaskId}`]: '' } })
+  await db.collection('planner').updateOne({ clerkUserId: userId }, { $unset: { [`subTasks.${subTaskId}`]: '' } })
   // Remove the subtask from the subtask list within the specified taskcard using $pull
   await db
     .collection('planner')
     .updateOne(
-      { username, [`taskCards.${taskCardId}.id`]: taskCardId },
+      { clerkUserId: userId, [`taskCards.${taskCardId}.id`]: taskCardId },
       { $pull: { [`taskCards.${taskCardId}.subTasks`]: subTaskId } }
     )
   res.status(204).end()
