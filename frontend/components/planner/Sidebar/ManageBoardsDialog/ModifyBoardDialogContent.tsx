@@ -9,6 +9,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { DeleteBoardConfirmDialog } from './DeleteBoardConfirmDialog'
 
 type ModifyBoardDialogContentProps = {
   closeDialog: () => void
@@ -67,12 +68,11 @@ export const ModifyBoardDialogContent = ({
             </form>
           </Form>
           <div className='flex justify-between mt-5'>
-            {/* <DeleteBoardConfirmDialog
+            <DeleteBoardConfirmDialog
               boardId={boardId}
-              categoryId={categoryId}
               closeDialog={closeDialog}
-              setDetailsOfCategoryBeingModified={setDetailsOfCategoryBeingModified}
-            /> */}
+              setBoardBeingModified={setBoardBeingModified}
+            />
             <span className='flex gap-1'>
               <Button size='sm' variant='secondary' onClick={closeDialog}>
                 Cancel

@@ -4,19 +4,25 @@ import { PlannerType } from './types'
 
 export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
   switch (action.type) {
-    // DONE
     case 'dataFetchedFromDatabase': {
       return action.payload
     }
-    // DONE
     case 'selectedBoardChanged': {
       draft.selectedBoard = action.payload.boardId
       break
     }
     case 'newBoardAdded': {
-      const { newBoardOrder, newBoardDetails } = action.payload
-      draft.boardOrder = newBoardOrder
-      draft.boards[newBoardDetails.id] = newBoardDetails
+      const { boardId, boardName, unassignedCategoryDetails } = action.payload
+      draft.boardOrder.push(boardId)
+      draft.boards[boardId] = {
+        id: boardId,
+        name: boardName,
+        columns: [],
+        categories: [],
+      }
+      draft.boards[boardId].categories.push(unassignedCategoryDetails.id)
+      draft.categories[unassignedCategoryDetails.id] = unassignedCategoryDetails
+      draft.selectedBoard = boardId
       break
     }
     case 'boardNameChanged': {
@@ -24,14 +30,23 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.boards[boardId].name = newName
       break
     }
-    // DONE
+    case 'boardDeleted': {
+      const { boardId } = action.payload
+      delete draft.boards[boardId]
+      draft.boardOrder = draft.boardOrder.filter((id: string) => id !== boardId)
+      if (draft.boardOrder.length === 0) {
+        draft.selectedBoard = ''
+      } else {
+        draft.selectedBoard = draft.boardOrder[0]
+      }
+      break
+    }
     case 'newColumnAdded': {
       const { boardId, newColumnDetails, updatedColumns } = action.payload
       draft.boards[boardId].columns = updatedColumns
       draft.columns[newColumnDetails.id] = newColumnDetails
       break
     }
-    // DONE
     case 'columnDeleted': {
       const { boardId, columnId } = action.payload
       draft.boards[boardId].columns = draft.boards[boardId].columns.filter((colId: string) => colId !== columnId)
@@ -43,19 +58,16 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.columns[columnId].name = newName
       break
     }
-    // DONE
     case 'columnsReordered': {
       const { boardId, newColumnOrder } = action.payload
       draft.boards[boardId].columns = newColumnOrder
       break
     }
-    // DONE
     case 'cardMovedWithinColumn': {
       const { columnId, reorderedCardIds } = action.payload
       draft.columns[columnId].taskCards = reorderedCardIds
       break
     }
-    // DONE
     case 'cardMovedAcrossColumns': {
       const { sourceColumnId, destColumnId, sourceColumnTaskCardIds, destColumnTaskCardIds } = action.payload
       draft.columns[sourceColumnId].taskCards = sourceColumnTaskCardIds
@@ -92,7 +104,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.dataEnteredInTaskCardBeingInitialized = action.payload
       break
     }
-    // DONE
     case 'newTaskCardAdded': {
       const { columnId, newTaskCardDetails: newTaskCard, updatedTaskCards } = action.payload
       draft.taskCards[newTaskCard.id] = newTaskCard
@@ -101,25 +112,21 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.taskCardBeingInitialized = null
       break
     }
-    // DONE
     case 'taskCardCheckedStatusChanged': {
       const { taskCardId, isChecked } = action.payload
       draft.taskCards[taskCardId].checked = isChecked
       break
     }
-    // DONE
     case 'taskCardTitleChanged': {
       const { taskCardId, newTitle } = action.payload
       draft.taskCards[taskCardId].title = newTitle
       break
     }
-    // DONE
     case 'taskCardContentChanged': {
       const { taskCardId, newContent } = action.payload
       draft.taskCards[taskCardId].content = newContent
       break
     }
-    // DONE
     case 'taskCardDeleted': {
       const { columnId, taskCardId } = action.payload
       draft.columns[columnId].taskCards = draft.columns[columnId].taskCards.filter(
@@ -133,32 +140,27 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.isSubTaskBeingDragged = action.payload
       break
     }
-    // DONE
     case 'subTasksReordered': {
       const { taskCardId, reorderedSubTasks } = action.payload
       draft.taskCards[taskCardId].subTasks = reorderedSubTasks
       break
     }
-    // DONE
     case 'subTasksCheckedStatusChanged': {
       const { subTaskId, isChecked } = action.payload
       draft.subTasks[subTaskId].checked = isChecked
       break
     }
-    // DONE
     case 'subTaskTitleChanged': {
       const { subTaskId, newTitle } = action.payload
       draft.subTasks[subTaskId].title = newTitle
       break
     }
-    // DONE
     case 'newSubTaskAdded': {
       const { taskCardId, newSubTaskDetails, newSubTasksOrder } = action.payload
       draft.taskCards[taskCardId].subTasks = newSubTasksOrder
       draft.subTasks[newSubTaskDetails.id] = newSubTaskDetails
       break
     }
-    // DONE
     case 'subTaskDeletedOnBackspaceKeydown': {
       const { taskCardId, subTaskId, newSubtasks } = action.payload
       draft.taskCards[taskCardId].subTasks = newSubtasks

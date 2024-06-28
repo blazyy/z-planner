@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { useEffect, useState } from 'react'
+import { AddNewBoardButton } from './AddNewBoardButton'
 import { ModifyBoardDialogContent } from './ModifyBoardDialogContent'
 
 export const ManageBoardsDialog = () => {
@@ -61,7 +62,7 @@ export const ManageBoardsDialog = () => {
             setBoardBeingModified={setBoardBeingModified}
           />
         )}
-        {/* <AddNewCategoryButton /> */}
+        <AddNewBoardButton />
       </div>
     </Dialog>
   )

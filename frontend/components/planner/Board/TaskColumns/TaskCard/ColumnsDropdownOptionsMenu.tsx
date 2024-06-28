@@ -22,6 +22,7 @@ export const ColumnsDropdownOptionsMenu = ({
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const columnsHasTaskCards = columns[columnId].taskCards.length > 0
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -31,7 +32,9 @@ export const ColumnsDropdownOptionsMenu = ({
         <DropdownMenuItem
           disabled={columnsHasTaskCards}
           onClick={() => {
-            if (!columnsHasTaskCards) deleteColumn(boardId, columnId, dispatch, showBoundary)
+            if (!columnsHasTaskCards) {
+              deleteColumn(boardId, columnId, dispatch, showBoundary)
+            }
           }}
         >
           <div className='flex items-center gap-2'>

@@ -19,26 +19,27 @@ export const Planner = () => {
     return <LoadingSpinner />
   }
 
+  if (plannerContext.boardOrder.length === 0) {
+    return <AddBoardCallout />
+  }
+
   return (
-    <>
-      <main id='planner' className='flex flex-col flex-1 justify-start items-center w-full'>
-        {plannerContext.boardOrder.length === 0 && <AddBoardCallout />}
-        {plannerContext.boardOrder.length > 0 && (
-          <DragDropContext
-            onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
-            onDragEnd={(result) =>
-              handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
-            }
-          >
-            <div className='flex justify-between gap-2 w-full h-full'>
-              <PlannerFiltersProvider>
-                <Sidebar />
-                <Board boardId={plannerContext.selectedBoard} />
-              </PlannerFiltersProvider>
-            </div>
-          </DragDropContext>
-        )}
-      </main>
-    </>
+    <main id='planner' className='flex flex-col flex-1 justify-start items-center w-full'>
+      {plannerContext.boardOrder.length > 0 && plannerContext.selectedBoard && (
+        <DragDropContext
+          onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
+          onDragEnd={(result) =>
+            handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
+          }
+        >
+          <div className='flex justify-between gap-2 w-full h-full'>
+            <PlannerFiltersProvider>
+              <Sidebar />
+              <Board boardId={plannerContext.selectedBoard} />
+            </PlannerFiltersProvider>
+          </div>
+        </DragDropContext>
+      )}
+    </main>
   )
 }
