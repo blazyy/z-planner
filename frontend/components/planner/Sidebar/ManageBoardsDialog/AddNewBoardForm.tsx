@@ -1,10 +1,12 @@
-import { addNewBoardToPlanner } from '@/app/utils/plannerUtils/boardUtils/addNewBoardToPlanner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { UNASSIGNED_CATEGORY_COLOR, UNASSIGNED_CATEGORY_ID, UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -21,7 +23,7 @@ type AddNewBoardFormProps = {
 
 export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardFormProps) => {
   const dispatch = usePlannerDispatch()!
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,10 +32,39 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
     },
   })
 
+  const addNewBoardMutation = useMutation({
+    mutationFn: async (newBoardData: any) => {
+      const token = await getToken()
+      return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`, newBoardData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    },
+    onMutate: async (newBoardData) => {
+      dispatch({
+        type: 'newBoardAdded',
+        payload: newBoardData,
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const boardId = crypto.randomUUID()
-    const boardName = values.boardName
-    addNewBoardToPlanner(boardId, boardName, dispatch, showBoundary)
+    const newBoardData = {
+      boardId: crypto.randomUUID(),
+      boardName: values.boardName,
+      unassignedCategoryDetails: {
+        id: UNASSIGNED_CATEGORY_ID,
+        name: UNASSIGNED_CATEGORY_NAME,
+        color: UNASSIGNED_CATEGORY_COLOR,
+      },
+    }
+    addNewBoardMutation.mutate(newBoardData)
     closeDialog()
   }
 

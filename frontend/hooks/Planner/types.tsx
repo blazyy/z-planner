@@ -79,6 +79,7 @@ export type BoardsType = {
 // const initialState = useState(undefined)
 
 export type PlannerType = {
+  backendErrorOccurred: boolean
   selectedBoard: string
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string

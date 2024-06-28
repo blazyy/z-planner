@@ -4,6 +4,7 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { PlannerFiltersProvider } from '@/hooks/PlannerFilters/PlannerFilters'
 import { DragDropContext } from '@hello-pangea/dnd'
 import { useErrorBoundary } from 'react-error-boundary'
+import { BackendErrorAlertCard } from '../global/AlertCard/AlertCard'
 import { AddBoardCallout } from './AddBoardCallout'
 import { Board } from './Board/Board'
 import { Sidebar } from './Sidebar/Sidebar'
@@ -13,6 +14,10 @@ export const Planner = () => {
   const plannerContext = usePlanner()
   const plannerDispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
+
+  if (plannerContext.backendErrorOccurred) {
+    return <BackendErrorAlertCard />
+  }
 
   if (plannerContext.boardOrder.length === 0) {
     return <AddBoardCallout />

@@ -8,6 +8,7 @@ import { plannerReducer } from './plannerReducer'
 import { PlannerType } from './types'
 
 const initialEmptyState: PlannerType = {
+  backendErrorOccurred: false,
   selectedBoard: '',
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',
