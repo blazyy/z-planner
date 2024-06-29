@@ -1,4 +1,3 @@
-import changeCardCheckedStatus from '@/app/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import changeCardContent from '@/app/utils/plannerUtils/cardUtils/changeCardContent'
 import changeCardTitle from '@/app/utils/plannerUtils/cardUtils/changeCardTitle'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,6 +6,9 @@ import { DialogContent } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
@@ -20,7 +22,38 @@ export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
   const { showBoundary } = useErrorBoundary()
   const dispatch = usePlannerDispatch()!
   const { taskCards } = usePlanner()
+  const { getToken } = useAuth()
   const task = taskCards[id]
+
+  const changeCardCheckedStatusMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      const { taskCardId, isChecked } = payload
+      return axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/checked`,
+        {
+          isChecked,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      dispatch({
+        type: 'taskCardCheckedStatusChanged',
+        payload: payload,
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   return (
     <DialogContent className='p-0'>
       <Card className='p-2'>
@@ -34,9 +67,13 @@ export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
                 <Checkbox
                   className='w-5 h-5'
                   checked={task.checked}
-                  onCheckedChange={(isChecked) =>
-                    changeCardCheckedStatus(id, Boolean(isChecked), dispatch, showBoundary)
-                  }
+                  onCheckedChange={(isChecked) => {
+                    const payload = {
+                      taskCardId: id,
+                      isChecked: Boolean(isChecked),
+                    }
+                    changeCardCheckedStatusMutation.mutate(payload)
+                  }}
                 />
                 <Textarea
                   value={task.title}

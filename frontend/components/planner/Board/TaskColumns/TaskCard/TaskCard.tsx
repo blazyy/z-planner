@@ -1,12 +1,13 @@
-import changeCardCheckedStatus from '@/app/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@clerk/nextjs'
 import { Draggable } from '@hello-pangea/dnd'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { CategoryBadge } from './CategoryBadge'
 import { DueDateIndicator } from './DueDateIndicator'
 import { ProgressBar } from './ProgressBar'
@@ -55,10 +56,40 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
   // was in the wrapper component. There was no straightforward way to pass that info down to it's children (i.e. TaskCard).
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
-  const plannerDispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
+  const dispatch = usePlannerDispatch()
   const { taskCards, idOfCardBeingDragged } = usePlanner()
   const task = taskCards[taskCardId]
+  const { getToken } = useAuth()
+
+  const changeCardCheckedStatusMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      const { taskCardId, isChecked } = payload
+      return axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/checked`,
+        {
+          isChecked,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      console.log('bruh', payload)
+      dispatch({
+        type: 'taskCardCheckedStatusChanged',
+        payload: payload,
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
 
   return (
     <TaskCardWrapper index={index} boardId={boardId} columnId={columnId} taskCardId={taskCardId}>
@@ -88,7 +119,11 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
               onClick={(event) => {
                 event.preventDefault() // Needed to prevent dialog from triggering
                 const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-                changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
+                const payload = {
+                  taskCardId,
+                  isChecked: !isChecked,
+                }
+                changeCardCheckedStatusMutation.mutate(payload)
               }}
             />
             <DueDateIndicator taskCardId={taskCardId} />
