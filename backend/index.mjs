@@ -11,8 +11,19 @@ import subtasks from './routes/planner/subtasks.mjs'
 
 const PORT = process.env.PORT || 5050
 const app = express()
+const allowedOrigin = 'https://zenith-planner-git-main-blazyys-projects.vercel.app'
 
-app.use(cors())
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (origin === allowedOrigin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+}
+
+app.use(cors(corsOptions))
 app.use(express.json())
 
 app.use(ClerkExpressRequireAuth())
