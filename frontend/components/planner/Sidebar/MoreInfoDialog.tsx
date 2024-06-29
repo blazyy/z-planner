@@ -27,7 +27,7 @@ export const MoreInfoDialog = () => {
             <div className='flex justify-between items-center gap-2'>
               <span>This is an open source project. Report any issues or feature requests on the repository.</span>
               <Button>
-                <a href='https://github.com/blazyy/planner' target='_blank' rel='noopener noreferrer'>
+                <a href='https://github.com/blazyy/zenith-planner' target='_blank' rel='noopener noreferrer'>
                   <div className='flex items-center gap-2'>
                     <Github className='mr-2 w-4 h-4' /> GitHub
                   </div>
