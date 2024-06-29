@@ -1,4 +1,4 @@
-import { calsans } from '@/app/layout'
+import { calsans } from '@/app/home/layout'
 import { cn } from '@/lib/utils'
 
 export function SiteLogo() {

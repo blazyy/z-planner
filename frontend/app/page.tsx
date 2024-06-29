@@ -3,7 +3,7 @@ import { AuroraBackground } from '@/components/ui/aurora-background'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { calsans } from './layout'
+import { calsans } from './home/layout'
 
 export default function Home() {
   return (
