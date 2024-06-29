@@ -1,3 +1,4 @@
+import deleteSubTask from '@/app/utils/plannerUtils/subTaskUtils/deleteSubTask'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { DEBOUNCE_TIME_MS } from '@/constants/constants'
@@ -11,7 +12,6 @@ import { debounce } from 'lodash'
 import { GripVertical } from 'lucide-react'
 import { useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
-import { handleKeyDownOnSubTask } from './utils'
 
 type EditableSubTaskProps = {
   index: number
@@ -88,13 +88,48 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
     },
   })
 
+  const addNewSubTaskOnEnterKeydownMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      return axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks`,
+        {
+          newSubTaskDetails: payload.newSubTaskDetails,
+          newSubTasksOrder: payload.newSubTasksOrder,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      dispatch({
+        type: 'newSubTaskAdded',
+        payload: {
+          taskCardId,
+          newSubTaskDetails: payload.newSubTaskDetails,
+          newSubTasksOrder: payload.newSubTasksOrder,
+        },
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   return (
     <div
       ref={provided.innerRef}
       {...provided.draggableProps}
       className={`flex gap-2 items-center ${isBeingDragged ? 'border-2 rounded-lg border-gray-400/50' : ''}`}
       onMouseEnter={() => {
-        if (!isSubTaskBeingDragged) setShowDragHandle(true) // Only show drag handle on hover when another subtask isn't being actively dragged
+        if (!isSubTaskBeingDragged) {
+          setShowDragHandle(true) // Only show drag handle on hover when another subtask isn't being actively dragged
+        }
       }}
       onMouseLeave={() => {
         setShowDragHandle(false)
@@ -116,9 +151,39 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         type='text'
         value={subTask.title}
         className='my-1 px-1 border-none h-1 text-gray-500 text-sm focus-visible:ring-0 focus-visible:ring-transparent'
-        onKeyDown={(event) =>
-          handleKeyDownOnSubTask(taskCards, subTasks, taskCardId, subTask, event, dispatch, showBoundary)
-        }
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowDown') {
+            /* Moves cursor focus to subtask below using the subtask ID */
+            const subTaskIds = taskCards[taskCardId].subTasks
+            const subTaskIndex = subTaskIds.findIndex((subTaskId) => subTaskId === subTask.id)
+            if (subTaskIndex < subTaskIds.length - 1) {
+              document.getElementById(subTaskIds[subTaskIndex + 1])?.focus()
+            }
+          } else if (event.key === 'ArrowUp') {
+            /* Moves cursor focus to subtask below using the subtask ID */
+            const subTaskIds = taskCards[taskCardId].subTasks
+            const subTaskIndex = subTaskIds.findIndex((subTaskId) => subTaskId === subTask.id)
+            if (subTaskIndex > 0) {
+              document.getElementById(subTaskIds[subTaskIndex - 1])?.focus()
+            }
+          } else if (event.key === 'Enter') {
+            const newSubTaskId = crypto.randomUUID()
+            const newSubTasksOrder = Array.from(taskCards[taskCardId].subTasks)
+            let subTaskIndex = newSubTasksOrder.findIndex((id: string) => id === subTask.id)
+            newSubTasksOrder.splice(subTaskIndex + 1, 0, newSubTaskId)
+            addNewSubTaskOnEnterKeydownMutation.mutate({
+              newSubTaskDetails: {
+                id: newSubTaskId,
+                title: '',
+                checked: false,
+              },
+              newSubTasksOrder,
+            })
+          } else if (event.key === 'Backspace' && subTask.title === '') {
+            event.preventDefault() // Prevents the last character of the task from being delete when the cursor jumps to the task above
+            deleteSubTask(taskCards[taskCardId], subTask.id, dispatch, showBoundary)
+          }
+        }}
         onChange={(event) => changeSubTaskTitleMutation.mutate({ subTaskId: subTask.id, newTitle: event.target.value })}
       />
     </div>
