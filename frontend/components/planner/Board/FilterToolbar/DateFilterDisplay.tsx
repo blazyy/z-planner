@@ -7,7 +7,9 @@ import { areDatesEqual } from '../TaskColumns/helpers'
 
 export const DateFilterDisplay = () => {
   const { dateFilter } = usePlannerFilters()
-  if (areDatesEqual(new Date(), dateFilter)) return null
+  if (!dateFilter || areDatesEqual(new Date(), dateFilter)) {
+    return null
+  }
   return (
     <Button variant={'outline'} className={cn('justify-start text-left font-normal text-muted-foreground ')}>
       <CalendarIcon className='mr-2 w-4 h-4' />
