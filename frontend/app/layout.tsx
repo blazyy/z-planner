@@ -6,7 +6,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
     <ClerkProvider>
       <html lang='en'>
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
           <body>{children}</body>
         </ThemeProvider>
       </html>
