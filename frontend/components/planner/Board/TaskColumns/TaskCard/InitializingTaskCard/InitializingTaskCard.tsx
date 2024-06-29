@@ -1,4 +1,3 @@
-import { addNewCardToColumn } from '@/app/utils/plannerUtils/cardUtils/addNewCardToColumn'
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -7,9 +6,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { CancelButton } from './CancelButton'
@@ -29,9 +30,9 @@ const formSchema = z.object({
 
 export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   const { columns, taskCardBeingInitialized } = usePlanner()
   const [selectedCategory, setSelectedCategory] = useState(UNASSIGNED_CATEGORY_ID)
+  const { getToken } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,14 +57,53 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
     })
   })
 
+  const addNewCardMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      const { columnId, newTaskCardDetails, updatedTaskCards } = payload
+      return axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}/cards`,
+        {
+          newTaskCardDetails,
+          updatedTaskCards,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      dispatch({
+        type: 'newTaskCardAdded',
+        payload: payload,
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newTaskCardDetails = {
       id: taskCardBeingInitialized!.taskCardId,
       title: values.taskCardTitle,
       category: selectedCategory,
       content: values.taskCardDesc,
+      checked: false,
+      subTasks: [],
     }
-    addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch, showBoundary)
+    const updatedTaskCards = Array.from(columns[columnId].taskCards)
+    updatedTaskCards.unshift(newTaskCardDetails.id) // Add to beginning of array
+    const payload = {
+      columnId,
+      newTaskCardDetails,
+      updatedTaskCards,
+    }
+    addNewCardMutation.mutate(payload)
   }
 
   return (

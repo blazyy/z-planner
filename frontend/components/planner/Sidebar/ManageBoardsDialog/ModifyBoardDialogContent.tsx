@@ -1,11 +1,12 @@
-import { changeBoardInfo } from '@/app/utils/plannerUtils/boardUtils/changeBoardInfo'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { DeleteBoardConfirmDialog } from './DeleteBoardConfirmDialog'
@@ -24,7 +25,7 @@ const formSchema = z.object({
 export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDialogContentProps) => {
   const { boards } = usePlanner()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,9 +35,42 @@ export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDi
     },
   })
 
+  const changeBoardInfoMutation = useMutation({
+    mutationFn: async (newBoardData: any) => {
+      const token = await getToken()
+      const { newName } = newBoardData
+      return axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`,
+        {
+          newName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (newBoardData) => {
+      dispatch({
+        type: 'boardNameChanged',
+        payload: newBoardData,
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const newBoardData = {
+      boardId,
+      newName: values.boardName,
+    }
+    changeBoardInfoMutation.mutate(newBoardData)
     closeDialog()
-    changeBoardInfo(boardId, values.boardName, dispatch, showBoundary)
   }
 
   return (

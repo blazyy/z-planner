@@ -1,4 +1,3 @@
-import deleteBoard from '@/app/utils/plannerUtils/boardUtils/deleteBoard'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +12,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useAuth } from '@clerk/nextjs'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 
 type DeleteBoardConfirmDialogProps = {
   boardId: string
@@ -22,9 +23,32 @@ type DeleteBoardConfirmDialogProps = {
 
 export const DeleteBoardConfirmDialog = ({ boardId, closeDialog }: DeleteBoardConfirmDialogProps) => {
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   const { boards, columns } = usePlanner()
   const boardHasTasks = boards[boardId].columns.reduce((acc, col) => acc + columns[col].taskCards.length, 0) > 0
+  const { getToken } = useAuth()
+
+  const deleteBoardMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken()
+      return axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    },
+    onMutate: async () => {
+      dispatch({
+        type: 'boardDeleted',
+        payload: { boardId },
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   return (
     <AlertDialog>
       <div className='flex justify-between items-end gap-2'>
@@ -60,7 +84,7 @@ export const DeleteBoardConfirmDialog = ({ boardId, closeDialog }: DeleteBoardCo
           <AlertDialogAction
             variant='destructive'
             onClick={() => {
-              deleteBoard(boardId, dispatch, showBoundary)
+              deleteBoardMutation.mutate()
               closeDialog()
             }}
           >
