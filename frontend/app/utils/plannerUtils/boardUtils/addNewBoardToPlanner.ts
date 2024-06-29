@@ -1,32 +1,45 @@
+import { UNASSIGNED_CATEGORY_COLOR, UNASSIGNED_CATEGORY_ID, UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const addNewBoardToPlanner = async (
-  boardOrder: string[],
-  newBoardDetails: {
-    id: string
-    name: string
-    columns: string[]
-  },
+  boardId: string,
+  boardName: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
-  const newBoardOrder = Array.from(boardOrder)
-  newBoardOrder.push(newBoardDetails.id) // Add to beginning of array
+  const unassignedCategoryDetails = {
+    id: UNASSIGNED_CATEGORY_ID,
+    name: UNASSIGNED_CATEGORY_NAME,
+    color: UNASSIGNED_CATEGORY_COLOR,
+  }
 
   dispatch({
     type: 'newBoardAdded',
     payload: {
-      newBoardOrder,
-      newBoardDetails,
+      boardId,
+      boardName,
+      unassignedCategoryDetails,
     },
   })
-
+  const token = await getToken()
   axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`, {
-      newBoardOrder,
-      newBoardDetails,
+    .post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`,
+      {
+        boardId,
+        boardName,
+        unassignedCategoryDetails,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useAuth } from '@clerk/nextjs'
 import { badgeClassNames } from './utils'
 
 type CategoryBadgeProps = {
@@ -16,10 +16,9 @@ type CategoryBadgeProps = {
 }
 
 export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
+  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()!
   const { boards, taskCards, categories } = usePlanner()
-  const { showBoundary } = useErrorBoundary()
-
   const categoryInfo = categories[taskCards[taskCardId].category]
   const categoriesInBoard = boards[boardId].categories
 
@@ -35,7 +34,7 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
             checked={categoryInfo.name === categories[categoryId].name}
             onClick={(event) => {
               event.preventDefault()
-              changeCardCategory(taskCardId, categoryId, dispatch, showBoundary) // TODO
+              changeCardCategory(taskCardId, categoryId, dispatch, getToken)
             }}
           >
             <Badge className={badgeClassNames[categories[categoryId].color]}>{categories[categoryId].name}</Badge>

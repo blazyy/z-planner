@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export default async function deleteCategory(
   boardId: string,
   categoryId: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) {
   dispatch({
     type: 'categoryDeleted',
@@ -15,8 +14,16 @@ export default async function deleteCategory(
       categoryId,
     },
   })
-
+  const token = await getToken()
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories/${categoryId}`)
-    .catch((error) => showErrorBoundary(error))
+    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories/${categoryId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    })
 }

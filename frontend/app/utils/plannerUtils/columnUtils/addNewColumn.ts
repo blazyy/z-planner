@@ -1,13 +1,12 @@
 import { BoardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const addNewColumn = async (
   board: BoardInfoType,
   newColumnName: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   const newColumnId = crypto.randomUUID()
   const newColumnDetails = {
@@ -25,10 +24,23 @@ export const addNewColumn = async (
       updatedColumns,
     },
   })
+  const token = await getToken()
   axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${board.id}/columns`, {
-      newColumnDetails,
-      updatedColumns,
+    .post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${board.id}/columns`,
+      {
+        newColumnDetails,
+        updatedColumns,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

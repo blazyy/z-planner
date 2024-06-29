@@ -1,3 +1,4 @@
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node'
 import cors from 'cors'
 import express from 'express'
 import './loadEnvironment.mjs'
@@ -14,7 +15,8 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Load the /posts routes
+app.use(ClerkExpressRequireAuth())
+
 app.use('/', [planner, boards, columns, cards, subtasks, categories])
 
 // Global error handling

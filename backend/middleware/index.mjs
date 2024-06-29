@@ -1,5 +1,3 @@
-export const getUsername = (req) => 'user1'
-
 const handleServerError = (res, error) => {
   console.error(error)
   res.status(500).send('Internal Server Error')

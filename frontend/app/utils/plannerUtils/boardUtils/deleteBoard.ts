@@ -1,23 +1,20 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
 
-export default async function deleteColumn(
+export default async function deleteBoard(
   boardId: string,
-  columnId: string,
   dispatch: Dispatch<any>,
   getToken: () => Promise<string | null>
 ) {
   dispatch({
-    type: 'columnDeleted',
+    type: 'boardDeleted',
     payload: {
       boardId,
-      columnId,
     },
   })
   const token = await getToken()
-
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns/${columnId}/delete`, {
+    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

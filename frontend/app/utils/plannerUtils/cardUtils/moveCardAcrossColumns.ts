@@ -1,7 +1,6 @@
 import { ColumnsType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export default async function moveCardAcrossColumns(
   columns: ColumnsType,
@@ -9,7 +8,7 @@ export default async function moveCardAcrossColumns(
   source: any,
   destination: any,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) {
   const sourceColumnId = source.droppableId
   const sourceColumn = columns[sourceColumnId]
@@ -30,13 +29,25 @@ export default async function moveCardAcrossColumns(
       destColumnTaskCardIds,
     },
   })
-
+  const token = await getToken()
   axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/move`, {
-      sourceColumnId,
-      destColumnId,
-      sourceColumnTaskCardIds,
-      destColumnTaskCardIds,
+    .patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/move`,
+      {
+        sourceColumnId,
+        destColumnId,
+        sourceColumnTaskCardIds,
+        destColumnTaskCardIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

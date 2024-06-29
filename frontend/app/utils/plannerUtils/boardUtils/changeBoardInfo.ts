@@ -1,25 +1,25 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
 
-export default async function changeCardCheckedStatus(
-  taskCardId: string,
-  isChecked: boolean,
+export const changeBoardInfo = async (
+  boardId: string,
+  newName: string,
   dispatch: Dispatch<any>,
   getToken: () => Promise<string | null>
-) {
+) => {
   dispatch({
-    type: 'taskCardCheckedStatusChanged',
+    type: 'boardNameChanged',
     payload: {
-      taskCardId,
-      isChecked,
+      boardId,
+      newName,
     },
   })
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/checked`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`,
       {
-        isChecked,
+        newName,
       },
       {
         headers: {

@@ -1,7 +1,6 @@
 import { ColumnInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const addNewCardToColumn = async (
   column: ColumnInfoType,
@@ -12,7 +11,7 @@ export const addNewCardToColumn = async (
     content: string | undefined
   },
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   const newTaskCardDetails = {
     id: cardDetails.id,
@@ -22,10 +21,8 @@ export const addNewCardToColumn = async (
     checked: false,
     subTasks: [],
   }
-
   const updatedTaskCards = Array.from(column.taskCards)
   updatedTaskCards.unshift(cardDetails.id) // Add to beginning of array
-
   dispatch({
     type: 'newTaskCardAdded',
     payload: {
@@ -34,11 +31,23 @@ export const addNewCardToColumn = async (
       updatedTaskCards,
     },
   })
-
+  const token = await getToken()
   axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${column.id}/cards`, {
-      newTaskCardDetails,
-      updatedTaskCards,
+    .post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${column.id}/cards`,
+      {
+        newTaskCardDetails,
+        updatedTaskCards,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

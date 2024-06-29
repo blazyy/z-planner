@@ -7,7 +7,7 @@ import { DialogContent } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useAuth } from '@clerk/nextjs'
 import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
@@ -17,8 +17,8 @@ type TaskCardDialogProps = {
 }
 
 export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
-  const { showBoundary } = useErrorBoundary()
   const dispatch = usePlannerDispatch()!
+  const { getToken } = useAuth()
   const { taskCards } = usePlanner()
   const task = taskCards[id]
   return (
@@ -34,14 +34,12 @@ export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
                 <Checkbox
                   className='w-5 h-5'
                   checked={task.checked}
-                  onCheckedChange={(isChecked) =>
-                    changeCardCheckedStatus(id, Boolean(isChecked), dispatch, showBoundary)
-                  }
+                  onCheckedChange={(isChecked) => changeCardCheckedStatus(id, Boolean(isChecked), dispatch, getToken)}
                 />
                 <Textarea
                   value={task.title}
                   className='items-center p-0 border-none h-[35px] text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-                  onChange={(event) => changeCardTitle(id, event.target.value, dispatch, showBoundary)}
+                  onChange={(event) => changeCardTitle(id, event.target.value, dispatch, getToken)}
                 />
               </div>
             </div>
@@ -54,7 +52,7 @@ export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
             placeholder='Notes...'
             value={task.content}
             className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-            onChange={(event) => changeCardContent(id, event.target.value, dispatch, showBoundary)}
+            onChange={(event) => changeCardContent(id, event.target.value, dispatch, getToken)}
           />
         </CardContent>
         <CardFooter className='flex justify-between'>{/* <CategoryBadge taskCardId={id} /> */}</CardFooter>

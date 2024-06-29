@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const addNewCategory = async (
   boardId: string,
@@ -10,7 +9,7 @@ export const addNewCategory = async (
     color: string
   },
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   dispatch({
     type: 'newCategoryAdded',
@@ -19,10 +18,22 @@ export const addNewCategory = async (
       newCategoryDetails,
     },
   })
-
+  const token = await getToken()
   axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories`, {
-      newCategoryDetails,
+    .post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories`,
+      {
+        newCategoryDetails,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

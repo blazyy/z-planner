@@ -1,3 +1,4 @@
+import { useAuth } from '@clerk/nextjs'
 import axios from 'axios'
 import { Dispatch, createContext, useContext, useEffect, useReducer } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
@@ -34,11 +35,17 @@ export const usePlannerDispatch = () => {
 export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
   const { showBoundary } = useErrorBoundary()
   const [plannerData, dispatch] = useReducer(plannerReducer, initialEmptyState)
+  const { getToken } = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = await getToken()
       axios
-        .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner`)
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           const data = response.data
           dispatch({
@@ -46,7 +53,6 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
             payload: {
               ...initialEmptyState,
               hasLoaded: true,
-              // scheduledTaskCards: data.scheduledTaskCards,
               selectedBoard: data.boardOrder.length > 0 ? data.boardOrder[0] : '',
               boardOrder: data.boardOrder,
               boards: data.boards,
@@ -60,7 +66,7 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
         .catch((error) => showBoundary(error))
     }
     fetchData()
-  }, [showBoundary])
+  }, [showBoundary, getToken])
 
   return (
     <PlannerContext.Provider value={plannerData}>

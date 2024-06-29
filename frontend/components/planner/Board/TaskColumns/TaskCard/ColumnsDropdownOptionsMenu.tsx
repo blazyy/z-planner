@@ -1,6 +1,7 @@
 import deleteColumn from '@/app/utils/plannerUtils/columnUtils/deleteColumn'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { Dispatch, SetStateAction } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { FiEdit2, FiTrash2 } from 'react-icons/fi'
@@ -18,10 +19,12 @@ export const ColumnsDropdownOptionsMenu = ({
   columnId,
   setIsEditingColumnName,
 }: ColumnsDropdownOptionsMenuProps) => {
+  const { getToken } = useAuth()
   const { columns } = usePlanner()
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   const columnsHasTaskCards = columns[columnId].taskCards.length > 0
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -31,7 +34,9 @@ export const ColumnsDropdownOptionsMenu = ({
         <DropdownMenuItem
           disabled={columnsHasTaskCards}
           onClick={() => {
-            if (!columnsHasTaskCards) deleteColumn(boardId, columnId, dispatch, showBoundary)
+            if (!columnsHasTaskCards) {
+              deleteColumn(boardId, columnId, dispatch, getToken)
+            }
           }}
         >
           <div className='flex items-center gap-2'>

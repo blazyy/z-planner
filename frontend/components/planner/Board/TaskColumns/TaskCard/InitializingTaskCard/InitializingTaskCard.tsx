@@ -7,9 +7,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { CancelButton } from './CancelButton'
@@ -28,8 +28,8 @@ const formSchema = z.object({
 })
 
 export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {
+  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   const { columns, taskCardBeingInitialized } = usePlanner()
   const [selectedCategory, setSelectedCategory] = useState(UNASSIGNED_CATEGORY_ID)
 
@@ -63,7 +63,7 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
       category: selectedCategory,
       content: values.taskCardDesc,
     }
-    addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch, showBoundary)
+    addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch, getToken)
   }
 
   return (

@@ -9,10 +9,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { ToastAction } from '@/components/ui/toast'
-import { Toaster } from '@/components/ui/toaster'
-import { useToast } from '@/components/ui/use-toast'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { useErrorBoundary } from 'react-error-boundary'
 
 type ContextMenuWrapperProps = {
@@ -22,12 +20,11 @@ type ContextMenuWrapperProps = {
 }
 
 export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {
-  const { toast } = useToast()
+  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
   return (
     <AlertDialog>
-      <Toaster />
       {children}
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -40,19 +37,7 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              deleteCard(columnId, taskCardId, dispatch, showBoundary)
-              toast({
-                title: 'Deleted task',
-                // description: 'Friday, February 10, 2023 at 5:57 PM',
-                action: (
-                  <ToastAction altText='Undo'>
-                    <div className='flex gap-2'>
-                      <span>Undo</span>
-                      <span className='text-gray-400'> ⌘Z</span>
-                    </div>
-                  </ToastAction>
-                ),
-              })
+              deleteCard(columnId, taskCardId, dispatch, getToken)
             }}
           >
             Continue

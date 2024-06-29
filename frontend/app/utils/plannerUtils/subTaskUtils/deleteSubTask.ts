@@ -1,13 +1,12 @@
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export default async function deleteSubTask(
   taskCard: TaskCardInfoType,
   subTaskId: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) {
   /* Moves cursor focus to subtask above using the subtask ID */
   const subTasksCopy = Array.from(taskCard.subTasks)
@@ -25,8 +24,16 @@ export default async function deleteSubTask(
       newSubtasks,
     },
   })
-
+  const token = await getToken()
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCard.id}/subtasks/${subTaskId}/delete`)
-    .catch((error) => showErrorBoundary(error))
+    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCard.id}/subtasks/${subTaskId}/delete`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    })
 }
