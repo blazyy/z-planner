@@ -7,6 +7,10 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     case 'dataFetchedFromDatabase': {
       return action.payload
     }
+    case 'backendErrorOccurred': {
+      draft.backendErrorOccurred = true
+      break
+    }
     case 'selectedBoardChanged': {
       draft.selectedBoard = action.payload.boardId
       break

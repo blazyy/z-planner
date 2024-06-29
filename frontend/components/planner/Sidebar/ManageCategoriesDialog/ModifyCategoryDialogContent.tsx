@@ -5,9 +5,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { CategoryColorPicker } from './CategoryColorPicker'
@@ -32,9 +32,9 @@ export const ModifyCategoryDialogContent = ({
   closeDialog,
   setDetailsOfCategoryBeingModified,
 }: ModifyCategoryDialogContentProps) => {
+  const { getToken } = useAuth()
   const { categories } = usePlanner()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,7 +51,7 @@ export const ModifyCategoryDialogContent = ({
       boardId: '',
       categoryId: '',
     }) // Used to reset the category being modified because once onSubmit is called, the category no longer exists
-    changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, showBoundary)
+    changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, getToken)
   }
 
   return (

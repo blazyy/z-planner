@@ -80,6 +80,7 @@ export type BoardsType = {
 
 export type PlannerType = {
   hasLoaded: boolean
+  backendErrorOccurred: boolean
   selectedBoard: string
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string

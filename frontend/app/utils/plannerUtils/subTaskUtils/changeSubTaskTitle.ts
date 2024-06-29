@@ -2,22 +2,37 @@ import { DEBOUNCE_TIME_MS } from '@/constants/constants'
 import axios from 'axios'
 import debounce from 'lodash/debounce'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
-const debouncedApiCall = debounce(async (subTaskId: string, newTitle: string, showErrorBoundary: ErrorBoundaryType) => {
-  axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/subtasks/${subTaskId}/title`, {
-      newTitle,
-    })
-    .catch((error) => showErrorBoundary(error))
-}, DEBOUNCE_TIME_MS)
+const debouncedApiCall = debounce(
+  async (subTaskId: string, newTitle: string, dispatch: Dispatch<any>, token: string | null) => {
+    axios
+      .patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/subtasks/${subTaskId}/title`,
+        {
+          newTitle,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .catch((error) => {
+        dispatch({
+          type: 'backendErrorOccurred',
+        })
+      })
+  },
+  DEBOUNCE_TIME_MS
+)
 
 export default async function changeSubTaskTitle(
   subTaskId: string,
   newTitle: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) {
+  const token = await getToken()
   dispatch({
     type: 'subTaskTitleChanged',
     payload: {
@@ -25,5 +40,5 @@ export default async function changeSubTaskTitle(
       newTitle,
     },
   })
-  debouncedApiCall(subTaskId, newTitle, showErrorBoundary)
+  debouncedApiCall(subTaskId, newTitle, dispatch, token)
 }

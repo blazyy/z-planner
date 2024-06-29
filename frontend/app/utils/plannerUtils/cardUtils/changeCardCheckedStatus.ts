@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export default async function changeCardCheckedStatus(
   taskCardId: string,
   isChecked: boolean,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) {
   dispatch({
     type: 'taskCardCheckedStatusChanged',
@@ -15,9 +14,22 @@ export default async function changeCardCheckedStatus(
       isChecked,
     },
   })
+  const token = await getToken()
   axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/checked`, {
-      isChecked,
+    .patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/checked`,
+      {
+        isChecked,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

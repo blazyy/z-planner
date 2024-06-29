@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -21,7 +21,7 @@ type AddNewBoardFormProps = {
 
 export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardFormProps) => {
   const dispatch = usePlannerDispatch()!
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,7 +33,7 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const boardId = crypto.randomUUID()
     const boardName = values.boardName
-    addNewBoardToPlanner(boardId, boardName, dispatch, showBoundary)
+    addNewBoardToPlanner(boardId, boardName, dispatch, getToken)
     closeDialog()
   }
 

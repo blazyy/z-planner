@@ -4,8 +4,8 @@ import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/c
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { DeleteBoardConfirmDialog } from './DeleteBoardConfirmDialog'
@@ -22,9 +22,9 @@ const formSchema = z.object({
 })
 
 export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDialogContentProps) => {
+  const { getToken } = useAuth()
   const { boards } = usePlanner()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,7 +36,7 @@ export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDi
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     closeDialog()
-    changeBoardInfo(boardId, values.boardName, dispatch, showBoundary)
+    changeBoardInfo(boardId, values.boardName, dispatch, getToken)
   }
 
   return (

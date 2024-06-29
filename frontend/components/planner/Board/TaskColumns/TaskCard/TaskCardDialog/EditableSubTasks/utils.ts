@@ -26,13 +26,13 @@ const handleArrowUp: HandleArrowUpFunc = (taskCards, taskCardId, subTask) => {
   }
 }
 
-const handleBackspace: HandleBackspaceFunc = (taskCard, subTaskId, event, dispatch, showBoundary) => {
+const handleBackspace: HandleBackspaceFunc = (taskCard, subTaskId, event, dispatch, getToken) => {
   event.preventDefault() // Prevents the last character of the task from being delete when the cursor jumps to the task above
-  deleteSubTask(taskCard, subTaskId, dispatch, showBoundary)
+  deleteSubTask(taskCard, subTaskId, dispatch, getToken)
 }
 
-const handleEnter: HandleEnterFunc = (taskCards, taskCardId, subTask, dispatch, showBoundary) => {
-  addNewSubTaskToCardOnEnterKeydown(taskCards[taskCardId], subTask.id, dispatch, showBoundary)
+const handleEnter: HandleEnterFunc = (taskCards, taskCardId, subTask, dispatch, getToken) => {
+  addNewSubTaskToCardOnEnterKeydown(taskCards[taskCardId], subTask.id, dispatch, getToken)
 }
 
 export const handleKeyDownOnSubTask: HandleKeyDownOnSubTaskFunc = (
@@ -42,11 +42,11 @@ export const handleKeyDownOnSubTask: HandleKeyDownOnSubTaskFunc = (
   subTask,
   event,
   dispatch,
-  showBoundary
+  getToken
 ) => {
   if (event.key === 'ArrowDown') handleArrowDown(taskCards, taskCardId, subTask)
   else if (event.key === 'ArrowUp') handleArrowUp(taskCards, taskCardId, subTask)
-  else if (event.key === 'Enter') handleEnter(taskCards, taskCardId, subTask, dispatch, showBoundary)
+  else if (event.key === 'Enter') handleEnter(taskCards, taskCardId, subTask, dispatch, getToken)
   else if (event.key === 'Backspace' && subTask.title === '')
-    handleBackspace(taskCards[taskCardId], subTask.id, event, dispatch, showBoundary)
+    handleBackspace(taskCards[taskCardId], subTask.id, event, dispatch, getToken)
 }

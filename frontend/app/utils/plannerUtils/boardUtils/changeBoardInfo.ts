@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const changeBoardInfo = async (
   boardId: string,
   newName: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   dispatch({
     type: 'boardNameChanged',
@@ -15,9 +14,22 @@ export const changeBoardInfo = async (
       newName,
     },
   })
+  const token = await getToken()
   axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`, {
-      newName,
+    .patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`,
+      {
+        newName,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

@@ -4,10 +4,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { SubTaskInfoType } from '@/hooks/Planner/types'
+import { useAuth } from '@clerk/nextjs'
 import { DraggableProvided } from '@hello-pangea/dnd'
 import { GripVertical } from 'lucide-react'
 import { useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { handleKeyDownOnSubTask } from './utils'
 
 type EditableSubTaskProps = {
@@ -22,7 +22,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
   const { isSubTaskBeingDragged, taskCards, subTasks } = usePlanner()
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = usePlannerDispatch()!
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
   return (
     <div
       ref={provided.innerRef}
@@ -41,20 +41,18 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
       <Checkbox
         id={`${index}`}
         checked={subTask.checked}
-        onCheckedChange={(isChecked) =>
-          changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch, showBoundary)
-        }
+        onCheckedChange={(isChecked) => changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch, getToken)}
       />
       <Input
         autoFocus
         id={subTask.id}
         type='text'
         value={subTask.title}
-        className='h-1 px-1 my-1 text-sm text-gray-500 border-none focus-visible:ring-0 focus-visible:ring-transparent'
+        className='my-1 px-1 border-none h-1 text-gray-500 text-sm focus-visible:ring-0 focus-visible:ring-transparent'
         onKeyDown={(event) =>
-          handleKeyDownOnSubTask(taskCards, subTasks, taskCardId, subTask, event, dispatch, showBoundary)
+          handleKeyDownOnSubTask(taskCards, subTasks, taskCardId, subTask, event, dispatch, getToken)
         }
-        onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch, showBoundary)}
+        onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch, getToken)}
       />
     </div>
   )

@@ -1,4 +1,3 @@
-import { ErrorBoundaryType } from '@/app/utils/plannerUtils/types'
 import {
   PlannerDispatchContextType,
   SubTaskInfoType,
@@ -14,7 +13,7 @@ export type HandleKeyDownOnSubTaskFunc = (
   subTask: SubTaskInfoType,
   event: React.KeyboardEvent<HTMLInputElement>,
   dispatch: PlannerDispatchContextType,
-  showBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => void
 
 export type HandleArrowDownFunc = (taskCards: TaskCardsType, taskCardId: string, subTask: SubTaskInfoType) => void
@@ -26,7 +25,7 @@ export type HandleBackspaceFunc = (
   subTaskId: string,
   event: React.KeyboardEvent<HTMLInputElement>,
   dispatch: PlannerDispatchContextType,
-  showBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => void
 
 export type HandleEnterFunc = (
@@ -34,5 +33,5 @@ export type HandleEnterFunc = (
   taskCardId: string,
   subTask: SubTaskInfoType,
   dispatch: PlannerDispatchContextType,
-  showBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => void

@@ -1,7 +1,6 @@
 import { BoardsType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const changeColumnOrder = async (
   boards: BoardsType,
@@ -10,7 +9,7 @@ export const changeColumnOrder = async (
   sourceIndex: number,
   destIndex: number,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   const newColumnOrder = Array.from(boards[boardId].columns)
   newColumnOrder.splice(sourceIndex, 1)
@@ -22,9 +21,22 @@ export const changeColumnOrder = async (
       newColumnOrder,
     },
   })
+  const token = await getToken()
   axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns/reorder`, {
-      newColumnOrder,
+    .patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns/reorder`,
+      {
+        newColumnOrder,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

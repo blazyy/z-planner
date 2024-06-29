@@ -1,7 +1,6 @@
 import { TaskCardsType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const reorderSubTasks = async (
   taskCards: TaskCardsType,
@@ -9,7 +8,7 @@ export const reorderSubTasks = async (
   sourceIndex: any,
   destIndex: any,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   const [taskCardId, subTaskId] = draggableId.split('~')
   const reorderedSubTasks = Array.from(taskCards[taskCardId].subTasks)
@@ -26,9 +25,22 @@ export const reorderSubTasks = async (
     type: 'subTaskDragStatusChanged',
     payload: false,
   })
+  const token = await getToken()
   axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks/move`, {
-      reorderedSubTasks,
+    .patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks/move`,
+      {
+        reorderedSubTasks,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

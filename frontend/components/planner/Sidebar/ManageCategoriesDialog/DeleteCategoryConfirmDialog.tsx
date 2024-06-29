@@ -14,8 +14,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { Dispatch, SetStateAction } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 
 type DeleteCategoryConfirmDialogProps = {
   boardId: string
@@ -30,8 +30,8 @@ export const DeleteCategoryConfirmDialog = ({
   setDetailsOfCategoryBeingModified,
   closeDialog,
 }: DeleteCategoryConfirmDialogProps) => {
+  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -56,7 +56,7 @@ export const DeleteCategoryConfirmDialog = ({
                 boardId: '',
                 categoryId: '',
               })
-              deleteCategory(boardId, categoryId, dispatch, showBoundary)
+              deleteCategory(boardId, categoryId, dispatch, getToken)
               closeDialog()
             }}
           >

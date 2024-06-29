@@ -1,13 +1,12 @@
 import { UNASSIGNED_CATEGORY_COLOR, UNASSIGNED_CATEGORY_ID, UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const addNewBoardToPlanner = async (
   boardId: string,
   boardName: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   const unassignedCategoryDetails = {
     id: UNASSIGNED_CATEGORY_ID,
@@ -23,12 +22,24 @@ export const addNewBoardToPlanner = async (
       unassignedCategoryDetails,
     },
   })
-
+  const token = await getToken()
   axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`, {
-      boardId,
-      boardName,
-      unassignedCategoryDetails,
+    .post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`,
+      {
+        boardId,
+        boardName,
+        unassignedCategoryDetails,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

@@ -1,13 +1,12 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
-import { ErrorBoundaryType } from '../types'
 
 export const changeCategoryInfo = async (
   categoryId: string,
   newName: string,
   newColor: string,
   dispatch: Dispatch<any>,
-  showErrorBoundary: ErrorBoundaryType
+  getToken: () => Promise<string | null>
 ) => {
   const categoryDetails = {
     id: categoryId,
@@ -20,10 +19,23 @@ export const changeCategoryInfo = async (
       categoryDetails,
     },
   })
+  const token = await getToken()
   axios
-    .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/categories/${categoryId}`, {
-      newName,
-      newColor,
+    .patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/categories/${categoryId}`,
+      {
+        newName,
+        newColor,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .catch((error) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
     })
-    .catch((error) => showErrorBoundary(error))
 }

@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useAuth } from '@clerk/nextjs'
 
 type DeleteBoardConfirmDialogProps = {
   boardId: string
@@ -21,8 +21,8 @@ type DeleteBoardConfirmDialogProps = {
 }
 
 export const DeleteBoardConfirmDialog = ({ boardId, closeDialog }: DeleteBoardConfirmDialogProps) => {
+  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   const { boards, columns } = usePlanner()
   const boardHasTasks = boards[boardId].columns.reduce((acc, col) => acc + columns[col].taskCards.length, 0) > 0
   return (
@@ -60,7 +60,7 @@ export const DeleteBoardConfirmDialog = ({ boardId, closeDialog }: DeleteBoardCo
           <AlertDialogAction
             variant='destructive'
             onClick={() => {
-              deleteBoard(boardId, dispatch, showBoundary)
+              deleteBoard(boardId, dispatch, getToken)
               closeDialog()
             }}
           >

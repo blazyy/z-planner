@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
@@ -32,6 +33,7 @@ function getRandomBadgeClassName() {
 }
 
 export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialogContentProps) => {
+  const { getToken } = useAuth()
   const { boardOrder, boards } = usePlanner()
   const dispatch = usePlannerDispatch()
   const { showBoundary } = useErrorBoundary()
@@ -53,7 +55,7 @@ export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialo
       name: values.categoryName,
       color: categoryColor,
     }
-    addNewCategory(values.boardId, newCategoryDetails, dispatch, showBoundary)
+    addNewCategory(values.boardId, newCategoryDetails, dispatch, getToken)
     closeDialog()
   }
 

@@ -2,8 +2,9 @@
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 // import { ProtectedRoute } from '../global/ProtectedRoute'
 import { PlannerFiltersProvider } from '@/hooks/PlannerFilters/PlannerFilters'
+import { useAuth } from '@clerk/nextjs'
 import { DragDropContext } from '@hello-pangea/dnd'
-import { useErrorBoundary } from 'react-error-boundary'
+import { BackendErrorAlertCard } from '../global/AlertCard/AlertCard'
 import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
 import { AddBoardCallout } from './AddBoardCallout'
 import { Board } from './Board/Board'
@@ -13,7 +14,11 @@ import { handleOnDragEnd, handleOnDragStart } from './utils'
 export const Planner = () => {
   const plannerContext = usePlanner()
   const plannerDispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
+
+  if (plannerContext.backendErrorOccurred) {
+    return <BackendErrorAlertCard />
+  }
 
   if (!plannerContext.hasLoaded) {
     return <LoadingSpinner />
@@ -29,7 +34,7 @@ export const Planner = () => {
         <DragDropContext
           onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
           onDragEnd={(result) =>
-            handleOnDragEnd(result, plannerDispatch, plannerContext, showBoundary, plannerContext.selectedBoard)
+            handleOnDragEnd(result, plannerDispatch, getToken, plannerContext, plannerContext.selectedBoard)
           }
         >
           <div className='flex justify-between gap-2 w-full h-full'>

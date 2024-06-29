@@ -5,8 +5,8 @@ import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@clerk/nextjs'
 import { Draggable } from '@hello-pangea/dnd'
-import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from './CategoryBadge'
 import { DueDateIndicator } from './DueDateIndicator'
 import { ProgressBar } from './ProgressBar'
@@ -55,8 +55,8 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
   // was in the wrapper component. There was no straightforward way to pass that info down to it's children (i.e. TaskCard).
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
+  const { getToken } = useAuth()
   const plannerDispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   const { taskCards, idOfCardBeingDragged } = usePlanner()
   const task = taskCards[taskCardId]
 
@@ -88,7 +88,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
               onClick={(event) => {
                 event.preventDefault() // Needed to prevent dialog from triggering
                 const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-                changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, showBoundary)
+                changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, getToken)
               }}
             />
             <DueDateIndicator taskCardId={taskCardId} />
@@ -98,4 +98,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
       </Card>
     </TaskCardWrapper>
   )
+}
+function getToken() {
+  throw new Error('Function not implemented.')
 }
