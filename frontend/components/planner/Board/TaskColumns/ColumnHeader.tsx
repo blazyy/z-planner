@@ -1,12 +1,13 @@
-import changeColumnName from '@/app/utils/plannerUtils/columnUtils/changeColumnName'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { AddNewCardButton } from './AddNewCardButton'
@@ -30,7 +31,7 @@ export const ColumnHeader = ({ boardId, columnId, dragHandleProps }: ColumnHeade
   const { columns } = usePlanner()
   const [isEditingColumnName, setIsEditingColumnName] = useState(false)
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,8 +40,39 @@ export const ColumnHeader = ({ boardId, columnId, dragHandleProps }: ColumnHeade
     },
   })
 
+  const changeColumnNameMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      return axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}`,
+        {
+          newName: payload.newName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      dispatch({
+        type: 'columnNameChanged',
+        payload: {
+          columnId,
+          newName: payload.newName,
+        },
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    changeColumnName(columnId, values.columnName, dispatch, showBoundary)
+    changeColumnNameMutation.mutate({ newName: values.columnName })
     setIsEditingColumnName(false)
   }
 

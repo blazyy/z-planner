@@ -1,4 +1,3 @@
-import deleteCard from '@/app/utils/plannerUtils/cardUtils/deleteCard'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,11 +8,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { ToastAction } from '@/components/ui/toast'
 import { Toaster } from '@/components/ui/toaster'
-import { useToast } from '@/components/ui/use-toast'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useAuth } from '@clerk/nextjs'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 
 type ContextMenuWrapperProps = {
   columnId: string
@@ -22,9 +21,37 @@ type ContextMenuWrapperProps = {
 }
 
 export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {
-  const { toast } = useToast()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
+
+  const deleteCardMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken()
+      return axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}/cards/${taskCardId}/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async () => {
+      dispatch({
+        type: 'taskCardDeleted',
+        payload: {
+          columnId,
+          taskCardId,
+        },
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   return (
     <AlertDialog>
       <Toaster />
@@ -40,19 +67,7 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              deleteCard(columnId, taskCardId, dispatch, showBoundary)
-              toast({
-                title: 'Deleted task',
-                // description: 'Friday, February 10, 2023 at 5:57 PM',
-                action: (
-                  <ToastAction altText='Undo'>
-                    <div className='flex gap-2'>
-                      <span>Undo</span>
-                      <span className='text-gray-400'> ⌘Z</span>
-                    </div>
-                  </ToastAction>
-                ),
-              })
+              deleteCardMutation.mutate()
             }}
           >
             Continue

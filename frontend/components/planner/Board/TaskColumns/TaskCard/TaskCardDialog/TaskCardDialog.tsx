@@ -9,7 +9,6 @@ import { useAuth } from '@clerk/nextjs'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import debounce from 'lodash/debounce'
-import { useErrorBoundary } from 'react-error-boundary'
 import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
@@ -35,7 +34,6 @@ const debouncedPatchContent = debounce(async (taskCardId, newContent, token) => 
 }, DEBOUNCE_TIME_MS)
 
 export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
-  const { showBoundary } = useErrorBoundary()
   const dispatch = usePlannerDispatch()!
   const { taskCards } = usePlanner()
   const { getToken } = useAuth()

@@ -1,4 +1,3 @@
-import deleteCategory from '@/app/utils/plannerUtils/categoryUtils/deleteCategory'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,8 +13,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { Dispatch, SetStateAction } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 
 type DeleteCategoryConfirmDialogProps = {
   boardId: string
@@ -31,7 +32,33 @@ export const DeleteCategoryConfirmDialog = ({
   closeDialog,
 }: DeleteCategoryConfirmDialogProps) => {
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken()
+      return axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories/${categoryId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    },
+    onMutate: async () => {
+      dispatch({
+        type: 'categoryDeleted',
+        payload: {
+          boardId,
+          categoryId,
+        },
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -56,7 +83,7 @@ export const DeleteCategoryConfirmDialog = ({
                 boardId: '',
                 categoryId: '',
               })
-              deleteCategory(boardId, categoryId, dispatch, showBoundary)
+              deleteCategoryMutation.mutate()
               closeDialog()
             }}
           >
