@@ -1,4 +1,3 @@
-import changeCardCategory from '@/app/utils/plannerUtils/cardUtils/changeCardCategory'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -7,7 +6,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useErrorBoundary } from 'react-error-boundary'
+import { useAuth } from '@clerk/nextjs'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { badgeClassNames } from './utils'
 
 type CategoryBadgeProps = {
@@ -18,10 +19,39 @@ type CategoryBadgeProps = {
 export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
   const dispatch = usePlannerDispatch()!
   const { boards, taskCards, categories } = usePlanner()
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
 
   const categoryInfo = categories[taskCards[taskCardId].category]
   const categoriesInBoard = boards[boardId].categories
+
+  const changeCardCategoryMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      const { taskCardId, newCategoryId } = payload
+      return axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/category`,
+        {
+          newCategoryId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      dispatch({
+        type: 'taskCategoryChanged',
+        payload: payload,
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
 
   return (
     <DropdownMenu>
@@ -35,7 +65,11 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
             checked={categoryInfo.name === categories[categoryId].name}
             onClick={(event) => {
               event.preventDefault()
-              changeCardCategory(taskCardId, categoryId, dispatch, showBoundary) // TODO
+              const payload = {
+                taskCardId,
+                newCategoryId: categoryId,
+              }
+              changeCardCategoryMutation.mutate(payload)
             }}
           >
             <Badge className={badgeClassNames[categories[categoryId].color]}>{categories[categoryId].name}</Badge>

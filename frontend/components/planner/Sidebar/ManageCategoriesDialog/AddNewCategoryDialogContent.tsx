@@ -1,4 +1,3 @@
-import { addNewCategory } from '@/app/utils/plannerUtils/categoryUtils/addNewCategory'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -6,9 +5,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
@@ -34,7 +35,7 @@ function getRandomBadgeClassName() {
 export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialogContentProps) => {
   const { boardOrder, boards } = usePlanner()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
+  const { getToken } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,13 +48,46 @@ export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialo
 
   const [categoryColor, setCategoryColor] = useState(getRandomBadgeClassName)
 
+  const addNewCategoryMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      const { boardId, newCategoryDetails } = payload
+      return axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories`,
+        {
+          newCategoryDetails,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      dispatch({
+        type: 'newCategoryAdded',
+        payload: payload,
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newCategoryDetails = {
       id: crypto.randomUUID(),
       name: values.categoryName,
       color: categoryColor,
     }
-    addNewCategory(values.boardId, newCategoryDetails, dispatch, showBoundary)
+    const payload = {
+      boardId: values.boardId,
+      newCategoryDetails,
+    }
+    addNewCategoryMutation.mutate(payload)
     closeDialog()
   }
 
