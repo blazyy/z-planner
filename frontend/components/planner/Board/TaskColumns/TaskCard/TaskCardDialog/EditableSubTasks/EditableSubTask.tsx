@@ -1,4 +1,3 @@
-import deleteSubTask from '@/app/utils/plannerUtils/subTaskUtils/deleteSubTask'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { DEBOUNCE_TIME_MS } from '@/constants/constants'
@@ -121,6 +120,36 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
     },
   })
 
+  const deleteSubTaskMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const token = await getToken()
+      const { subTaskId } = payload
+      return axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks/${subTaskId}/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    },
+    onMutate: async (payload) => {
+      dispatch({
+        type: 'subTaskDeletedOnBackspaceKeydown',
+        payload: {
+          taskCardId,
+          subTaskId: payload.subTaskId,
+          newSubtasks: payload.newSubtasks,
+        },
+      })
+    },
+    onError: (err) => {
+      dispatch({
+        type: 'backendErrorOccurred',
+      })
+    },
+  })
+
   return (
     <div
       ref={provided.innerRef}
@@ -181,7 +210,19 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
             })
           } else if (event.key === 'Backspace' && subTask.title === '') {
             event.preventDefault() // Prevents the last character of the task from being delete when the cursor jumps to the task above
-            deleteSubTask(taskCards[taskCardId], subTask.id, dispatch, showBoundary)
+            // deleteSubTask(taskCards[taskCardId], subTask.id, dispatch, showBoundary)
+            /* Moves cursor focus to subtask above using the subtask ID */
+            const subTasksCopy = Array.from(taskCards[taskCardId].subTasks)
+            const subTaskIndex = subTasksCopy.findIndex((id: string) => id === subTask.id)
+            if (subTaskIndex > 0) {
+              document.getElementById(subTasksCopy[subTaskIndex - 1])?.focus()
+            }
+            /* -------------------------------------------------------- */
+            const newSubtasks = subTasksCopy.filter((id: string) => id !== subTask.id)
+            deleteSubTaskMutation.mutate({
+              subTaskId: subTask.id,
+              newSubtasks,
+            })
           }
         }}
         onChange={(event) => changeSubTaskTitleMutation.mutate({ subTaskId: subTask.id, newTitle: event.target.value })}
