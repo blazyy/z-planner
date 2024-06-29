@@ -1,6 +1,4 @@
-import { Navbar } from '@/components/global/Navbar'
 import { ThemeProvider } from '@/components/theme-provider'
-import { cn } from '@/lib/utils'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Quicksand } from 'next/font/google'
 import localFont from 'next/font/local'
@@ -17,10 +15,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
     <ClerkProvider>
       <html lang='en'>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <body className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
-            <Navbar />
-            {children}
-          </body>
+          <body>{children}</body>
         </ThemeProvider>
       </html>
     </ClerkProvider>
