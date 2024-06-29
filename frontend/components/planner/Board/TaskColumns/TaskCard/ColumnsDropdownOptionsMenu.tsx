@@ -3,7 +3,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useAuth } from '@clerk/nextjs'
 import { Dispatch, SetStateAction } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
 import { FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { SlOptionsVertical } from 'react-icons/sl'
 import { COLUMN_ACTION_ICON_COLOR } from '../ColumnHeader'
@@ -22,7 +21,6 @@ export const ColumnsDropdownOptionsMenu = ({
   const { getToken } = useAuth()
   const { columns } = usePlanner()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   const columnsHasTaskCards = columns[columnId].taskCards.length > 0
 
   return (

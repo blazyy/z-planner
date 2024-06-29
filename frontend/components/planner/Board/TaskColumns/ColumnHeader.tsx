@@ -27,15 +27,15 @@ const formSchema = z.object({
 })
 
 export const ColumnHeader = ({ boardId, columnId, dragHandleProps }: ColumnHeaderProps) => {
-  const { columns } = usePlanner()
-  const [isEditingColumnName, setIsEditingColumnName] = useState(false)
-  const dispatch = usePlannerDispatch()
   const { getToken } = useAuth()
+  const { columns } = usePlanner()
+  const dispatch = usePlannerDispatch()
+  const [isEditingColumnName, setIsEditingColumnName] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      columnName: '',
+      columnName: columns[columnId].name,
     },
   })
 

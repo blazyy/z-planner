@@ -13,7 +13,7 @@ export const AlertCard = ({ error, resetErrorBoundary }: FallbackProps) => {
       <Alert className='w-fit' variant='destructive'>
         <AlertCircle className='w-4 h-4' />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>Sorry about that! Something went wrong. [{error.message}]</AlertDescription>
+        <AlertDescription>Sorry about that! Something went wrong. </AlertDescription>
         {/* <Button onClick={resetErrorBoundary}>Reload</Button> */}
       </Alert>
     </main>

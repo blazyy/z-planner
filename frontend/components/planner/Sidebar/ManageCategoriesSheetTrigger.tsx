@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { IoMdSettings } from 'react-icons/io'
+import { Tag } from 'lucide-react'
 import { ManageCategoriesDialog } from './ManageCategoriesDialog/ManageCategoriesDialog'
 
 export const ManageCategoriesSheetTrigger = () => {
@@ -9,7 +9,7 @@ export const ManageCategoriesSheetTrigger = () => {
       <SheetTrigger asChild>
         <Button variant='ghost' className='justify-start w-full'>
           <div className='flex items-center gap-2'>
-            <IoMdSettings className='w-5 h-5' />
+            <Tag className='w-5 h-5' />
             Manage Categories
           </div>
         </Button>

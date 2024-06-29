@@ -45,7 +45,7 @@ export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent className='flex flex-col gap-6 px-4'>
+        <CardContent className='flex flex-col gap-6 px-2'>
           <EditableSubTasks taskCardId={id} />
           <Separator />
           <Textarea

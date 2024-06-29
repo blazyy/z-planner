@@ -3,7 +3,6 @@ import { Separator } from '@/components/ui/separator'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
-import { EventCalendar } from './EventCalendar'
 import { ManageBoardsSheetTrigger } from './ManageBoardsSheetTrigger'
 import { ManageCategoriesSheetTrigger } from './ManageCategoriesSheetTrigger'
 
@@ -37,16 +36,20 @@ export const Sidebar = () => {
 
   return (
     <div className='flex flex-col items-start gap-8 w-72'>
-      <EventCalendar />
+      {/* <EventCalendar /> */}
       {/* <LiveDate /> */}
-      <div className='flex flex-col gap-2 w-full'>
-        <span className='mb-4 font-bold text-xl'>Boards</span>
-        {boardOrder.map((boardId, i) => (
-          <BoardButton key={i} board={boards[boardId]} />
-        ))}
-        <Separator />
-        <ManageBoardsSheetTrigger />
-        <ManageCategoriesSheetTrigger />
+      <div className='flex flex-col justify-start gap-2 w-full h-full'>
+        <div className='flex flex-col gap-2 w-full'>
+          <span className='mb-4 font-bold text-xl'>Boards</span>
+          {boardOrder.map((boardId, i) => (
+            <BoardButton key={i} board={boards[boardId]} />
+          ))}
+        </div>
+        <div className='flex flex-col gap-2 mt-5 w-full'>
+          <Separator />
+          <ManageBoardsSheetTrigger />
+          <ManageCategoriesSheetTrigger />
+        </div>
       </div>
     </div>
   )

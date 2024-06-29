@@ -72,7 +72,6 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
           <div className='flex flex-col justify-between items-start'>
             <CardTitle className='text-xl'>{task.title}</CardTitle>
           </div>
-          {/* <CardDescription>{task.content}</CardDescription> */}
         </CardHeader>
         {task.subTasks.length > 0 && (
           <CardContent className='flex flex-col gap-2 px-4'>
@@ -98,7 +97,4 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
       </Card>
     </TaskCardWrapper>
   )
-}
-function getToken() {
-  throw new Error('Function not implemented.')
 }

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { IoMdSettings } from 'react-icons/io'
+import { Kanban } from 'lucide-react'
 import { ManageBoardsDialog } from './ManageBoardsDialog/ManageBoardsDialog'
 
 export const ManageBoardsSheetTrigger = () => {
@@ -9,7 +9,7 @@ export const ManageBoardsSheetTrigger = () => {
       <SheetTrigger asChild>
         <Button variant='ghost' className='justify-start w-full'>
           <div className='flex items-center gap-2'>
-            <IoMdSettings className='w-5 h-5' />
+            <Kanban className='w-5 h-5' />
             Manage Boards
           </div>
         </Button>

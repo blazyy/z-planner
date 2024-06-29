@@ -77,7 +77,7 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder='Task title' {...field} />
+                    <Input id='taskCardTitleTextInput' placeholder='Task title' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
