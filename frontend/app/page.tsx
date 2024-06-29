@@ -2,8 +2,12 @@
 import { AuroraBackground } from '@/components/ui/aurora-background'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
+import localFont from 'next/font/local'
 import Link from 'next/link'
-import { calsans } from './home/layout'
+
+const calsans = localFont({
+  src: '../assets/fonts/CalSans-SemiBold.woff2',
+})
 
 export default function Home() {
   return (
