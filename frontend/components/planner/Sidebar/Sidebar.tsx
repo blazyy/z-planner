@@ -54,13 +54,13 @@ export const Sidebar = () => {
           </div>
         </div>
         <div>
-          <Button variant='ghost' className='justify-start mb-2 w-full'>
-            <a href='https://github.com/blazyy/z-planner' target='_blank' rel='noopener noreferrer'>
+          <a href='https://github.com/blazyy/z-planner' target='_blank' rel='noopener noreferrer'>
+            <Button variant='ghost' className='justify-start mb-2 w-full'>
               <div className='flex items-center gap-2'>
                 <Github className='mr-2 w-5 h-5' /> GitHub
               </div>
-            </a>
-          </Button>
+            </Button>
+          </a>
         </div>
       </div>
     </div>
