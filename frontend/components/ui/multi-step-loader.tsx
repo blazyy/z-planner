@@ -107,6 +107,9 @@ export const MultiStepLoader = ({
     {
       text: 'Boosting productivity',
     },
+    {
+      text: 'Cold starting a free-tier backend hosting service...',
+    },
   ]
 
   useEffect(() => {
@@ -144,7 +147,6 @@ export const MultiStepLoader = ({
           <div className='relative h-96'>
             <LoaderCore value={currentState} loadingStates={loadingStates} />
           </div>
-
           <div className='bottom-0 z-20 absolute inset-x-0 bg-white dark:bg-black bg-gradient-to-t h-full [mask-image:radial-gradient(900px_at_center,transparent_30%,white)]' />
         </motion.div>
       )}
