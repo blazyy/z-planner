@@ -99,13 +99,10 @@ export const MultiStepLoader = ({
       text: 'Syncing columns',
     },
     {
-      text: 'Adding cards',
+      text: 'Setting up cards',
     },
     {
-      text: 'Moving cards',
-    },
-    {
-      text: 'Checking cards',
+      text: 'Checking the boards once again',
     },
     {
       text: 'Boosting productivity',
