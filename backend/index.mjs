@@ -11,7 +11,7 @@ import subtasks from './routes/planner/subtasks.mjs'
 
 const PORT = process.env.PORT || 5050
 const app = express()
-const allowedOrigin = 'https://zenith-planner.vercel.app'
+const allowedOrigin = process.env.ALLOWED_ORIGIN
 
 const corsOptions = {
   origin: function (origin, callback) {

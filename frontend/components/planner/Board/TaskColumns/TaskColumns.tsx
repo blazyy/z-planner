@@ -15,7 +15,7 @@ export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
 
   if (numColumns === 0) {
     return (
-      <div className='flex flex-col items-start gap-2 w-1/4'>
+      <div className='flex flex-1 pl-2'>
         <AddNewColumnButton boardId={boardId} />
       </div>
     )
@@ -24,12 +24,12 @@ export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
   const hasCards = boards[boardId].columns.reduce((acc, col) => acc + columns[col].taskCards.length, 0) > 0
 
   return (
-    <div className='flex'>
-      <div className={cn('flex', hasCards ? 'mt-1 p-2' : 'pl-2')}>
+    <div className='flex flex-1'>
+      <div className={cn('flex flex-1', hasCards ? 'mt-1 p-2' : 'pl-2')}>
         {/* droppableId doesn't matter here because it won't be interacting with other droppables */}
         <Droppable droppableId='all-columns' direction='horizontal' type='column'>
           {(provided) => (
-            <div className='flex flex-row pb-72' {...provided.droppableProps} ref={provided.innerRef}>
+            <div className='flex flex-row flex-1' {...provided.droppableProps} ref={provided.innerRef}>
               {boards[boardId].columns.map((columnId, index) => (
                 <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
               ))}
@@ -37,7 +37,6 @@ export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
             </div>
           )}
         </Droppable>
-        <AddNewColumnButton key={boardId} boardId={boardId} />
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
+import { cn } from '@/lib/utils'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { ColumnHeader } from './ColumnHeader'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
@@ -22,9 +23,10 @@ const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string 
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className={`flex flex-col transition ease grow p-1 px-2 rounded-lg ${
+          className={cn(
+            'flex flex-col transition ease grow p-1 px-2 rounded-lg',
             snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
-          }`}
+          )}
         >
           {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
             <InitializingTaskCard boardId={boardId} columnId={columnId} />
@@ -68,11 +70,7 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
-        <div
-          className={`task-column flex flex-col gap-2 w-96 mr-2`}
-          {...provided.draggableProps}
-          ref={provided.innerRef}
-        >
+        <div className='flex flex-col gap-2 mr-2 w-96 min-h-full' {...provided.draggableProps} ref={provided.innerRef}>
           <ColumnHeader boardId={boardId} columnId={columnInfo.id} dragHandleProps={provided.dragHandleProps} />
           <ColumnTasks boardId={boardId} columnId={columnInfo.id} />
         </div>

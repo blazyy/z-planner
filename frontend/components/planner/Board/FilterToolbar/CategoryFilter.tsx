@@ -31,7 +31,7 @@ export const CategoryFilter = () => {
         <Button variant='outline' className='border-dashed'>
           <div className='flex items-center gap-2'>
             <FiPlusCircle className='w-4 h-4' />
-            <span>Category</span>
+            <span>Filter</span>
             {selectedCategories.length > 0 && (
               <>
                 <Separator orientation='vertical' className='mx-2 h-4' />

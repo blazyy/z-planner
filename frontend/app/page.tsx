@@ -23,7 +23,7 @@ export default function Home() {
         className='relative flex flex-col justify-center items-center gap-4 px-4'
       >
         <div className={cn('font-bold text-3xl text-center md:text-7xl dark:text-white', calsans.className)}>
-          zenith planner.
+          z planner.
         </div>
         <div className='py-4 font-extralight text-base md:text-4xl dark:text-neutral-200'>
           Leave the task management to us.

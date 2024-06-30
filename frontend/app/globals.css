@@ -1,11 +1,11 @@
-#planner {
+/* #planner {
   padding: 1% !important; /* The important is needed because the dialog component was messing up the body padding for some weird reason */
-}
+/* } */
 
-.task-column {
+/* .task-column {
   height: 700px;
   width: 500px;
-}
+} */
 
 /* Removes outline on subtasks that have contentEditable set to true */
 [contenteditable]:focus {

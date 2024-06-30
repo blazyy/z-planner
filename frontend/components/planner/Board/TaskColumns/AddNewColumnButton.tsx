@@ -66,7 +66,7 @@ export const AddNewColumnButton = ({ boardId }: AddNewColumnButtonProps) => {
   const [isAddingColumn, setIsAddingColumn] = useState(false)
 
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-2 mr-4'>
       {!isAddingColumn && (
         <div className='flex justify-center items-center gap-2 cursor-pointer'>
           <Button variant='secondary' onClick={() => setIsAddingColumn(true)}>

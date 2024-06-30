@@ -3,9 +3,9 @@ import { Separator } from '@/components/ui/separator'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
+import { Github } from 'lucide-react'
 import { ManageBoardsSheetTrigger } from './ManageBoardsSheetTrigger'
 import { ManageCategoriesSheetTrigger } from './ManageCategoriesSheetTrigger'
-import { MoreInfoDialog } from './MoreInfoDialog'
 
 type BoardButtonProps = {
   board: BoardInfoType
@@ -36,13 +36,13 @@ export const Sidebar = () => {
   const { boardOrder, boards } = usePlanner()
 
   return (
-    <div className='flex flex-col items-start gap-8 w-72'>
+    <div className='flex flex-col items-start gap-8 w-1/6'>
       {/* <EventCalendar /> */}
       {/* <LiveDate /> */}
       <div className='flex flex-col justify-between gap-2 w-full h-full'>
         <div>
           <div className='flex flex-col gap-2 w-full'>
-            <span className='mb-4 font-bold text-xl'>Boards</span>
+            <span className='mb-2 font-bold text-xl'>Boards</span>
             {boardOrder.map((boardId, i) => (
               <BoardButton key={i} board={boards[boardId]} />
             ))}
@@ -54,7 +54,13 @@ export const Sidebar = () => {
           </div>
         </div>
         <div>
-          <MoreInfoDialog />
+          <Button variant='ghost' className='justify-start mb-2 w-full'>
+            <a href='https://github.com/blazyy/z-planner' target='_blank' rel='noopener noreferrer'>
+              <div className='flex items-center gap-2'>
+                <Github className='mr-2 w-5 h-5' /> GitHub
+              </div>
+            </a>
+          </Button>
         </div>
       </div>
     </div>

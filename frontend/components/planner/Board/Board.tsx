@@ -7,7 +7,7 @@ type BoardProps = {
 
 export const Board = ({ boardId }: BoardProps) => {
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex flex-col w-5/6'>
       <FilterToolbar boardId={boardId} />
       <TaskColumns boardId={boardId} />
     </div>

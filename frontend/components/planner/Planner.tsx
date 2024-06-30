@@ -29,7 +29,7 @@ export const Planner = () => {
   }
 
   return (
-    <main id='planner' className='flex flex-col flex-1 justify-start items-center w-full'>
+    <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
       {plannerContext.boardOrder.length > 0 && plannerContext.selectedBoard && (
         <DragDropContext
           onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
@@ -37,7 +37,7 @@ export const Planner = () => {
             handleOnDragEnd(result, plannerDispatch, getToken, plannerContext, plannerContext.selectedBoard)
           }
         >
-          <div className='flex justify-between gap-2 w-full h-full'>
+          <div className='flex flex-1 justify-start gap-2 w-full'>
             <PlannerFiltersProvider>
               <Sidebar />
               <Board boardId={plannerContext.selectedBoard} />
