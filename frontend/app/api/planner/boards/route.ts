@@ -5,26 +5,22 @@ import { NextResponse } from 'next/server'
 export const POST = withMiddleware(async (req: ExtendedNextRequest) => {
   const { userId } = req
   const { boardId, boardName, unassignedCategoryDetails } = await req.json()
-  try {
-    await Planner.updateMany(
-      { clerkUserId: userId },
-      {
-        $push: {
-          boardOrder: boardId,
+  await Planner.updateMany(
+    { clerkUserId: userId },
+    {
+      $push: {
+        boardOrder: boardId,
+      },
+      $set: {
+        [`boards.${boardId}`]: {
+          id: boardId,
+          name: boardName,
+          columns: [],
+          categories: [unassignedCategoryDetails.id],
         },
-        $set: {
-          [`boards.${boardId}`]: {
-            id: boardId,
-            name: boardName,
-            columns: [],
-            categories: [unassignedCategoryDetails.id],
-          },
-          [`categories.${unassignedCategoryDetails.id}`]: unassignedCategoryDetails,
-        },
-      }
-    )
-    return NextResponse.json({ status: 201, message: 'Board added successfully' })
-  } catch (error) {
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' })
-  }
+        [`categories.${unassignedCategoryDetails.id}`]: unassignedCategoryDetails,
+      },
+    }
+  )
+  return NextResponse.json({ status: 201, message: 'Board added successfully' })
 })

@@ -19,20 +19,28 @@ type Handler = (req: ExtendedNextRequest, context: ExtendedNextContext) => Promi
 
 export function withDbConnect(handler: Handler): Handler {
   return async (req, context) => {
-    await dbConnect()
-    return handler(req, context)
+    try {
+      await dbConnect()
+      return handler(req, context)
+    } catch (error) {
+      return NextResponse.json({ status: 500, error: 'Internal Server Error' })
+    }
   }
 }
 
 export function withAuth(handler: Handler): Handler {
   return async (req, context) => {
-    const authObj = auth()
-    const { userId } = authObj
-    if (!userId) {
-      return NextResponse.json({ status: 401, error: 'Unauthorized' })
+    try {
+      const authObj = auth()
+      const { userId } = authObj
+      if (!userId) {
+        return NextResponse.json({ status: 401, error: 'Unauthorized' })
+      }
+      req.userId = userId
+      return handler(req, context)
+    } catch (error) {
+      return NextResponse.json({ status: 500, error: 'Internal Server Error' })
     }
-    req.userId = userId
-    return handler(req, context)
   }
 }
 
