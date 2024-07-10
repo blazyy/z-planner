@@ -26,7 +26,7 @@ export default async function deleteSubTask(
   })
   const token = await getToken()
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCard.id}/subtasks/${subTaskId}/delete`, {
+    .delete(`/api/planner/cards/${taskCard.id}/subtasks/${subTaskId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

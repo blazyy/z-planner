@@ -7,9 +7,9 @@ const debouncedApiCall = debounce(
   async (subTaskId: string, newTitle: string, dispatch: Dispatch<any>, token: string | null) => {
     axios
       .patch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/subtasks/${subTaskId}/title`,
+        `/api/planner/subtasks/${subTaskId}`,
         {
-          newTitle,
+          title: newTitle,
         },
         {
           headers: {

@@ -2,7 +2,6 @@ import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node'
 import cors from 'cors'
 import express from 'express'
 import './loadEnvironment.mjs'
-import categories from './routes/planner/categories.mjs'
 import columns from './routes/planner/columns.mjs'
 import subtasks from './routes/planner/subtasks.mjs'
 
@@ -25,7 +24,7 @@ app.use(express.json())
 
 app.use(ClerkExpressRequireAuth())
 
-app.use('/', [columns, subtasks, categories])
+app.use('/', [columns, subtasks])
 
 // Global error handling
 app.use((err, _req, res, next) => {

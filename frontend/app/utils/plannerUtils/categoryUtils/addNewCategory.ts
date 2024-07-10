@@ -21,7 +21,7 @@ export const addNewCategory = async (
   const token = await getToken()
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories`,
+      `/api/planner/boards/${boardId}/categories`,
       {
         newCategoryDetails,
       },

@@ -25,7 +25,7 @@ const addNewSubTask = async (
   const token = await getToken()
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks`,
+      `/api/planner/cards/${taskCardId}/subtasks`,
       {
         newSubTaskDetails,
         newSubTasksOrder,

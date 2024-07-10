@@ -17,7 +17,7 @@ export default async function changeColumnName(
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}`,
+      `/api/planner/columns/${columnId}`,
       {
         newName,
       },

@@ -1,28 +1,21 @@
+// pages/api/planner/cards/[taskCardId]/subtasks/move/route.ts
 import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
 
-interface CardModificationRequestBody {
-  title?: string
-  content?: string
-  checked?: boolean
-  category?: string
+interface MoveSubtaskRequestBody {
+  reorderedSubTasks: string[]
 }
 
 export const PATCH = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
     const { cardId } = params
-    const body: CardModificationRequestBody = await req.json()
-
-    const [key, value] = Object.entries(body)[0]
-    const updateField = { [`taskCards.${cardId}.${key}`]: value }
+    const { reorderedSubTasks }: MoveSubtaskRequestBody = await req.json()
 
     await Planner.updateOne(
-      { clerkUserId: userId },
-      {
-        $set: updateField,
-      }
+      { clerkUserId: userId, [`taskCards.${cardId}.id`]: cardId },
+      { $set: { [`taskCards.${cardId}.subTasks`]: reorderedSubTasks } }
     )
 
     return NextResponse.json({ status: 204 })

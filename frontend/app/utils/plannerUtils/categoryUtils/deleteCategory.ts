@@ -16,7 +16,7 @@ export default async function deleteCategory(
   })
   const token = await getToken()
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/categories/${categoryId}`, {
+    .delete(`/api/planner/boards/${boardId}/categories/${categoryId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

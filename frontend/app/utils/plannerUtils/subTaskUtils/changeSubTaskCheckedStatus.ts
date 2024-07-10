@@ -17,9 +17,9 @@ export default async function changeSubTaskCheckedStatus(
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/subtasks/${subTaskId}/checked`,
+      `/api/planner/subtasks/${subTaskId}`,
       {
-        isChecked,
+        checked: isChecked,
       },
       {
         headers: {

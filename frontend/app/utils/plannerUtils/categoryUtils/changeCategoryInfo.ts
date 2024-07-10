@@ -22,7 +22,7 @@ export const changeCategoryInfo = async (
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/categories/${categoryId}`,
+      `/api/planner/categories/${categoryId}`,
       {
         newName,
         newColor,

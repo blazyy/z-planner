@@ -24,7 +24,7 @@ export const changeColumnOrder = async (
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns/reorder`,
+      `/api/planner/boards/${boardId}/columns/reorder`,
       {
         newColumnOrder,
       },

@@ -17,7 +17,7 @@ export default async function deleteCard(
   const token = await getToken()
 
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}/cards/${taskCardId}/delete`, {
+    .delete(`/api/planner/columns/${columnId}/cards/${taskCardId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

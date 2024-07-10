@@ -14,7 +14,7 @@ export default async function deleteBoard(
   })
   const token = await getToken()
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`, {
+    .delete(`/api/planner/boards/${boardId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

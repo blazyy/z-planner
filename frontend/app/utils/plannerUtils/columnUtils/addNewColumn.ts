@@ -27,7 +27,7 @@ export const addNewColumn = async (
   const token = await getToken()
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${board.id}/columns`,
+      `/api/planner/boards/${board.id}/columns`,
       {
         newColumnDetails,
         updatedColumns,

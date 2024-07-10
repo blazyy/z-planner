@@ -17,7 +17,7 @@ export default async function deleteColumn(
   const token = await getToken()
 
   axios
-    .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}/columns/${columnId}/delete`, {
+    .delete(`/api/planner/boards/${boardId}/columns/${columnId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

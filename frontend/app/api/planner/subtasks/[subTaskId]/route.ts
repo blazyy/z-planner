@@ -2,21 +2,19 @@ import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
 
-interface CardModificationRequestBody {
+interface SubTaskModificationRequestBody {
   title?: string
-  content?: string
   checked?: boolean
-  category?: string
 }
 
 export const PATCH = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
-    const { cardId } = params
-    const body: CardModificationRequestBody = await req.json()
+    const { subTaskId } = params
+    const body: SubTaskModificationRequestBody = await req.json()
 
     const [key, value] = Object.entries(body)[0]
-    const updateField = { [`taskCards.${cardId}.${key}`]: value }
+    const updateField = { [`subTasks.${subTaskId}.${key}`]: value }
 
     await Planner.updateOne(
       { clerkUserId: userId },

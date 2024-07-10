@@ -28,7 +28,7 @@ export const reorderSubTasks = async (
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/subtasks/move`,
+      `/api/planner/cards/${taskCardId}/subtasks/move`,
       {
         reorderedSubTasks,
       },

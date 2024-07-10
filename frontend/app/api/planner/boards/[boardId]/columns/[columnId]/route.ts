@@ -1,27 +1,22 @@
+// pages/api/planner/boards/[boardId]/columns/[columnId]/route.ts
 import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
 
-interface CardModificationRequestBody {
-  title?: string
-  content?: string
-  checked?: boolean
-  category?: string
-}
-
-export const PATCH = withMiddleware(
+export const DELETE = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
-    const { cardId } = params
-    const body: CardModificationRequestBody = await req.json()
-
-    const [key, value] = Object.entries(body)[0]
-    const updateField = { [`taskCards.${cardId}.${key}`]: value }
+    const { boardId, columnId } = params
 
     await Planner.updateOne(
       { clerkUserId: userId },
       {
-        $set: updateField,
+        $pull: {
+          [`boards.${boardId}.columns`]: columnId,
+        },
+        $unset: {
+          [`columns.${columnId}`]: 1,
+        },
       }
     )
 

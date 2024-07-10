@@ -11,6 +11,8 @@ export interface Params {
   boardId?: string
   columnId?: string
   cardId?: string
+  categoryId?: string
+  subTaskId?: string
 }
 
 export interface ExtendedNextContext {
