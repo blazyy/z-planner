@@ -16,7 +16,6 @@ export const AddNewBoardButton = () => {
 
   return (
     <Dialog
-      modal={false}
       open={isDialogOpen}
       onOpenChange={(newOpen) => {
         // Used to call custom closeDialog function when dialog is closed, this resets unsaved changes in dialog when closed

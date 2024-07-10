@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { AddNewBoardForm } from './Sidebar/ManageBoardsDialog/AddNewBoardForm'
+import { AddNewBoardForm } from './SettingsView/ManageBoardsDialog/AddNewBoardForm'
 
 export const AddBoardCallout = () => {
   return (

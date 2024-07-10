@@ -21,6 +21,11 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.selectedBoard = ''
       break
     }
+    case 'settingsModeToggled': {
+      draft.currentView = 'settings'
+      draft.selectedBoard = ''
+      break
+    }
     case 'newBoardAdded': {
       const { boardId, boardName, unassignedCategoryDetails } = action.payload
       draft.boardOrder.push(boardId)
@@ -32,7 +37,7 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       }
       draft.boards[boardId].categories.push(unassignedCategoryDetails.id)
       draft.categories[unassignedCategoryDetails.id] = unassignedCategoryDetails
-      draft.selectedBoard = boardId
+      // draft.selectedBoard = boardId
       break
     }
     case 'boardNameChanged': {

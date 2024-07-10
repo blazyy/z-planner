@@ -1,6 +1,5 @@
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { AddNewCategoryDialogContent } from './AddNewCategoryDialogContent'
@@ -16,7 +15,6 @@ export const AddNewCategoryButton = () => {
 
   return (
     <Dialog
-      modal={false}
       open={isDialogOpen}
       onOpenChange={(newOpen) => {
         // Used to call custom closeDialog function when dialog is closed, this resets unsaved changes in dialog when closed

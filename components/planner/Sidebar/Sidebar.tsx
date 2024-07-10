@@ -5,8 +5,7 @@ import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { Github } from 'lucide-react'
 import { ArchiveModeToggle } from './ArchiveModeToggle'
-import { ManageBoardsSheetTrigger } from './ManageBoardsDialog/ManageBoardsSheetTrigger'
-import { ManageCategoriesSheetTrigger } from './ManageCategoriesDialog/ManageCategoriesSheetTrigger'
+import { SettingsModeToggle } from './SettingsModeToggle'
 
 type BoardButtonProps = {
   board: BoardInfoType
@@ -43,16 +42,15 @@ export const Sidebar = () => {
       <div className='flex flex-col justify-between gap-2 w-full h-full'>
         <div>
           <div className='flex flex-col gap-2 w-full'>
-            <span className='mb-2 font-bold text-xl'>Boards</span>
+            {/* <span className='mb-2 font-bold text-xl'>Boards</span> */}
             {boardOrder.map((boardId, i) => (
               <BoardButton key={i} board={boards[boardId]} />
             ))}
           </div>
           <div className='flex flex-col gap-2 mt-5 w-full'>
             <Separator />
-            <ManageBoardsSheetTrigger />
-            <ManageCategoriesSheetTrigger />
             <ArchiveModeToggle />
+            <SettingsModeToggle />
           </div>
         </div>
         <div>

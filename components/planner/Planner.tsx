@@ -9,6 +9,7 @@ import { MultiStepLoader } from '../ui/multi-step-loader'
 import { AddBoardCallout } from './AddBoardCallout'
 import { ArchiveView } from './ArchiveView/ArchiveView'
 import { Board } from './Board/Board'
+import { SettingsView } from './SettingsView/SettingsView'
 import { Sidebar } from './Sidebar/Sidebar'
 import { handleOnDragEnd, handleOnDragStart } from './utils'
 
@@ -45,6 +46,8 @@ export const Planner = () => {
                 <Board boardId={plannerContext.selectedBoard} />
               ) : plannerContext.currentView === 'archive' ? (
                 <ArchiveView />
+              ) : plannerContext.currentView === 'settings' ? (
+                <SettingsView />
               ) : (
                 <></>
               )}
