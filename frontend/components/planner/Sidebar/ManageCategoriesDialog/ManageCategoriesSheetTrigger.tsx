@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Tag } from 'lucide-react'
-import { ManageCategoriesDialog } from './ManageCategoriesDialog/ManageCategoriesDialog'
+import { ManageCategoriesDialog } from './ManageCategoriesDialog'
 
 export const ManageCategoriesSheetTrigger = () => {
   return (

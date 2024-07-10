@@ -4,8 +4,9 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { Github } from 'lucide-react'
-import { ManageBoardsSheetTrigger } from './ManageBoardsSheetTrigger'
-import { ManageCategoriesSheetTrigger } from './ManageCategoriesSheetTrigger'
+import { ArchiveModeToggle } from './ArchiveModeToggle'
+import { ManageBoardsSheetTrigger } from './ManageBoardsDialog/ManageBoardsSheetTrigger'
+import { ManageCategoriesSheetTrigger } from './ManageCategoriesDialog/ManageCategoriesSheetTrigger'
 
 type BoardButtonProps = {
   board: BoardInfoType
@@ -51,6 +52,7 @@ export const Sidebar = () => {
             <Separator />
             <ManageBoardsSheetTrigger />
             <ManageCategoriesSheetTrigger />
+            <ArchiveModeToggle />
           </div>
         </div>
         <div>

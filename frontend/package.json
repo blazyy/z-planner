@@ -42,6 +42,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.279.0",
     "mongodb": "^6.3.0",
+    "mongoose": "^8.5.0",
     "next": "latest",
     "next-themes": "^0.3.0",
     "react": "^18.2.0",

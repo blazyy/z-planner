@@ -7,6 +7,7 @@ import { DragDropContext } from '@hello-pangea/dnd'
 import { BackendErrorAlertCard } from '../global/AlertCard/AlertCard'
 import { MultiStepLoader } from '../ui/multi-step-loader'
 import { AddBoardCallout } from './AddBoardCallout'
+import { ArchiveView } from './ArchiveView/ArchiveView'
 import { Board } from './Board/Board'
 import { Sidebar } from './Sidebar/Sidebar'
 import { handleOnDragEnd, handleOnDragStart } from './utils'
@@ -30,7 +31,7 @@ export const Planner = () => {
 
   return (
     <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
-      {plannerContext.boardOrder.length > 0 && plannerContext.selectedBoard && (
+      {plannerContext.boardOrder.length > 0 && (
         <DragDropContext
           onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
           onDragEnd={(result) =>
@@ -40,7 +41,13 @@ export const Planner = () => {
           <div className='flex flex-1 justify-start gap-2 w-full'>
             <PlannerFiltersProvider>
               <Sidebar />
-              <Board boardId={plannerContext.selectedBoard} />
+              {plannerContext.currentView === 'board' ? (
+                <Board boardId={plannerContext.selectedBoard} />
+              ) : plannerContext.currentView === 'archive' ? (
+                <ArchiveView />
+              ) : (
+                <></>
+              )}
             </PlannerFiltersProvider>
           </div>
         </DragDropContext>

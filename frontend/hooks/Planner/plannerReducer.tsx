@@ -12,7 +12,13 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'selectedBoardChanged': {
+      draft.currentView = 'board'
       draft.selectedBoard = action.payload.boardId
+      break
+    }
+    case 'archiveModeToggled': {
+      draft.currentView = 'archive'
+      draft.selectedBoard = ''
       break
     }
     case 'newBoardAdded': {

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Kanban } from 'lucide-react'
-import { ManageBoardsDialog } from './ManageBoardsDialog/ManageBoardsDialog'
+import { ManageBoardsDialog } from './ManageBoardsDialog'
 
 export const ManageBoardsSheetTrigger = () => {
   return (

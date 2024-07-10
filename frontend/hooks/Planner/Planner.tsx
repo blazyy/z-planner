@@ -7,6 +7,7 @@ import { PlannerType } from './types'
 
 const initialEmptyState: PlannerType = {
   backendErrorOccurred: false,
+  currentView: 'board',
   hasLoaded: false,
   selectedBoard: '',
   isSubTaskBeingDragged: false,
@@ -42,7 +43,7 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
     const fetchData = async () => {
       const token = await getToken()
       axios
-        .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/planner`, {
+        .get('/api/planner', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
