@@ -25,7 +25,7 @@ export const addNewBoardToPlanner = async (
   const token = await getToken()
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards`,
+      '/api/planner/boards',
       {
         boardId,
         boardName,

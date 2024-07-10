@@ -1,20 +1,11 @@
-import dbConnect from '@/lib/dbConnect'
+import { ExtendedNextRequest, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
-import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-export async function GET(req: Request) {
-  await dbConnect()
-
-  const { userId } = auth()
-
-  if (!userId) {
-    return Response.json({ status: 401, error: 'Unauthorized' })
-  }
-
+export const GET = withMiddleware(async (req: ExtendedNextRequest) => {
+  const { userId } = req
   let user = await Planner.findOne({ clerkUserId: userId }).lean()
   if (!user) {
-    // If user doesn't exist, create a new one
     user = new Planner({
       clerkUserId: userId,
       boardOrder: [],
@@ -28,4 +19,4 @@ export async function GET(req: Request) {
     user = user.toObject()
   }
   return NextResponse.json(user)
-}
+})

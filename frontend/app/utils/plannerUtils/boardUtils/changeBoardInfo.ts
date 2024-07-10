@@ -17,7 +17,7 @@ export const changeBoardInfo = async (
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/boards/${boardId}`,
+      `/api/planner/boards/${boardId}`,
       {
         newName,
       },
