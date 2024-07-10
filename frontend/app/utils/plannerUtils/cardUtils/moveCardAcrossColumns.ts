@@ -32,7 +32,7 @@ export default async function moveCardAcrossColumns(
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/move`,
+      `/api/planner/cards/${draggedCardId}/move`,
       {
         sourceColumnId,
         destColumnId,

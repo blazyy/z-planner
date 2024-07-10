@@ -7,9 +7,9 @@ const debouncedApiCall = debounce(
   async (taskCardId: string, newContent: string, dispatch: Dispatch<any>, token: string | null) => {
     axios
       .patch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/content`,
+        `/api/planner/cards/${taskCardId}`,
         {
-          newContent,
+          content: newContent,
         },
         {
           headers: {

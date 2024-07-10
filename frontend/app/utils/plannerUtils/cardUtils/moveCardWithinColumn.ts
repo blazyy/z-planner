@@ -26,7 +26,7 @@ export default async function moveCardWithinColumn(
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${columnId}/cards/move`,
+      `/api/planner/columns/${columnId}/cards/reorder`,
       { reorderedCardIds },
       {
         headers: {

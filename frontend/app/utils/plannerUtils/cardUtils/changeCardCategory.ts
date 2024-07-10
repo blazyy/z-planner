@@ -17,9 +17,9 @@ export default async function changeCardCategory(
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/category`,
+      `/api/planner/cards/${taskCardId}`,
       {
-        newCategoryId,
+        category: newCategoryId,
       },
       {
         headers: {

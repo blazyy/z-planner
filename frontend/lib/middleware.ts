@@ -8,7 +8,9 @@ export interface ExtendedNextRequest extends NextRequest {
 }
 
 export interface Params {
-  id: string
+  boardId?: string
+  columnId?: string
+  cardId?: string
 }
 
 export interface ExtendedNextContext {

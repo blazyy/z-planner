@@ -22,5 +22,5 @@ export const POST = withMiddleware(async (req: ExtendedNextRequest) => {
       },
     }
   )
-  return NextResponse.json({ status: 201, message: 'Board added successfully' })
+  return NextResponse.json({ status: 201 })
 })

@@ -3,33 +3,33 @@ import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
 
 export const PATCH = withMiddleware(async (req: ExtendedNextRequest, { params }: { params: Params }) => {
-  const { id } = params
   const { userId } = req
+  const { boardId } = params
   const { newName } = await req.json()
   await Planner.updateOne(
     { clerkUserId: userId },
     {
       $set: {
-        [`boards.${id}.name`]: newName,
+        [`boards.${boardId}.name`]: newName,
       },
     }
   )
-  return NextResponse.json({ status: 200, message: 'Board name changed successfully' })
+  return NextResponse.json({ status: 200 })
 })
 
 export const DELETE = withMiddleware(async (req: ExtendedNextRequest, { params }: { params: Params }) => {
   const { userId } = req
-  const { id } = params
+  const { boardId } = params
   await Planner.updateOne(
     { clerkUserId: userId },
     {
       $pull: {
-        boardOrder: id,
+        boardOrder: boardId,
       },
       $unset: {
-        [`boards.${id}`]: '',
+        [`boards.${boardId}`]: '',
       },
     }
   )
-  return NextResponse.json({ status: 204, message: 'Board deleted successfully' })
+  return NextResponse.json({ status: 204 })
 })

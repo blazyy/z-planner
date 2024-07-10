@@ -34,7 +34,7 @@ export const addNewCardToColumn = async (
   const token = await getToken()
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/columns/${column.id}/cards`,
+      `/api/planner/columns/${column.id}/cards`,
       {
         newTaskCardDetails,
         updatedTaskCards,

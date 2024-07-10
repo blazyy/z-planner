@@ -17,9 +17,9 @@ export default async function changeCardCheckedStatus(
   const token = await getToken()
   axios
     .patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/planner/cards/${taskCardId}/checked`,
+      `/api/planner/cards/${taskCardId}`,
       {
-        isChecked,
+        checked: isChecked,
       },
       {
         headers: {
