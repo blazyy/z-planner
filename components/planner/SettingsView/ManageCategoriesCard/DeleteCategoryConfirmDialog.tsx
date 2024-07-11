@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useAuth } from '@clerk/nextjs'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 
 type DeleteCategoryConfirmDialogProps = {
   boardId: string
@@ -32,10 +32,27 @@ export const DeleteCategoryConfirmDialog = ({
 }: DeleteCategoryConfirmDialogProps) => {
   const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false)
+
   return (
-    <AlertDialog>
+    <AlertDialog
+      open={isAlertDialogOpen}
+      onOpenChange={(newOpen) => {
+        if (!newOpen) {
+          setIsAlertDialogOpen(false)
+        }
+        // https://github.com/shadcn-ui/ui/issues/1912#issuecomment-2187447622
+        // The setTimeout is a workaround for a bug where after you clicked on an action on the alert dialog,
+        // both dialogs would close but the page would become unresponsive-- you couldn't click on anything.
+        setTimeout(() => {
+          if (!newOpen) {
+            document.body.style.pointerEvents = ''
+          }
+        }, 100)
+      }}
+    >
       <AlertDialogTrigger asChild>
-        <Button size='sm' variant='destructive'>
+        <Button size='sm' variant='destructive' onClick={() => setIsAlertDialogOpen(true)}>
           Delete
         </Button>
       </AlertDialogTrigger>

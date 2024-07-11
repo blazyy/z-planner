@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
@@ -65,17 +65,15 @@ export const ManageColumnsCard = () => {
             {boards[selectedBoard].columns.map((columnId: string) => {
               return (
                 <div key={columnId} className='flex flex-col gap-2 w-full'>
-                  <DialogTrigger asChild>
-                    <Button
-                      className='pl-2 w-full'
-                      variant='secondary'
-                      onClick={() => {
-                        setColumnBeingModified(columnId)
-                      }}
-                    >
-                      <span>{columns[columnId].name}</span>
-                    </Button>
-                  </DialogTrigger>
+                  <Button
+                    className='pl-2 w-full'
+                    variant='secondary'
+                    onClick={() => {
+                      setColumnBeingModified(columnId)
+                    }}
+                  >
+                    <span>{columns[columnId].name}</span>
+                  </Button>
                 </div>
               )
             })}
