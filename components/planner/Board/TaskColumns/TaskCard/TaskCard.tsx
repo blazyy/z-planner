@@ -82,7 +82,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
         <CardFooter className='flex justify-between px-4 pb-4'>
           <div className='flex items-center gap-2'>
             <Checkbox
-              className='w-5 h-5'
+              className='rounded-xl w-5 h-5'
               checked={task.checked}
               onClick={(event) => {
                 event.preventDefault() // Needed to prevent dialog from triggering

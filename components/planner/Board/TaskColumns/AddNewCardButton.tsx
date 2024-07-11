@@ -1,5 +1,6 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { nanoid } from 'nanoid'
 import { useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { COLUMN_ACTION_ICON_COLOR } from './ColumnHeader'
@@ -30,7 +31,7 @@ export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
                   !dataEnteredInTaskCardBeingInitialized &&
                   taskCardBeingInitialized.columnId !== columnId)
               ) {
-                const newTaskCardId = crypto.randomUUID()
+                const newTaskCardId = nanoid()
                 dispatch({
                   type: 'newTaskCardInitialized',
                   payload: {

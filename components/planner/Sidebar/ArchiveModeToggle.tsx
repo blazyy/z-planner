@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { Archive } from 'lucide-react'
@@ -14,6 +15,9 @@ export const ArchiveModeToggle = () => {
       <div className='flex items-center gap-2'>
         <Archive className='w-5 h-5' />
         Archive
+        <Badge variant='outline' className='ml-2'>
+          Coming Soon
+        </Badge>
       </div>
     </Button>
   )

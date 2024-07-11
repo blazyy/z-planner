@@ -7,6 +7,7 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { addNewCategory } from '@/utils/plannerUtils/categoryUtils/addNewCategory'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { nanoid } from 'nanoid'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -47,7 +48,7 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newCategoryDetails = {
-      id: crypto.randomUUID(),
+      id: nanoid(),
       name: values.categoryName,
       color: categoryColor,
     }

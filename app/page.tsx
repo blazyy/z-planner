@@ -28,7 +28,7 @@ export default function Home() {
         <div className='py-4 font-extralight text-base md:text-4xl dark:text-neutral-200'>
           Leave the task management to us.
         </div>
-        <Link href='/home'>
+        <Link href='/boards'>
           <button
             className='bg-black dark:bg-white px-4 py-2 rounded-full w-fit text-white dark:text-black'
             onClick={() => alert}

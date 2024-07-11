@@ -5,6 +5,7 @@ import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { addNewBoardToPlanner } from '@/utils/plannerUtils/boardUtils/addNewBoardToPlanner'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { nanoid } from 'nanoid'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -31,7 +32,7 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const boardId = crypto.randomUUID()
+    const boardId = nanoid()
     const boardName = values.boardName
     addNewBoardToPlanner(boardId, boardName, dispatch, getToken)
     closeDialog()
