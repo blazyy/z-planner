@@ -67,8 +67,10 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
         })
         .catch((error) => showBoundary(error))
     }
-    fetchData()
-  }, [showBoundary, getToken])
+    if (!plannerData.hasLoaded) {
+      fetchData()
+    }
+  }, [showBoundary, getToken, plannerData.hasLoaded])
 
   return (
     <PlannerContext.Provider value={plannerData}>

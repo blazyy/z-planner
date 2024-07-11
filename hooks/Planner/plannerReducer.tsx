@@ -11,21 +11,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.backendErrorOccurred = true
       break
     }
-    case 'selectedBoardChanged': {
-      draft.currentView = 'board'
-      draft.selectedBoard = action.payload.boardId
-      break
-    }
-    case 'archiveModeToggled': {
-      draft.currentView = 'archive'
-      draft.selectedBoard = ''
-      break
-    }
-    case 'settingsModeToggled': {
-      draft.currentView = 'settings'
-      draft.selectedBoard = ''
-      break
-    }
     case 'newBoardAdded': {
       const { boardId, boardName, unassignedCategoryDetails } = action.payload
       draft.boardOrder.push(boardId)
@@ -49,11 +34,11 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       const { boardId } = action.payload
       delete draft.boards[boardId]
       draft.boardOrder = draft.boardOrder.filter((id: string) => id !== boardId)
-      if (draft.boardOrder.length === 0) {
-        draft.selectedBoard = ''
-      } else {
-        draft.selectedBoard = draft.boardOrder[0]
-      }
+      // if (draft.boardOrder.length === 0) {
+      //   draft.selectedBoard = ''
+      // } else {
+      //   draft.selectedBoard = draft.boardOrder[0]
+      // }
       break
     }
     case 'newColumnAdded': {

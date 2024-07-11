@@ -1,60 +1,14 @@
-'use client'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-// import { ProtectedRoute } from '../global/ProtectedRoute'
-import { PlannerFiltersProvider } from '@/hooks/PlannerFilters/PlannerFilters'
-import { useAuth } from '@clerk/nextjs'
-import { DragDropContext } from '@hello-pangea/dnd'
-import { BackendErrorAlertCard } from '../global/AlertCard/AlertCard'
-import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
-import { AddBoardCallout } from './AddBoardCallout'
-import { ArchiveView } from './ArchiveView/ArchiveView'
-import { Board } from './Board/Board'
-import { SettingsView } from './SettingsView/SettingsView'
-import { Sidebar } from './Sidebar/Sidebar'
-import { handleOnDragEnd, handleOnDragStart } from './utils'
+import { usePlanner } from '@/hooks/Planner/Planner'
+import { useRouter } from 'next/navigation'
 
 export const Planner = () => {
+  const router = useRouter()
   const plannerContext = usePlanner()
-  const plannerDispatch = usePlannerDispatch()
-  const { getToken } = useAuth()
 
-  if (plannerContext.backendErrorOccurred) {
-    return <BackendErrorAlertCard />
+  if (plannerContext.boardOrder.length > 0) {
+    router.push(`/boards/${plannerContext.boardOrder[0]}`)
   }
 
-  if (!plannerContext.hasLoaded) {
-    return <LoadingSpinner />
-  }
-
-  if (plannerContext.boardOrder.length === 0) {
-    return <AddBoardCallout />
-  }
-
-  return (
-    <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
-      {plannerContext.boardOrder.length > 0 && (
-        <DragDropContext
-          onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, plannerDispatch)}
-          onDragEnd={(result) =>
-            handleOnDragEnd(result, plannerDispatch, getToken, plannerContext, plannerContext.selectedBoard)
-          }
-        >
-          <div className='flex flex-1 justify-start gap-2 w-full'>
-            <PlannerFiltersProvider>
-              <Sidebar />
-              {plannerContext.currentView === 'board' ? (
-                <Board boardId={plannerContext.selectedBoard} />
-              ) : plannerContext.currentView === 'archive' ? (
-                <ArchiveView />
-              ) : plannerContext.currentView === 'settings' ? (
-                <SettingsView />
-              ) : (
-                <></>
-              )}
-            </PlannerFiltersProvider>
-          </div>
-        </DragDropContext>
-      )}
-    </main>
-  )
+  return <></>
+  // return <AddBoardCallout />
 }

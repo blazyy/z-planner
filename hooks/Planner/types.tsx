@@ -82,7 +82,6 @@ export type PlannerType = {
   hasLoaded: boolean
   currentView: 'board' | 'archive' | 'settings'
   backendErrorOccurred: boolean
-  selectedBoard: string
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null

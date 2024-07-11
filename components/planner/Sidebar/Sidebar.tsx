@@ -1,27 +1,28 @@
+'use client'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlanner } from '@/hooks/Planner/Planner'
 import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { Github } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { ArchiveModeToggle } from './ArchiveModeToggle'
 import { SettingsModeToggle } from './SettingsModeToggle'
 
 type BoardButtonProps = {
   board: BoardInfoType
+  isCurrentlySelectedBoard: boolean
 }
 
-const BoardButton = ({ board }: BoardButtonProps) => {
-  const { selectedBoard } = usePlanner()
-  const dispatch = usePlannerDispatch()
+const BoardButton = ({ board, isCurrentlySelectedBoard }: BoardButtonProps) => {
+  const router = useRouter()
   const filtersDispatch = usePlannerFiltersDispatch()
-  const isCurrentlySelectedBoard = selectedBoard === board.id
   return (
     <Button
       variant={isCurrentlySelectedBoard ? 'secondary' : 'ghost'}
       className={`${isCurrentlySelectedBoard ? 'border-l-4 border-green-500' : ''}`}
       onClick={() => {
-        dispatch({ type: 'selectedBoardChanged', payload: { boardId: board.id } })
+        router.push(`/boards/${board.id}`)
         filtersDispatch({ type: 'filtersReset' })
       }}
     >
@@ -32,19 +33,15 @@ const BoardButton = ({ board }: BoardButtonProps) => {
   )
 }
 
-export const Sidebar = () => {
+export const Sidebar = ({ selectedBoardId }: { selectedBoardId: string }) => {
   const { boardOrder, boards } = usePlanner()
-
   return (
-    <div className='flex flex-col items-start gap-8 w-1/6'>
-      {/* <EventCalendar /> */}
-      {/* <LiveDate /> */}
+    <nav className='flex flex-col items-start gap-8 w-1/6'>
       <div className='flex flex-col justify-between gap-2 w-full h-full'>
         <div>
           <div className='flex flex-col gap-2 w-full'>
-            {/* <span className='mb-2 font-bold text-xl'>Boards</span> */}
             {boardOrder.map((boardId, i) => (
-              <BoardButton key={i} board={boards[boardId]} />
+              <BoardButton key={i} board={boards[boardId]} isCurrentlySelectedBoard={boardId === selectedBoardId} />
             ))}
           </div>
           <div className='flex flex-col gap-2 mt-5 w-full'>
@@ -63,6 +60,6 @@ export const Sidebar = () => {
           </a>
         </div>
       </div>
-    </div>
+    </nav>
   )
 }
