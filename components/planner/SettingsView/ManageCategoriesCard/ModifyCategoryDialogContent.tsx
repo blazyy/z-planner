@@ -1,26 +1,28 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { changeCategoryInfo } from '@/utils/plannerUtils/categoryUtils/changeCategoryInfo'
+import deleteCategory from '@/utils/plannerUtils/categoryUtils/deleteCategory'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Quicksand } from 'next/font/google'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 import { CategoryColorPicker } from './CategoryColorPicker'
-import { DeleteCategoryConfirmDialog } from './DeleteCategoryConfirmDialog'
 
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyCategoryDialogContentProps = {
   boardId: string
   categoryId: string
-  closeDialog: () => void
-  setDetailsOfCategoryBeingModified: Dispatch<SetStateAction<{ boardId: string; categoryId: string }>>
+  onCloseDialog: () => void
 }
 
 const formSchema = z.object({
@@ -32,8 +34,7 @@ const formSchema = z.object({
 export const ModifyCategoryDialogContent = ({
   boardId,
   categoryId,
-  closeDialog,
-  setDetailsOfCategoryBeingModified,
+  onCloseDialog,
 }: ModifyCategoryDialogContentProps) => {
   const { getToken } = useAuth()
   const { categories } = usePlanner()
@@ -50,12 +51,8 @@ export const ModifyCategoryDialogContent = ({
   const [categoryColor, setCategoryColor] = useState(categories[categoryId].color)
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    setDetailsOfCategoryBeingModified({
-      boardId: '',
-      categoryId: '',
-    }) // Used to reset the category being modified because once onSubmit is called, the category no longer exists
     changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, getToken)
-    closeDialog()
+    onCloseDialog()
   }
 
   return (
@@ -85,14 +82,20 @@ export const ModifyCategoryDialogContent = ({
             <CategoryColorPicker color={categoryColor} setColor={setCategoryColor} />
           </div>
           <div className='flex justify-between mt-5'>
-            <DeleteCategoryConfirmDialog
-              boardId={boardId}
-              categoryId={categoryId}
-              closeDialog={closeDialog}
-              setDetailsOfCategoryBeingModified={setDetailsOfCategoryBeingModified}
+            <ManageItemAlertDialog
+              onCloseParentDialog={onCloseDialog}
+              onClickDelete={() => deleteCategory(boardId, categoryId, dispatch, getToken)}
+              isDeleteButtonDisabled={false}
+              deleteConfirmationContent={
+                <>
+                  <span>This action cannot be undone. Any tasks with this category will be moved to</span>
+                  {<Badge className='bg-slate-500 hover:bg-slate-700 m-1 text-white'>{UNASSIGNED_CATEGORY_NAME}</Badge>}
+                </>
+              }
+              deleteButtonDisabledTooltipContent=''
             />
             <span className='flex gap-1'>
-              <Button size='sm' variant='secondary' onClick={closeDialog}>
+              <Button size='sm' variant='secondary' onClick={onCloseDialog}>
                 Cancel
               </Button>
               <Button size='sm' onClick={() => onSubmit(form.getValues())} disabled={!form.formState.isValid}>

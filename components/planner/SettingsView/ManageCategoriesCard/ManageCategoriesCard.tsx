@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
+import { ManageItemCardDialogWrapper } from '../ManageItemCardDialogWrapper'
 import { AddNewCategoryButton } from './AddNewCategoryButton'
 import { ModifyCategoryDialogContent } from './ModifyCategoryDialogContent'
 
@@ -15,38 +16,21 @@ export const ManageCategoriesCard = () => {
     boardId: '',
     categoryId: '',
   })
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [key, setKey] = useState(0)
+  const conditionToOpenDialog = Boolean(
+    detailsOfCategoryBeingModified.boardId && detailsOfCategoryBeingModified.categoryId
+  )
 
-  useEffect(() => {
-    if (detailsOfCategoryBeingModified.categoryId && detailsOfCategoryBeingModified.boardId) {
-      setIsDialogOpen(true)
-    }
-  }, [detailsOfCategoryBeingModified])
-
-  const closeDialog = () => {
-    setIsDialogOpen(false)
+  const onCloseDialog = () => {
     setDetailsOfCategoryBeingModified({
       boardId: '',
       categoryId: '',
     })
-    setKey((prevKey) => prevKey + 1) // Resets unsaved changes in dialog when cancel button is clicked
+    setKey((prevKey) => prevKey + 1) // Resets unsaved changes in dialog when cancel button is clicked.
   }
 
   return (
-    <Dialog
-      open={isDialogOpen}
-      onOpenChange={(newOpen) => {
-        if (!newOpen) {
-          closeDialog()
-        }
-        setTimeout(() => {
-          if (!newOpen) {
-            document.body.style.pointerEvents = ''
-          }
-        }, 100)
-      }}
-    >
+    <ManageItemCardDialogWrapper onCloseDialog={onCloseDialog} conditionToOpenDialog={conditionToOpenDialog}>
       <div className='flex flex-col justify-start gap-5 border-slate-200 p-5 border rounded-md w-1/4'>
         <div className='flex flex-col'>
           <span className='font-bold text-lg'>Manage Categories</span>
@@ -102,17 +86,16 @@ export const ManageCategoriesCard = () => {
             </>
           )
         })}
-        {detailsOfCategoryBeingModified.boardId && detailsOfCategoryBeingModified.categoryId && (
+        {conditionToOpenDialog && (
           <ModifyCategoryDialogContent
             key={key}
             boardId={detailsOfCategoryBeingModified.boardId}
             categoryId={detailsOfCategoryBeingModified.categoryId}
-            closeDialog={closeDialog}
-            setDetailsOfCategoryBeingModified={setDetailsOfCategoryBeingModified}
+            onCloseDialog={onCloseDialog}
           />
         )}
         <AddNewCategoryButton />
       </div>
-    </Dialog>
+    </ManageItemCardDialogWrapper>
   )
 }

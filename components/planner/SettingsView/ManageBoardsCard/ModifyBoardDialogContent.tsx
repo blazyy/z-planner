@@ -4,17 +4,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { changeBoardInfo } from '@/utils/plannerUtils/boardUtils/changeBoardInfo'
+import deleteBoard from '@/utils/plannerUtils/boardUtils/deleteBoard'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Quicksand } from 'next/font/google'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { DeleteBoardConfirmDialog } from './DeleteBoardConfirmDialog'
+import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyBoardDialogContentProps = {
-  closeDialog: () => void
+  onCloseDialog: () => void
   boardId: string
 }
 
@@ -24,7 +25,7 @@ const formSchema = z.object({
   }),
 })
 
-export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDialogContentProps) => {
+export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoardDialogContentProps) => {
   const { getToken } = useAuth()
   const { boards } = usePlanner()
   const dispatch = usePlannerDispatch()
@@ -38,7 +39,7 @@ export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDi
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    closeDialog()
+    onCloseDialog()
     changeBoardInfo(boardId, values.boardName, dispatch, getToken)
   }
 
@@ -65,9 +66,14 @@ export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDi
             </form>
           </Form>
           <div className='flex justify-between mt-5'>
-            <DeleteBoardConfirmDialog boardId={boardId} closeDialog={closeDialog} />
+            <ManageItemAlertDialog
+              onCloseParentDialog={onCloseDialog}
+              onClickDelete={() => deleteBoard(boardId, dispatch, getToken)}
+              isDeleteButtonDisabled={boards[boardId].columns.length > 0}
+              deleteButtonDisabledTooltipContent='A board with columns cannot be deleted.'
+            />
             <span className='flex gap-1'>
-              <Button size='sm' variant='secondary' onClick={closeDialog}>
+              <Button size='sm' variant='secondary' onClick={onCloseDialog}>
                 Cancel
               </Button>
               <Button size='sm' onClick={() => onSubmit(form.getValues())} disabled={!form.formState.isValid}>

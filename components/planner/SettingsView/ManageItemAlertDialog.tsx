@@ -10,30 +10,31 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import deleteColumn from '@/utils/plannerUtils/columnUtils/deleteColumn'
-import { useAuth } from '@clerk/nextjs'
-import { useState } from 'react'
+import { Quicksand } from 'next/font/google'
+import React, { useState } from 'react'
 
-type DeleteColumnConfirmDialogProps = {
-  boardId: string
-  columnId: string
-  closeDialog: () => void
-}
+const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
-export const DeleteColumnConfirmDialog = ({ boardId, columnId, closeDialog }: DeleteColumnConfirmDialogProps) => {
-  const { getToken } = useAuth()
-  const { columns } = usePlanner()
-  const dispatch = usePlannerDispatch()
-  const columnsHasTasks = columns[columnId].taskCards.length > 0
-  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false)
-
+export const ManageItemAlertDialog = ({
+  onCloseParentDialog,
+  onClickDelete,
+  isDeleteButtonDisabled,
+  deleteButtonDisabledTooltipContent,
+  deleteConfirmationContent = <span>This action cannot be undone. Are you sure?</span>,
+}: {
+  onCloseParentDialog: () => void
+  onClickDelete: () => void
+  isDeleteButtonDisabled: boolean
+  deleteButtonDisabledTooltipContent: string
+  deleteConfirmationContent?: React.ReactNode
+}) => {
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <AlertDialog
-      open={isAlertDialogOpen}
+      open={isOpen}
       onOpenChange={(newOpen) => {
         if (!newOpen) {
-          setIsAlertDialogOpen(false)
+          setIsOpen(false)
         }
         // https://github.com/shadcn-ui/ui/issues/1912#issuecomment-2187447622
         // The setTimeout is a workaround for a bug where after you clicked on an action on the alert dialog,
@@ -46,38 +47,38 @@ export const DeleteColumnConfirmDialog = ({ boardId, columnId, closeDialog }: De
       }}
     >
       <div className='flex justify-between items-end gap-2'>
-        {!columnsHasTasks && (
-          <Button size='sm' variant='destructive' disabled={columnsHasTasks} onClick={() => setIsAlertDialogOpen(true)}>
+        {!isDeleteButtonDisabled && (
+          <Button size='sm' variant='destructive' onClick={() => setIsOpen(true)}>
             Delete
           </Button>
         )}
-        {columnsHasTasks && (
+        {isDeleteButtonDisabled && (
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger className='cursor-default'>
-                <Button size='sm' variant='destructive' disabled={columnsHasTasks}>
+                <Button size='sm' variant='destructive' disabled={true}>
                   Delete
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>A column with tasks cannot be deleted.</p>
+                <p>{deleteButtonDisabledTooltipContent}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}
       </div>
-      <AlertDialogContent>
+      <AlertDialogContent className={quicksand.className}>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+          <AlertDialogDescription>{deleteConfirmationContent}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             variant='destructive'
             onClick={() => {
-              deleteColumn(boardId, columnId, dispatch, getToken)
-              closeDialog()
+              onCloseParentDialog()
+              onClickDelete()
             }}
           >
             Delete

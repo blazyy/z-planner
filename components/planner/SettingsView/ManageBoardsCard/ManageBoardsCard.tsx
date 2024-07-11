@@ -1,38 +1,25 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { ManageItemCardDialogWrapper } from '../ManageItemCardDialogWrapper'
 import { AddNewBoardButton } from './AddNewBoardButton'
 import { ModifyBoardDialogContent } from './ModifyBoardDialogContent'
 
 export const ManageBoardsCard = () => {
   const { boardOrder, boards } = usePlanner()
   const [boardBeingModified, setBoardBeingModified] = useState('')
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [key, setKey] = useState(0)
+  const conditionToOpenDialog = Boolean(boardBeingModified)
 
-  useEffect(() => {
-    if (boardBeingModified) {
-      setIsDialogOpen(true)
-    }
-  }, [boardBeingModified])
-
-  const closeDialog = () => {
-    setIsDialogOpen(false)
+  const onCloseDialog = () => {
     setBoardBeingModified('')
     setKey((prevKey) => prevKey + 1) // Resets unsaved changes in dialog when cancel button is clicked
   }
 
   return (
-    <Dialog
-      open={isDialogOpen}
-      onOpenChange={(newOpen) => {
-        if (!newOpen) {
-          closeDialog()
-        }
-      }}
-    >
+    <ManageItemCardDialogWrapper onCloseDialog={onCloseDialog} conditionToOpenDialog={conditionToOpenDialog}>
       <div className='flex flex-col justify-between gap-5 border-slate-200 p-5 border rounded-md w-1/4'>
         <div className='flex flex-col justify-start gap-5 w-full'>
           <div className='flex flex-col'>
@@ -61,12 +48,12 @@ export const ManageBoardsCard = () => {
               )
             })}
           </div>
-          {boardBeingModified && (
-            <ModifyBoardDialogContent key={key} closeDialog={closeDialog} boardId={boardBeingModified} />
+          {conditionToOpenDialog && (
+            <ModifyBoardDialogContent key={key} onCloseDialog={onCloseDialog} boardId={boardBeingModified} />
           )}
         </div>
         <AddNewBoardButton />
       </div>
-    </Dialog>
+    </ManageItemCardDialogWrapper>
   )
 }

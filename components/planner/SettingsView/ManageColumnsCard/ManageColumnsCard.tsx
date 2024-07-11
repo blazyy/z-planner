@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button'
-import { Dialog } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { Quicksand } from 'next/font/google'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { ManageItemCardDialogWrapper } from '../ManageItemCardDialogWrapper'
 import { AddNewColumnButton } from './AddNewColumnButton'
 import { ModifyColumnDialogContent } from './ModifyColumnDialogContent'
 
@@ -15,30 +15,15 @@ export const ManageColumnsCard = () => {
   const { boardOrder, boards, columns } = usePlanner()
   const [selectedBoard, setSelectedBoard] = useState(boardOrder[0])
   const [columnBeingModified, setColumnBeingModified] = useState('')
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [key, setKey] = useState(0)
 
-  useEffect(() => {
-    if (columnBeingModified) {
-      setIsDialogOpen(true)
-    }
-  }, [columnBeingModified])
-
-  const closeDialog = () => {
-    setIsDialogOpen(false)
+  const onCloseDialog = () => {
     setColumnBeingModified('')
     setKey((prevKey) => prevKey + 1) // Resets unsaved changes in dialog when cancel button is clicked
   }
 
   return (
-    <Dialog
-      open={isDialogOpen}
-      onOpenChange={(newOpen) => {
-        if (!newOpen) {
-          closeDialog()
-        }
-      }}
-    >
+    <ManageItemCardDialogWrapper onCloseDialog={onCloseDialog} conditionToOpenDialog={Boolean(columnBeingModified)}>
       <div className='flex flex-col justify-between gap-5 border-slate-200 p-5 border rounded-md w-1/4'>
         <div className='flex flex-col justify-start gap-5 w-full'>
           <div className='flex flex-col'>
@@ -86,7 +71,7 @@ export const ManageColumnsCard = () => {
           {columnBeingModified && (
             <ModifyColumnDialogContent
               key={key}
-              closeDialog={closeDialog}
+              onCloseDialog={onCloseDialog}
               boardId={selectedBoard}
               columnId={columnBeingModified}
             />
@@ -94,6 +79,6 @@ export const ManageColumnsCard = () => {
         </div>
         <AddNewColumnButton boardId={selectedBoard} />
       </div>
-    </Dialog>
+    </ManageItemCardDialogWrapper>
   )
 }

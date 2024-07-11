@@ -4,17 +4,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import changeColumnName from '@/utils/plannerUtils/columnUtils/changeColumnName'
+import deleteColumn from '@/utils/plannerUtils/columnUtils/deleteColumn'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Quicksand } from 'next/font/google'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { DeleteColumnConfirmDialog } from './DeleteColumnConfirmDialog'
+import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyBoardDialogContentProps = {
-  closeDialog: () => void
+  onCloseDialog: () => void
   boardId: string
   columnId: string
 }
@@ -25,7 +26,7 @@ const formSchema = z.object({
   }),
 })
 
-export const ModifyColumnDialogContent = ({ closeDialog, boardId, columnId }: ModifyBoardDialogContentProps) => {
+export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: ModifyBoardDialogContentProps) => {
   const { getToken } = useAuth()
   const { columns } = usePlanner()
   const dispatch = usePlannerDispatch()
@@ -39,7 +40,7 @@ export const ModifyColumnDialogContent = ({ closeDialog, boardId, columnId }: Mo
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    closeDialog()
+    onCloseDialog()
     changeColumnName(columnId, values.columnName, dispatch, getToken)
   }
 
@@ -66,9 +67,14 @@ export const ModifyColumnDialogContent = ({ closeDialog, boardId, columnId }: Mo
             </form>
           </Form>
           <div className='flex justify-between mt-5'>
-            <DeleteColumnConfirmDialog boardId={boardId} columnId={columnId} closeDialog={closeDialog} />
+            <ManageItemAlertDialog
+              onCloseParentDialog={onCloseDialog}
+              isDeleteButtonDisabled={columns[columnId].taskCards.length > 0}
+              deleteButtonDisabledTooltipContent='A column with tasks cannot be deleted.'
+              onClickDelete={() => deleteColumn(boardId, columnId, dispatch, getToken)}
+            />
             <span className='flex gap-1'>
-              <Button size='sm' variant='secondary' onClick={closeDialog}>
+              <Button size='sm' variant='secondary' onClick={onCloseDialog}>
                 Cancel
               </Button>
               <Button size='sm' onClick={() => onSubmit(form.getValues())} disabled={!form.formState.isValid}>
