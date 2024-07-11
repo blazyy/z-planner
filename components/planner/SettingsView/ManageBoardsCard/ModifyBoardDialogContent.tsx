@@ -1,14 +1,17 @@
-import { changeBoardInfo } from '@/app/utils/plannerUtils/boardUtils/changeBoardInfo'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { changeBoardInfo } from '@/utils/plannerUtils/boardUtils/changeBoardInfo'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Quicksand } from 'next/font/google'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { DeleteBoardConfirmDialog } from './DeleteBoardConfirmDialog'
+
+const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyBoardDialogContentProps = {
   closeDialog: () => void
@@ -40,7 +43,7 @@ export const ModifyBoardDialogContent = ({ closeDialog, boardId }: ModifyBoardDi
   }
 
   return (
-    <DialogContent>
+    <DialogContent className={quicksand.className}>
       <DialogHeader>
         <DialogTitle className='mb-5'>Modify Board</DialogTitle>
         <DialogDescription>

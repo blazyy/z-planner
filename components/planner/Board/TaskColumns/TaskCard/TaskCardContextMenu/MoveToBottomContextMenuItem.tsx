@@ -1,6 +1,6 @@
-import moveCardWithinColumn from '@/app/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { ContextMenuItem } from '@/components/ui/context-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import moveCardWithinColumn from '@/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { useAuth } from '@clerk/nextjs'
 import { ArrowBigDown } from 'lucide-react'
 import { useContext } from 'react'

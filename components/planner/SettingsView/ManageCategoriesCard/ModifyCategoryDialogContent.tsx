@@ -1,17 +1,20 @@
-import { changeCategoryInfo } from '@/app/utils/plannerUtils/categoryUtils/changeCategoryInfo'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { changeCategoryInfo } from '@/utils/plannerUtils/categoryUtils/changeCategoryInfo'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Quicksand } from 'next/font/google'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { CategoryColorPicker } from './CategoryColorPicker'
 import { DeleteCategoryConfirmDialog } from './DeleteCategoryConfirmDialog'
+
+const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyCategoryDialogContentProps = {
   boardId: string
@@ -52,10 +55,11 @@ export const ModifyCategoryDialogContent = ({
       categoryId: '',
     }) // Used to reset the category being modified because once onSubmit is called, the category no longer exists
     changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, getToken)
+    closeDialog()
   }
 
   return (
-    <DialogContent>
+    <DialogContent className={quicksand.className}>
       <DialogHeader>
         <DialogTitle className='mb-5'>Modify Category</DialogTitle>
         <DialogDescription>

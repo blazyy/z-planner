@@ -1,11 +1,15 @@
 import { Button } from '@/components/ui/button'
 import { Dialog } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
+import { Quicksand } from 'next/font/google'
 import { useEffect, useState } from 'react'
 import { AddNewColumnButton } from './AddNewColumnButton'
 import { ModifyColumnDialogContent } from './ModifyColumnDialogContent'
+
+const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 export const ManageColumnsCard = () => {
   const { boardOrder, boards, columns } = usePlanner()
@@ -45,13 +49,14 @@ export const ManageColumnsCard = () => {
           </div>
           <Separator />
           <div className='flex flex-col gap-2 w-full'>
+            <Label htmlFor='board-selector'>Board</Label>
             <Select onValueChange={(value) => setSelectedBoard(value)} defaultValue={selectedBoard}>
-              <SelectTrigger>
+              <SelectTrigger id='board-selector'>
                 <SelectValue placeholder='Select a board' />
               </SelectTrigger>
               <SelectContent>
                 {boardOrder.map((boardId: string) => (
-                  <SelectItem key={boardId} value={boardId}>
+                  <SelectItem key={boardId} value={boardId} className={quicksand.className}>
                     {boards[boardId].name}
                   </SelectItem>
                 ))}

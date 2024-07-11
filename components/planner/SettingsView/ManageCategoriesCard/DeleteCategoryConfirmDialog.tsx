@@ -1,4 +1,3 @@
-import deleteCategory from '@/app/utils/plannerUtils/categoryUtils/deleteCategory'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import deleteCategory from '@/utils/plannerUtils/categoryUtils/deleteCategory'
 import { useAuth } from '@clerk/nextjs'
 import { Dispatch, SetStateAction, useState } from 'react'
 

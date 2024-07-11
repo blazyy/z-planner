@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Popover, PopoverContent } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
+import { PopoverTrigger } from '@radix-ui/react-popover'
 import { Dispatch, SetStateAction } from 'react'
 import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 
@@ -15,9 +16,9 @@ export const CategoryColorPicker = ({ color, setColor }: CategoryColorPickerProp
   return (
     <Popover modal={true}>
       <PopoverTrigger>
-        <Button variant='outline' className='justify-start w-[230px] font-normal text-left'>
+        <Button variant='outline' className='justify-start w-[230px] font-normal'>
           <div className='flex items-center gap-2 w-full'>
-            <div className={cn('h-4 w-4 rounded !bg-center !bg-cover transition-all', badgeClassNames[color])}></div>
+            <div className={cn('h-4 w-4 rounded !bg-center !bg-cover transition-all', badgeClassNames[color])} />
             <div>{getCapitalizedColorName(color)}</div>
           </div>
         </Button>

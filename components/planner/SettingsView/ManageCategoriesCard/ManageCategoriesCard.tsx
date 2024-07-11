@@ -40,6 +40,11 @@ export const ManageCategoriesCard = () => {
         if (!newOpen) {
           closeDialog()
         }
+        setTimeout(() => {
+          if (!newOpen) {
+            document.body.style.pointerEvents = ''
+          }
+        }, 100)
       }}
     >
       <div className='flex flex-col justify-start gap-5 border-slate-200 p-5 border rounded-md w-1/4'>

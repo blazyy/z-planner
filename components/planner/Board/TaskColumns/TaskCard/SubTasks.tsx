@@ -1,6 +1,6 @@
-import changeSubTaskCheckedStatus from '@/app/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 import { Checkbox } from '@/components/ui/checkbox'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 import { useAuth } from '@clerk/nextjs'
 
 type SubTasksProps = {

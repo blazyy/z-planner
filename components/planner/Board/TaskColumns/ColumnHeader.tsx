@@ -1,77 +1,24 @@
-import changeColumnName from '@/app/utils/plannerUtils/columnUtils/changeColumnName'
 import { Card, CardHeader } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useAuth } from '@clerk/nextjs'
+import { usePlanner } from '@/hooks/Planner/Planner'
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { AddNewCardButton } from './AddNewCardButton'
-import { ColumnsDropdownOptionsMenu } from './TaskCard/ColumnsDropdownOptionsMenu'
 
 type ColumnHeaderProps = {
-  boardId: string
   columnId: string
   dragHandleProps: DraggableProvidedDragHandleProps | null
 }
 
 export const COLUMN_ACTION_ICON_COLOR = 'text-gray-400'
 
-const formSchema = z.object({
-  columnName: z.string().min(2, {
-    message: 'Column name must be at least 2 characters.',
-  }),
-})
-
-export const ColumnHeader = ({ boardId, columnId, dragHandleProps }: ColumnHeaderProps) => {
-  const { getToken } = useAuth()
+export const ColumnHeader = ({ columnId, dragHandleProps }: ColumnHeaderProps) => {
   const { columns } = usePlanner()
-  const dispatch = usePlannerDispatch()
-  const [isEditingColumnName, setIsEditingColumnName] = useState(false)
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      columnName: columns[columnId].name,
-    },
-  })
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    changeColumnName(columnId, values.columnName, dispatch, getToken)
-    setIsEditingColumnName(false)
-  }
 
   return (
     <Card {...dragHandleProps} className='hover:bg-muted mb-1 transition-all cursor-pointer'>
-      <CardHeader className='p-1'>
+      <CardHeader className='p-2'>
         <div className='flex flex-row justify-between items-center gap-2 px-2'>
+          <div className='font-bold text-gray-700 text-xl'>{columns[columnId].name}</div>
           <AddNewCardButton columnId={columnId} />
-          {!isEditingColumnName && <div className='text-gray-700 text-lg'>{columns[columnId].name}</div>}
-          {isEditingColumnName && (
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                  control={form.control}
-                  name='columnName'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder='Column name...' {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </form>
-            </Form>
-          )}
-          <ColumnsDropdownOptionsMenu
-            boardId={boardId}
-            columnId={columnId}
-            setIsEditingColumnName={setIsEditingColumnName}
-          />
         </div>
       </CardHeader>
     </Card>

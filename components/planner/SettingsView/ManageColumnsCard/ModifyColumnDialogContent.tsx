@@ -1,14 +1,17 @@
-import changeColumnName from '@/app/utils/plannerUtils/columnUtils/changeColumnName'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import changeColumnName from '@/utils/plannerUtils/columnUtils/changeColumnName'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Quicksand } from 'next/font/google'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { DeleteColumnConfirmDialog } from './DeleteColumnConfirmDialog'
+
+const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyBoardDialogContentProps = {
   closeDialog: () => void
@@ -41,7 +44,7 @@ export const ModifyColumnDialogContent = ({ closeDialog, boardId, columnId }: Mo
   }
 
   return (
-    <DialogContent>
+    <DialogContent className={quicksand.className}>
       <DialogHeader>
         <DialogTitle className='mb-5'>Modify Column</DialogTitle>
         <DialogDescription>

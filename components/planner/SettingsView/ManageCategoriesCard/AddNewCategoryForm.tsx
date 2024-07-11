@@ -1,10 +1,10 @@
-import { addNewCategory } from '@/app/utils/plannerUtils/categoryUtils/addNewCategory'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { addNewCategory } from '@/utils/plannerUtils/categoryUtils/addNewCategory'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -18,7 +18,6 @@ type AddNewCategoryFormProps = {
 }
 
 const formSchema = z.object({
-  boardId: z.string(),
   categoryName: z.string().min(2, {
     message: 'Category name must be at least 2 characters.',
   }),
@@ -34,12 +33,12 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
   const { getToken } = useAuth()
   const { boardOrder, boards } = usePlanner()
   const dispatch = usePlannerDispatch()
+  const [selectedBoard, setSelectedBoard] = useState(boardOrder[0])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      boardId: boardOrder[0],
       categoryName: '',
     },
   })
@@ -52,7 +51,7 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
       name: values.categoryName,
       color: categoryColor,
     }
-    addNewCategory(values.boardId, newCategoryDetails, dispatch, getToken)
+    addNewCategory(selectedBoard, newCategoryDetails, dispatch, getToken)
     closeDialog()
   }
 
@@ -60,30 +59,18 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name='boardId'
-            render={({ field }) => (
-              <FormItem className='mb-4 w-1/2'>
-                <FormLabel>Board</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Select a board' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {boardOrder.map((boardId) => (
-                      <SelectItem key={boardId} value={boardId}>
-                        {boards[boardId].name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <Select onValueChange={(value) => setSelectedBoard(value)} defaultValue={selectedBoard}>
+            <SelectTrigger className='mb-4 w-1/2'>
+              <SelectValue placeholder='Select a board' />
+            </SelectTrigger>
+            <SelectContent>
+              {boardOrder.map((boardId) => (
+                <SelectItem key={boardId} value={boardId}>
+                  {boards[boardId].name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <FormField
             control={form.control}
             name='categoryName'

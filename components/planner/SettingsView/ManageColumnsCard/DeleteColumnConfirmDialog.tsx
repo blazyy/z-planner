@@ -1,4 +1,3 @@
-import deleteColumn from '@/app/utils/plannerUtils/columnUtils/deleteColumn'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import deleteColumn from '@/utils/plannerUtils/columnUtils/deleteColumn'
 import { useAuth } from '@clerk/nextjs'
 import { useState } from 'react'
 

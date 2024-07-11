@@ -1,15 +1,19 @@
-import changeCardCheckedStatus from '@/app/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
-import changeCardContent from '@/app/utils/plannerUtils/cardUtils/changeCardContent'
-import changeCardTitle from '@/app/utils/plannerUtils/cardUtils/changeCardTitle'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { cn } from '@/lib/utils'
+import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
+import changeCardContent from '@/utils/plannerUtils/cardUtils/changeCardContent'
+import changeCardTitle from '@/utils/plannerUtils/cardUtils/changeCardTitle'
 import { useAuth } from '@clerk/nextjs'
+import { Quicksand } from 'next/font/google'
 import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
+
+const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type TaskCardDialogProps = {
   boardId: string
@@ -22,7 +26,7 @@ export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
   const { taskCards } = usePlanner()
   const task = taskCards[id]
   return (
-    <DialogContent className='p-0'>
+    <DialogContent className={cn(quicksand.className, 'p-0')}>
       <Card className='p-2'>
         <CardHeader className='gap-2 pb-0 pl-7'>
           <div className='flex gap-2'>

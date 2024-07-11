@@ -1,4 +1,3 @@
-import deleteBoard from '@/app/utils/plannerUtils/boardUtils/deleteBoard'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import deleteBoard from '@/utils/plannerUtils/boardUtils/deleteBoard'
 import { useAuth } from '@clerk/nextjs'
 import { useState } from 'react'
 

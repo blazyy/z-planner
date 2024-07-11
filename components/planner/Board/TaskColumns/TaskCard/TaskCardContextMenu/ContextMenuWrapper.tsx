@@ -1,4 +1,3 @@
-import deleteCard from '@/app/utils/plannerUtils/cardUtils/deleteCard'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +9,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import deleteCard from '@/utils/plannerUtils/cardUtils/deleteCard'
 import { useAuth } from '@clerk/nextjs'
 import { useErrorBoundary } from 'react-error-boundary'
 
