@@ -1,5 +1,6 @@
-import { ManageCategoriesCard } from '../Sidebar/ManageCategoriesCard/ManageCategoriesCard'
-import { ManageBoardsCard } from './ManageBoardsDialog/ManageBoardsCard'
+import { ManageBoardsCard } from './ManageBoardsCard/ManageBoardsCard'
+import { ManageCategoriesCard } from './ManageCategoriesCard/ManageCategoriesCard'
+import { ManageColumnsCard } from './ManageColumnsCard/ManageColumnsCard'
 
 export const SettingsView = () => {
   return (
@@ -7,6 +8,7 @@ export const SettingsView = () => {
       <h1 className='font-bold text-2xl'>Settings</h1>
       <div className='flex gap-5 w-full'>
         <ManageBoardsCard />
+        <ManageColumnsCard />
         <ManageCategoriesCard />
       </div>
     </div>

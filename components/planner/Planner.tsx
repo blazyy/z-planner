@@ -5,7 +5,7 @@ import { PlannerFiltersProvider } from '@/hooks/PlannerFilters/PlannerFilters'
 import { useAuth } from '@clerk/nextjs'
 import { DragDropContext } from '@hello-pangea/dnd'
 import { BackendErrorAlertCard } from '../global/AlertCard/AlertCard'
-import { MultiStepLoader } from '../ui/multi-step-loader'
+import { LoadingSpinner } from '../global/LoadingSpinner/LoadingSpinner'
 import { AddBoardCallout } from './AddBoardCallout'
 import { ArchiveView } from './ArchiveView/ArchiveView'
 import { Board } from './Board/Board'
@@ -23,7 +23,7 @@ export const Planner = () => {
   }
 
   if (!plannerContext.hasLoaded) {
-    return <MultiStepLoader loading={!plannerContext.hasLoaded} />
+    return <LoadingSpinner />
   }
 
   if (plannerContext.boardOrder.length === 0) {
