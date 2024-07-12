@@ -5,9 +5,9 @@ import { usePlanner } from '@/hooks/Planner/Planner'
 import { useRouter } from 'next/navigation'
 
 export default function BoardPage({ params }: { params: { boardId: string } }) {
-  const router = useRouter()
   const { hasLoaded, boards } = usePlanner()
   const { boardId } = params
+  const router = useRouter()
 
   if (!hasLoaded) {
     return <LoadingSpinner />

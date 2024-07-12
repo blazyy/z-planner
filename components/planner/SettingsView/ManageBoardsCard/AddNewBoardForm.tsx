@@ -6,6 +6,7 @@ import { addNewBoardToPlanner } from '@/utils/plannerUtils/boardUtils/addNewBoar
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -21,8 +22,9 @@ type AddNewBoardFormProps = {
 }
 
 export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardFormProps) => {
-  const dispatch = usePlannerDispatch()!
   const { getToken } = useAuth()
+  const router = useRouter()
+  const dispatch = usePlannerDispatch()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,6 +38,7 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
     const boardName = values.boardName
     addNewBoardToPlanner(boardId, boardName, dispatch, getToken)
     closeDialog()
+    router.push(`/boards/${boardId}`)
   }
 
   return (
@@ -48,7 +51,7 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder='Board name' {...field} />
+                  <Input className='w-72' placeholder='Board name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

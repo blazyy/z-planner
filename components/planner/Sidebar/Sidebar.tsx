@@ -46,7 +46,7 @@ const SidebarButton = ({
 
 export const Sidebar = ({ currentPage }: { currentPage: string }) => {
   const { boardOrder, boards, hasLoaded } = usePlanner()
-  if (!hasLoaded) {
+  if (!hasLoaded || boardOrder.length === 0) {
     return <></>
   }
   return (

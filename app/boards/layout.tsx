@@ -4,6 +4,7 @@ import { Navbar } from '@/components/global/Navbar'
 import { Sidebar } from '@/components/planner/Sidebar/Sidebar'
 import { PlannerProvider } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
+import { ClerkProvider } from '@clerk/nextjs'
 import { Quicksand } from 'next/font/google'
 import { usePathname } from 'next/navigation'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -15,18 +16,20 @@ export default function Layout({ children }: { children: JSX.Element }) {
   const currentPage = pathname.split('/boards/')[1]
 
   return (
-    <div className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
-      <Navbar />
-      <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
-        <ErrorBoundary FallbackComponent={AlertCard} onError={logError}>
-          <PlannerProvider>
-            <div className='flex flex-1 justify-start gap-2 w-full'>
-              <Sidebar currentPage={currentPage} />
-              {children}
-            </div>
-          </PlannerProvider>
-        </ErrorBoundary>
-      </main>
-    </div>
+    <ClerkProvider>
+      <div className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
+        <Navbar />
+        <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
+          <ErrorBoundary FallbackComponent={AlertCard} onError={logError}>
+            <PlannerProvider>
+              <div className='flex flex-1 justify-start gap-2 w-full'>
+                <Sidebar currentPage={currentPage} />
+                {children}
+              </div>
+            </PlannerProvider>
+          </ErrorBoundary>
+        </main>
+      </div>
+    </ClerkProvider>
   )
 }
