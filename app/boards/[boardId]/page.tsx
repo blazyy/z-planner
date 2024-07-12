@@ -8,11 +8,7 @@ export default function BoardPage({ params }: { params: { boardId: string } }) {
   const { boardId } = params
 
   if (!hasLoaded) {
-    return (
-      <div className='flex flex-col justify-center items-center gap-2 w-full'>
-        <LoadingSpinner />
-      </div>
-    )
+    return <LoadingSpinner />
   }
   return <Board boardId={boardId} />
 }

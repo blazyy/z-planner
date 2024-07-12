@@ -1,3 +1,4 @@
+'use client'
 import { PlannerFiltersProvider } from '@/hooks/PlannerFilters/PlannerFilters'
 import { FilterToolbar } from './FilterToolbar/FilterToolbar'
 import { TaskColumns } from './TaskColumns/TaskColumns'
