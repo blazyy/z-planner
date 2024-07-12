@@ -8,7 +8,6 @@ import { PlannerType } from './types'
 const initialEmptyState: PlannerType = {
   hasLoaded: false,
   backendErrorOccurred: false,
-  currentView: 'board',
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
