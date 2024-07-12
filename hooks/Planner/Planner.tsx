@@ -6,10 +6,9 @@ import { plannerReducer } from './plannerReducer'
 import { PlannerType } from './types'
 
 const initialEmptyState: PlannerType = {
+  hasLoaded: false,
   backendErrorOccurred: false,
   currentView: 'board',
-  hasLoaded: false,
-  selectedBoard: '',
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,

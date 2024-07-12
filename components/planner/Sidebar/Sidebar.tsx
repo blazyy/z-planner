@@ -34,7 +34,10 @@ const BoardButton = ({ board, isCurrentlySelectedBoard }: BoardButtonProps) => {
 }
 
 export const Sidebar = ({ selectedBoardId }: { selectedBoardId: string }) => {
-  const { boardOrder, boards } = usePlanner()
+  const { boardOrder, boards, hasLoaded } = usePlanner()
+  if (!hasLoaded) {
+    return <></>
+  }
   return (
     <nav className='flex flex-col items-start gap-8 w-1/6'>
       <div className='flex flex-col justify-between gap-2 w-full h-full'>

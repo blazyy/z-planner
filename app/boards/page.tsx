@@ -1,6 +1,14 @@
 'use client'
-import { Planner } from '@/components/planner/Planner'
+import { usePlanner } from '@/hooks/Planner/Planner'
+import { useRouter } from 'next/navigation'
 
 export default function PlannerPage() {
-  return <Planner />
+  const router = useRouter()
+  const plannerContext = usePlanner()
+
+  if (plannerContext.boardOrder.length > 0) {
+    router.push(`/boards/${plannerContext.boardOrder[0]}`)
+  }
+
+  return <></>
 }

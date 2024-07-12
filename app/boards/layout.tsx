@@ -12,6 +12,7 @@ const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', 
 
 export default function Layout({ children }: { children: JSX.Element }) {
   const { boardId } = useParams<{ boardId: string }>()
+
   return (
     <div className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
       <Navbar />
