@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function AddBoardCallout() {
-  const { boardOrder } = usePlanner()
+  const { boardOrder, hasLoaded } = usePlanner()
   const router = useRouter()
 
   useEffect(() => {
@@ -14,6 +14,10 @@ export default function AddBoardCallout() {
       router.push(`/boards/${boardOrder[0]}`)
     }
   }, [boardOrder, router])
+
+  if (!hasLoaded) {
+    return null
+  }
 
   return (
     <div className='flex flex-col flex-1 justify-center items-center gap-4 p-4 w-full'>
