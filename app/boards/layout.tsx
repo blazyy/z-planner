@@ -1,7 +1,7 @@
 'use client'
 import { AlertCard, logError } from '@/components/global/AlertCard/AlertCard'
 import { Navbar } from '@/components/global/Navbar'
-import { Sidebar } from '@/components/planner/Sidebar/Sidebar'
+import { Sidebar } from '@/components/planner/Sidebar'
 import { Toaster } from '@/components/ui/sonner'
 import { PlannerProvider } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'

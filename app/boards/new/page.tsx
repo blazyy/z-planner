@@ -16,7 +16,7 @@ export default function AddBoardCallout() {
   }, [boardOrder, router])
 
   if (!hasLoaded) {
-    return null
+    return <></>
   }
 
   return (
