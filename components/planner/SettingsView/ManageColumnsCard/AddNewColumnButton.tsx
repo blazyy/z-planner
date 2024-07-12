@@ -27,11 +27,9 @@ export const AddNewColumnButton = ({ boardId }: { boardId: string }) => {
       }}
     >
       <DialogTrigger>
-        <div className='flex justify-between items-start'>
-          <Button className='w-full' variant='outline'>
-            <Plus className='mr-2 w-4 h-4' /> Add a new column
-          </Button>
-        </div>
+        <Button className='w-full' variant='outline'>
+          <Plus className='mr-2 w-4 h-4' /> Add a new column
+        </Button>
       </DialogTrigger>
       <AddNewColumnDialogContent key={key} boardId={boardId} closeDialog={closeDialog} />
     </Dialog>

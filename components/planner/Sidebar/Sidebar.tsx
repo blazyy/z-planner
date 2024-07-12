@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
-import { Github } from 'lucide-react'
+import { Archive, Github, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 type BoardButtonProps = {
@@ -16,10 +16,12 @@ const SidebarButton = ({
   isCurrentlySelected,
   label,
   pathname,
+  icon,
 }: {
   isCurrentlySelected: boolean
   label: string
   pathname: string
+  icon?: React.ReactNode
 }) => {
   const router = useRouter()
   const filtersDispatch = usePlannerFiltersDispatch()
@@ -33,26 +35,10 @@ const SidebarButton = ({
       }}
     >
       <div className='flex justify-between gap-2 w-full'>
-        <div className='flex'>{label}</div>
-      </div>
-    </Button>
-  )
-}
-
-const BoardButton = ({ board, isCurrentlySelectedBoard }: BoardButtonProps) => {
-  const router = useRouter()
-  const filtersDispatch = usePlannerFiltersDispatch()
-  return (
-    <Button
-      variant={isCurrentlySelectedBoard ? 'secondary' : 'ghost'}
-      className={`${isCurrentlySelectedBoard ? 'border-l-4 border-green-500' : ''}`}
-      onClick={() => {
-        router.push(`/boards/${board.id}`)
-        filtersDispatch({ type: 'filtersReset' })
-      }}
-    >
-      <div className='flex justify-between gap-2 w-full'>
-        <div className='flex'>{board.name}</div>
+        <div className='flex'>
+          {icon ? icon : <></>}
+          <span className='ml-2'>{label}</span>
+        </div>
       </div>
     </Button>
   )
@@ -79,11 +65,17 @@ export const Sidebar = ({ currentPage }: { currentPage: string }) => {
           </div>
           <div className='flex flex-col gap-2 mt-5 w-full'>
             <Separator />
-            <SidebarButton isCurrentlySelected={currentPage === 'archive'} label='Archive' pathname='/boards/archive' />
+            <SidebarButton
+              isCurrentlySelected={currentPage === 'archive'}
+              label='Archive'
+              pathname='/boards/archive'
+              icon={<Archive className='w-5 h-5' />}
+            />
             <SidebarButton
               isCurrentlySelected={currentPage === 'settings'}
               label='Settings'
               pathname='/boards/settings'
+              icon={<Settings className='w-5 h-5' />}
             />
           </div>
         </div>

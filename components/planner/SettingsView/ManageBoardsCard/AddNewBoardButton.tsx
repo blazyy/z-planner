@@ -26,11 +26,9 @@ export const AddNewBoardButton = () => {
       }}
     >
       <DialogTrigger>
-        <div className='flex justify-between items-start'>
-          <Button className='w-full' variant='outline'>
-            <Plus className='mr-2 w-4 h-4' /> Add a new board
-          </Button>
-        </div>
+        <Button className='w-full' variant='outline'>
+          <Plus className='mr-2 w-4 h-4' /> Add a new board
+        </Button>
       </DialogTrigger>
       <AddNewBoardDialogContent key={key} closeDialog={closeDialog} />
     </Dialog>

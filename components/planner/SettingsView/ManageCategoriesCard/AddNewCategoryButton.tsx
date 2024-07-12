@@ -25,11 +25,9 @@ export const AddNewCategoryButton = () => {
       }}
     >
       <DialogTrigger>
-        <div className='flex justify-between items-start'>
-          <Button className='w-full' variant='outline'>
-            <Plus className='mr-2 w-4 h-4' /> Add a new category
-          </Button>
-        </div>
+        <Button className='w-full' variant='outline'>
+          <Plus className='mr-2 w-4 h-4' /> Add a new category
+        </Button>
       </DialogTrigger>
       <AddNewCategoryDialogContent key={key} closeDialog={closeDialog} />
     </Dialog>
