@@ -1,5 +1,5 @@
 'use client'
-import { AddNewBoardForm } from '@/components/planner/SettingsView/ManageBoardsCard/AddNewBoardForm'
+import { AddNewBoardForm } from '@/components/planner/Settings/ManageBoardsCard/AddNewBoardForm'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { useRouter } from 'next/navigation'

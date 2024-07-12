@@ -3,12 +3,13 @@ import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/c
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { changeBoardInfo } from '@/utils/plannerUtils/boardUtils/changeBoardInfo'
-import deleteBoard from '@/utils/plannerUtils/boardUtils/deleteBoard'
+import changeColumnName from '@/utils/plannerUtils/columnUtils/changeColumnName'
+import deleteColumn from '@/utils/plannerUtils/columnUtils/deleteColumn'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Quicksand } from 'next/font/google'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 
@@ -17,42 +18,43 @@ const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', 
 type ModifyBoardDialogContentProps = {
   onCloseDialog: () => void
   boardId: string
+  columnId: string
 }
 
 const formSchema = z.object({
-  boardName: z.string().min(2, {
-    message: 'Board name must be at least 2 characters.',
+  columnName: z.string().min(2, {
+    message: 'Column name must be at least 2 characters.',
   }),
 })
 
-export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoardDialogContentProps) => {
+export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: ModifyBoardDialogContentProps) => {
   const { getToken } = useAuth()
-  const { boards } = usePlanner()
+  const { columns } = usePlanner()
   const dispatch = usePlannerDispatch()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      boardName: boards[boardId].name,
+      columnName: columns[columnId].name,
     },
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     onCloseDialog()
-    changeBoardInfo(boardId, values.boardName, dispatch, getToken)
+    changeColumnName(columnId, values.columnName, dispatch, getToken)
   }
 
   return (
     <DialogContent className={quicksand.className}>
       <DialogHeader>
-        <DialogTitle className='mb-5'>Modify Board</DialogTitle>
+        <DialogTitle className='mb-5'>Modify Column</DialogTitle>
         <DialogDescription>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
-                name='boardName'
+                name='columnName'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -68,9 +70,12 @@ export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoard
           <div className='flex justify-between mt-5'>
             <ManageItemAlertDialog
               onCloseParentDialog={onCloseDialog}
-              onClickDelete={() => deleteBoard(boardId, dispatch, getToken)}
-              isDeleteButtonDisabled={boards[boardId].columns.length > 0}
-              deleteButtonDisabledTooltipContent='A board with columns cannot be deleted.'
+              isDeleteButtonDisabled={columns[columnId].taskCards.length > 0}
+              deleteButtonDisabledTooltipContent='A column with tasks cannot be deleted.'
+              onClickDelete={() => {
+                deleteColumn(boardId, columnId, dispatch, getToken)
+                toast.success('Column deleted.')
+              }}
             />
             <span className='flex gap-1'>
               <Button size='sm' variant='secondary' onClick={onCloseDialog}>

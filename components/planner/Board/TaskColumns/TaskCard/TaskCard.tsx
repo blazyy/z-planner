@@ -5,8 +5,10 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
+import moveCardWithinColumn from '@/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { useAuth } from '@clerk/nextjs'
 import { Draggable } from '@hello-pangea/dnd'
+import { toast } from 'sonner'
 import { CategoryBadge } from './CategoryBadge'
 import { DueDateIndicator } from './DueDateIndicator'
 import { ProgressBar } from './ProgressBar'
@@ -56,8 +58,8 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
   const { getToken } = useAuth()
-  const plannerDispatch = usePlannerDispatch()
-  const { taskCards, idOfCardBeingDragged } = usePlanner()
+  const dispatch = usePlannerDispatch()
+  const { columns, taskCards, idOfCardBeingDragged } = usePlanner()
   const task = taskCards[taskCardId]
 
   return (
@@ -87,7 +89,16 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
               onClick={(event) => {
                 event.preventDefault() // Needed to prevent dialog from triggering
                 const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-                changeCardCheckedStatus(taskCardId, !isChecked, plannerDispatch, getToken)
+                if (!isChecked) {
+                  // Means the card was just checked, condition might be confusing
+                  const indexOfCard = columns[columnId].taskCards.indexOf(taskCardId)
+                  const lastIndex = columns[columnId].taskCards.length - 1
+                  moveCardWithinColumn(columns, columnId, taskCardId, indexOfCard, lastIndex, dispatch, getToken)
+                  toast.success('Task marked as complete.')
+                } else {
+                  toast.info('Task marked as incomplete.')
+                }
+                changeCardCheckedStatus(taskCardId, !isChecked, dispatch, getToken)
               }}
             />
             <DueDateIndicator taskCardId={taskCardId} />

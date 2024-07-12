@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Quicksand } from 'next/font/google'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 import { CategoryColorPicker } from './CategoryColorPicker'
@@ -84,7 +85,10 @@ export const ModifyCategoryDialogContent = ({
           <div className='flex justify-between mt-5'>
             <ManageItemAlertDialog
               onCloseParentDialog={onCloseDialog}
-              onClickDelete={() => deleteCategory(boardId, categoryId, dispatch, getToken)}
+              onClickDelete={() => {
+                deleteCategory(boardId, categoryId, dispatch, getToken)
+                toast.success('Category deleted.')
+              }}
               isDeleteButtonDisabled={false}
               deleteConfirmationContent={
                 <>

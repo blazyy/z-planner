@@ -1,8 +1,8 @@
 'use client'
 import { LoadingSpinner } from '@/components/global/LoadingSpinner'
-import { ManageBoardsCard } from '@/components/planner/SettingsView/ManageBoardsCard/ManageBoardsCard'
-import { ManageCategoriesCard } from '@/components/planner/SettingsView/ManageCategoriesCard/ManageCategoriesCard'
-import { ManageColumnsCard } from '@/components/planner/SettingsView/ManageColumnsCard/ManageColumnsCard'
+import { ManageBoardsCard } from '@/components/planner/Settings/ManageBoardsCard/ManageBoardsCard'
+import { ManageCategoriesCard } from '@/components/planner/Settings/ManageCategoriesCard/ManageCategoriesCard'
+import { ManageColumnsCard } from '@/components/planner/Settings/ManageColumnsCard/ManageColumnsCard'
 import { usePlanner } from '@/hooks/Planner/Planner'
 
 export default function SettingsPage() {

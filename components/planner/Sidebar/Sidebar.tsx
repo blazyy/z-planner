@@ -2,15 +2,9 @@
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { Archive, Github, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-
-type BoardButtonProps = {
-  board: BoardInfoType
-  isCurrentlySelectedBoard: boolean
-}
 
 const SidebarButton = ({
   isCurrentlySelected,

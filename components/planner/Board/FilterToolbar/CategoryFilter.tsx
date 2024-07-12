@@ -13,10 +13,10 @@ import { badgeClassNames } from '../TaskColumns/TaskCard/utils'
 const getTaskCardBelongingToCategoryCount = (taskCards: TaskCardInfoType[], category: string) =>
   taskCards.filter((taskCard) => taskCard.category === category).length
 
-export const CategoryFilter = () => {
+export const CategoryFilter = ({ selectedBoard }: { selectedBoard: string }) => {
   const dispatch = usePlannerFiltersDispatch()
   const { selectedCategories } = usePlannerFilters()
-  const { categories, boards, selectedBoard, columns, taskCards } = usePlanner()
+  const { categories, boards, columns, taskCards } = usePlanner()
 
   const categoriesInSelectedBoard = boards[selectedBoard].categories
 

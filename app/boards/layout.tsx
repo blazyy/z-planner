@@ -2,6 +2,7 @@
 import { AlertCard, logError } from '@/components/global/AlertCard/AlertCard'
 import { Navbar } from '@/components/global/Navbar'
 import { Sidebar } from '@/components/planner/Sidebar/Sidebar'
+import { Toaster } from '@/components/ui/sonner'
 import { PlannerProvider } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { ClerkProvider } from '@clerk/nextjs'
@@ -24,6 +25,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
             <PlannerProvider>
               <div className='flex flex-1 justify-start gap-2 w-full'>
                 <Sidebar currentPage={currentPage} />
+                <Toaster richColors />
                 {children}
               </div>
             </PlannerProvider>

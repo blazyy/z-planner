@@ -8,11 +8,15 @@ import { addNewCategory } from '@/utils/plannerUtils/categoryUtils/addNewCategor
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
+import { Quicksand } from 'next/font/google'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 import { CategoryColorPicker } from './CategoryColorPicker'
+
+const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type AddNewCategoryFormProps = {
   closeDialog: () => void
@@ -53,6 +57,7 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
       color: categoryColor,
     }
     addNewCategory(selectedBoard, newCategoryDetails, dispatch, getToken)
+    toast.success('Category added.')
     closeDialog()
   }
 
@@ -64,7 +69,7 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
             <SelectTrigger className='mb-4 w-1/2'>
               <SelectValue placeholder='Select a board' />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={quicksand.className}>
               {boardOrder.map((boardId) => (
                 <SelectItem key={boardId} value={boardId}>
                   {boards[boardId].name}

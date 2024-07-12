@@ -22,7 +22,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       }
       draft.boards[boardId].categories.push(unassignedCategoryDetails.id)
       draft.categories[unassignedCategoryDetails.id] = unassignedCategoryDetails
-      // draft.selectedBoard = boardId
       break
     }
     case 'boardNameChanged': {

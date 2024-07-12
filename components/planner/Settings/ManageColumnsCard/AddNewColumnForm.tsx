@@ -1,44 +1,42 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { addNewBoardToPlanner } from '@/utils/plannerUtils/boardUtils/addNewBoardToPlanner'
+import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { addNewColumn } from '@/utils/plannerUtils/columnUtils/addNewColumn'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { nanoid } from 'nanoid'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import * as z from 'zod'
 
 const formSchema = z.object({
-  boardName: z.string().min(2, {
-    message: 'Board name must be at least 2 characters.',
+  columnName: z.string().min(2, {
+    message: 'Column name must be at least 2 characters.',
   }),
 })
 
-type AddNewBoardFormProps = {
-  isCallout?: boolean
+type AddNewColumnFormProps = {
+  boardId: string
   closeDialog: () => void
 }
 
-export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardFormProps) => {
+export const AddNewColumnForm = ({ boardId, closeDialog }: AddNewColumnFormProps) => {
+  const { boards } = usePlanner()
+  const dispatch = usePlannerDispatch()!
   const { getToken } = useAuth()
-  const router = useRouter()
-  const dispatch = usePlannerDispatch()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      boardName: '',
+      columnName: '',
     },
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const boardId = nanoid()
-    const boardName = values.boardName
-    addNewBoardToPlanner(boardId, boardName, dispatch, getToken)
+    const columnName = values.columnName
+    addNewColumn(boards[boardId], columnName, dispatch, getToken)
+    toast.success('Column added.')
     closeDialog()
-    router.push(`/boards/${boardId}`)
   }
 
   return (
@@ -47,11 +45,11 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
-            name='boardName'
+            name='columnName'
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input className='w-72' placeholder='Board name' {...field} />
+                  <Input placeholder='Column name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -60,13 +58,11 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
         </form>
       </Form>
       <div className='flex justify-end gap-1 w-full'>
-        {!isCallout && (
-          <Button size='sm' variant='secondary' onClick={closeDialog}>
-            Cancel
-          </Button>
-        )}
+        <Button size='sm' variant='secondary' onClick={closeDialog}>
+          Cancel
+        </Button>
         <Button size='sm' onClick={() => onSubmit(form.getValues())} disabled={!form.formState.isValid}>
-          {isCallout ? 'Create' : 'Save'}
+          Save
         </Button>
       </div>
     </div>
