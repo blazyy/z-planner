@@ -5,13 +5,14 @@ import { Sidebar } from '@/components/planner/Sidebar/Sidebar'
 import { PlannerProvider } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { Quicksand } from 'next/font/google'
-import { useParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { ErrorBoundary } from 'react-error-boundary'
 
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 export default function Layout({ children }: { children: JSX.Element }) {
-  const { boardId } = useParams<{ boardId: string }>()
+  const pathname = usePathname()
+  const currentPage = pathname.split('/boards/')[1]
 
   return (
     <div className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
@@ -20,7 +21,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
         <ErrorBoundary FallbackComponent={AlertCard} onError={logError}>
           <PlannerProvider>
             <div className='flex flex-1 justify-start gap-2 w-full'>
-              <Sidebar selectedBoardId={boardId} />
+              <Sidebar currentPage={currentPage} />
               {children}
             </div>
           </PlannerProvider>

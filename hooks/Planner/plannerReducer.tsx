@@ -34,11 +34,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       const { boardId } = action.payload
       delete draft.boards[boardId]
       draft.boardOrder = draft.boardOrder.filter((id: string) => id !== boardId)
-      // if (draft.boardOrder.length === 0) {
-      //   draft.selectedBoard = ''
-      // } else {
-      //   draft.selectedBoard = draft.boardOrder[0]
-      // }
       break
     }
     case 'newColumnAdded': {

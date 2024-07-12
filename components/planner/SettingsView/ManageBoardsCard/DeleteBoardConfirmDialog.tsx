@@ -22,8 +22,8 @@ type DeleteBoardConfirmDialogProps = {
 
 export const DeleteBoardConfirmDialog = ({ boardId, closeDialog }: DeleteBoardConfirmDialogProps) => {
   const { getToken } = useAuth()
-  const dispatch = usePlannerDispatch()
   const { boards, columns } = usePlanner()
+  const dispatch = usePlannerDispatch()
   const boardHasTasks = boards[boardId].columns.reduce((acc, col) => acc + columns[col].taskCards.length, 0) > 0
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false)
 

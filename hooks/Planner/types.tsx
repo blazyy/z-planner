@@ -80,7 +80,6 @@ export type BoardsType = {
 
 export type PlannerType = {
   hasLoaded: boolean
-  currentView: 'board' | 'archive' | 'settings'
   backendErrorOccurred: boolean
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string

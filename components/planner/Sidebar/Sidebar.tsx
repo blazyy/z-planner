@@ -6,12 +6,37 @@ import { BoardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { Github } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { ArchiveModeToggle } from './ArchiveModeToggle'
-import { SettingsModeToggle } from './SettingsModeToggle'
 
 type BoardButtonProps = {
   board: BoardInfoType
   isCurrentlySelectedBoard: boolean
+}
+
+const SidebarButton = ({
+  isCurrentlySelected,
+  label,
+  pathname,
+}: {
+  isCurrentlySelected: boolean
+  label: string
+  pathname: string
+}) => {
+  const router = useRouter()
+  const filtersDispatch = usePlannerFiltersDispatch()
+  return (
+    <Button
+      variant={isCurrentlySelected ? 'secondary' : 'ghost'}
+      className={`${isCurrentlySelected ? 'border-l-4 border-green-500' : ''}`}
+      onClick={() => {
+        router.push(pathname)
+        filtersDispatch({ type: 'filtersReset' })
+      }}
+    >
+      <div className='flex justify-between gap-2 w-full'>
+        <div className='flex'>{label}</div>
+      </div>
+    </Button>
+  )
 }
 
 const BoardButton = ({ board, isCurrentlySelectedBoard }: BoardButtonProps) => {
@@ -33,7 +58,7 @@ const BoardButton = ({ board, isCurrentlySelectedBoard }: BoardButtonProps) => {
   )
 }
 
-export const Sidebar = ({ selectedBoardId }: { selectedBoardId: string }) => {
+export const Sidebar = ({ currentPage }: { currentPage: string }) => {
   const { boardOrder, boards, hasLoaded } = usePlanner()
   if (!hasLoaded) {
     return <></>
@@ -44,13 +69,22 @@ export const Sidebar = ({ selectedBoardId }: { selectedBoardId: string }) => {
         <div>
           <div className='flex flex-col gap-2 w-full'>
             {boardOrder.map((boardId, i) => (
-              <BoardButton key={i} board={boards[boardId]} isCurrentlySelectedBoard={boardId === selectedBoardId} />
+              <SidebarButton
+                key={i}
+                isCurrentlySelected={boardId === currentPage}
+                label={boards[boardId].name}
+                pathname={`/boards/${boardId}`}
+              />
             ))}
           </div>
           <div className='flex flex-col gap-2 mt-5 w-full'>
             <Separator />
-            <ArchiveModeToggle />
-            <SettingsModeToggle />
+            <SidebarButton isCurrentlySelected={currentPage === 'archive'} label='Archive' pathname='/boards/archive' />
+            <SidebarButton
+              isCurrentlySelected={currentPage === 'settings'}
+              label='Settings'
+              pathname='/boards/settings'
+            />
           </div>
         </div>
         <div>
