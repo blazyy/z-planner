@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
   const currentPage = pathname.split('/boards/')[1]
 
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl='/'>
       <div className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
         <Navbar />
         <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
