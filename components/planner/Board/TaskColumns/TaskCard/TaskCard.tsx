@@ -9,7 +9,6 @@ import { useAuth } from '@clerk/nextjs'
 import { Draggable } from '@hello-pangea/dnd'
 import { toast } from 'sonner'
 import { CategoryBadge } from './CategoryBadge'
-import { DueDateIndicator } from './DueDateIndicator'
 import { ProgressBar } from './ProgressBar'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
@@ -97,7 +96,6 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
                 changeCardCheckedStatus(columnId, taskCardId, !isChecked, dispatch, getToken)
               }}
             />
-            <DueDateIndicator taskCardId={taskCardId} />
           </div>
           <CategoryBadge boardId={boardId} taskCardId={taskCardId} />
         </CardFooter>
