@@ -11,16 +11,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       draft.backendErrorOccurred = true
       break
     }
-    case 'selectedBoardChanged': {
-      draft.currentView = 'board'
-      draft.selectedBoard = action.payload.boardId
-      break
-    }
-    case 'archiveModeToggled': {
-      draft.currentView = 'archive'
-      draft.selectedBoard = ''
-      break
-    }
     case 'newBoardAdded': {
       const { boardId, boardName, unassignedCategoryDetails } = action.payload
       draft.boardOrder.push(boardId)
@@ -28,11 +18,9 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
         id: boardId,
         name: boardName,
         columns: [],
-        categories: [],
+        categories: [unassignedCategoryDetails.id],
       }
-      draft.boards[boardId].categories.push(unassignedCategoryDetails.id)
       draft.categories[unassignedCategoryDetails.id] = unassignedCategoryDetails
-      draft.selectedBoard = boardId
       break
     }
     case 'boardNameChanged': {
@@ -44,11 +32,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       const { boardId } = action.payload
       delete draft.boards[boardId]
       draft.boardOrder = draft.boardOrder.filter((id: string) => id !== boardId)
-      if (draft.boardOrder.length === 0) {
-        draft.selectedBoard = ''
-      } else {
-        draft.selectedBoard = draft.boardOrder[0]
-      }
       break
     }
     case 'newColumnAdded': {
@@ -123,8 +106,19 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'taskCardCheckedStatusChanged': {
-      const { taskCardId, isChecked } = action.payload
-      draft.taskCards[taskCardId].checked = isChecked
+      const { columnId, taskCardId, isChecked } = action.payload
+      if (isChecked) {
+        draft.taskCards[taskCardId].status = 'completed'
+        const sourceIndex = draft.columns[columnId].taskCards.indexOf(taskCardId)
+        const destIndex = draft.columns[columnId].taskCards.length - 1
+        const startingColumn = draft.columns[columnId]
+        const reorderedCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards
+        reorderedCardIds.splice(sourceIndex, 1)
+        reorderedCardIds.splice(destIndex, 0, taskCardId)
+        draft.columns[columnId].taskCards = reorderedCardIds
+      } else {
+        draft.taskCards[taskCardId].status = 'created'
+      }
       break
     }
     case 'taskCardTitleChanged': {

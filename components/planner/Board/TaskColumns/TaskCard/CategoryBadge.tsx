@@ -1,4 +1,3 @@
-import changeCardCategory from '@/app/utils/plannerUtils/cardUtils/changeCardCategory'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -7,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import changeCardCategory from '@/utils/plannerUtils/cardUtils/changeCardCategory'
 import { useAuth } from '@clerk/nextjs'
 import { badgeClassNames } from './utils'
 

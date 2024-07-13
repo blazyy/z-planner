@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 interface CardModificationRequestBody {
   title?: string
   content?: string
-  checked?: boolean
+  status?: string
   category?: string
 }
 

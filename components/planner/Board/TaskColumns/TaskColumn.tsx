@@ -71,7 +71,7 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
         <div className='flex flex-col gap-2 mr-2 w-96 min-h-full' {...provided.draggableProps} ref={provided.innerRef}>
-          <ColumnHeader boardId={boardId} columnId={columnInfo.id} dragHandleProps={provided.dragHandleProps} />
+          <ColumnHeader columnId={columnInfo.id} dragHandleProps={provided.dragHandleProps} />
           <ColumnTasks boardId={boardId} columnId={columnInfo.id} />
         </div>
       )}

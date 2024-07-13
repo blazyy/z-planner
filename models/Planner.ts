@@ -16,7 +16,7 @@ const taskCardSchema = new Schema(
     title: { type: String, required: true },
     category: { type: String, required: true },
     content: { type: String },
-    checked: { type: Boolean, default: false },
+    status: { type: String, required: true },
     subTasks: [subTaskSchema],
   },
   { _id: false }
@@ -50,14 +50,17 @@ const categorySchema = new Schema(
   { _id: false }
 )
 
-const plannerSchema = new Schema({
-  clerkUserId: { type: String, required: true },
-  boardOrder: [String],
-  boards: { type: Object, of: boardSchema },
-  columns: { type: Object, of: columnSchema },
-  categories: { type: Object, of: categorySchema },
-  taskCards: { type: Object, of: taskCardSchema },
-  subTasks: { type: Object, of: subTaskSchema },
-})
+const plannerSchema = new Schema(
+  {
+    clerkUserId: { type: String, required: true },
+    boardOrder: [String],
+    boards: { type: Map, of: boardSchema, default: {} },
+    columns: { type: Map, of: columnSchema, default: {} },
+    categories: { type: Map, of: categorySchema, default: {} },
+    taskCards: { type: Map, of: taskCardSchema, default: {} },
+    subTasks: { type: Map, of: subTaskSchema, default: {} },
+  },
+  { minimize: false }
+)
 
 export default mongoose.models.Planner || mongoose.model('Planner', plannerSchema, 'planner')

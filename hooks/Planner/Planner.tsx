@@ -6,10 +6,8 @@ import { plannerReducer } from './plannerReducer'
 import { PlannerType } from './types'
 
 const initialEmptyState: PlannerType = {
-  backendErrorOccurred: false,
-  currentView: 'board',
   hasLoaded: false,
-  selectedBoard: '',
+  backendErrorOccurred: false,
   isSubTaskBeingDragged: false,
   idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
@@ -55,7 +53,6 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
             payload: {
               ...initialEmptyState,
               hasLoaded: true,
-              selectedBoard: data.boardOrder.length > 0 ? data.boardOrder[0] : '',
               boardOrder: data.boardOrder,
               boards: data.boards,
               columns: data.columns,
@@ -67,8 +64,10 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
         })
         .catch((error) => showBoundary(error))
     }
-    fetchData()
-  }, [showBoundary, getToken])
+    if (!plannerData.hasLoaded) {
+      fetchData()
+    }
+  }, [showBoundary, getToken, plannerData.hasLoaded])
 
   return (
     <PlannerContext.Provider value={plannerData}>

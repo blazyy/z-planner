@@ -17,9 +17,8 @@ export type TaskCardInfoType = {
   title: string
   category: string
   content: string
-  checked: boolean
+  status: 'created' | 'archived' | 'completed' | 'deleted'
   subTasks: string[]
-  dueDate: string | null
 }
 
 export type TaskCardBeingInitializedType = {
@@ -80,9 +79,7 @@ export type BoardsType = {
 
 export type PlannerType = {
   hasLoaded: boolean
-  currentView: 'board' | 'archive'
   backendErrorOccurred: boolean
-  selectedBoard: string
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null

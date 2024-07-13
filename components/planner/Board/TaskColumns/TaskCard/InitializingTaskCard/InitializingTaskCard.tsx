@@ -1,4 +1,3 @@
-import { addNewCardToColumn } from '@/app/utils/plannerUtils/cardUtils/addNewCardToColumn'
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -7,10 +6,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
+import { addNewCardToColumn } from '@/utils/plannerUtils/cardUtils/addNewCardToColumn'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import * as z from 'zod'
 import { CancelButton } from './CancelButton'
 import { CategoryBadge } from './CategoryBadge'
@@ -24,7 +25,7 @@ const formSchema = z.object({
   taskCardTitle: z.string().min(2, {
     message: 'Card title must be at least 2 characters.',
   }),
-  taskCardDesc: z.string().optional(),
+  taskCardDesc: z.string(),
 })
 
 export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {
@@ -64,6 +65,7 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
       content: values.taskCardDesc,
     }
     addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch, getToken)
+    toast.success('Task added.')
   }
 
   return (

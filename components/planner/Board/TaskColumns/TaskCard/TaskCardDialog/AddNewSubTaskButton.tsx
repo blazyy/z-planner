@@ -1,5 +1,5 @@
-import { addNewSubTaskOnButtonClick } from '@/app/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { addNewSubTaskOnButtonClick } from '@/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
 import { useAuth } from '@clerk/nextjs'
 import { GripVertical, PlusCircle } from 'lucide-react'
 import { useState } from 'react'

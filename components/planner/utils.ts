@@ -1,9 +1,9 @@
 'use client'
-import moveCardAcrossColumns from '@/app/utils/plannerUtils/cardUtils/moveCardAcrossColumns'
-import moveCardWithinColumn from '@/app/utils/plannerUtils/cardUtils/moveCardWithinColumn'
-import { changeColumnOrder } from '@/app/utils/plannerUtils/columnUtils/changeColumnOrder'
-import { reorderSubTasks } from '@/app/utils/plannerUtils/subTaskUtils/reorderSubtasks'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
+import moveCardAcrossColumns from '@/utils/plannerUtils/cardUtils/moveCardAcrossColumns'
+import moveCardWithinColumn from '@/utils/plannerUtils/cardUtils/moveCardWithinColumn'
+import { changeColumnOrder } from '@/utils/plannerUtils/columnUtils/changeColumnOrder'
+import { reorderSubTasks } from '@/utils/plannerUtils/subTaskUtils/reorderSubtasks'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 
 type OnDragEndFunc = (
