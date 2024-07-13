@@ -12,7 +12,7 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
   const dispatch = usePlannerDispatch()
   const { taskCards, subTasks } = usePlanner()
   const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
-  const isEditable = !taskCards[taskCardId].checked
+  const isEditable = !(taskCards[taskCardId].status === 'completed')
   return (
     <div className='flex flex-col gap-0.5'>
       {subTasksUnderTaskCard.map((subTask, index) => (
