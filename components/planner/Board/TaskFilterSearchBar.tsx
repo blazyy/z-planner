@@ -8,7 +8,7 @@ export const TaskFilterSearchBar = () => {
   return (
     <Input
       startIcon={Search}
-      className='w-96 focus-visible:ring-0 focus-visible:ring-transparent'
+      className='w-96 focus-visible:ring-0 focus-visible:ring-transparent justify-center items-center'
       type='text'
       placeholder='Search for tasks...'
       value={searchQuery}

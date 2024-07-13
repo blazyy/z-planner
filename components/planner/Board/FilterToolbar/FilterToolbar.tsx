@@ -14,7 +14,7 @@ export const FilterToolbar = ({ boardId }: FilterToolbarProps) => {
   const numTaskCardsInBoard = boards[boardId].columns.reduce((acc, col) => acc + columns[col].taskCards.length, 0)
 
   return (
-    <div className='flex items-center gap-2 ml-2'>
+    <div className='flex gap-2 ml-2'>
       {numTaskCardsInBoard > 0 && (
         <div className='flex justify-start gap-2 w-full'>
           <TaskFilterSearchBar />

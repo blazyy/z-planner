@@ -1,13 +1,9 @@
 import { ContextMenuContent } from '@/components/ui/context-menu'
-import { cn } from '@/lib/utils'
-import { Quicksand } from 'next/font/google'
 import { createContext } from 'react'
 import { ContextMenuWrapper } from './ContextMenuWrapper'
 import { DeleteCardContextMenuItem } from './DeleteCardContextMenuItem'
 import { MoveToBottomContextMenuItem } from './MoveToBottomContextMenuItem'
 import { MoveToTopContextMenuItem } from './MoveToTopContextMenuItem'
-
-const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type TaskCardContextMenuProps = {
   boardId: string
@@ -46,7 +42,7 @@ export const TaskCardContextMenu = ({ boardId, columnId, taskCardId }: TaskCardC
   return (
     <ContextMenuWrapper columnId={columnId} taskCardId={taskCardId}>
       <ContextMenuItemContext.Provider value={{ columnId, taskCardId, iconProps, contextMenuItemProps }}>
-        <ContextMenuContent className={cn('w-48', quicksand.className)}>
+        <ContextMenuContent className='w-48'>
           {/* The delete functionality is in the ContextMenuWrapper since it connects to a confirmation alert dialog */}
           <DeleteCardContextMenuItem />
           <MoveToBottomContextMenuItem />

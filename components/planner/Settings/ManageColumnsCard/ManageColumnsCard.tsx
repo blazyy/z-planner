@@ -3,13 +3,10 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { Quicksand } from 'next/font/google'
 import { useState } from 'react'
 import { ManageItemCardDialogWrapper } from '../ManageItemCardDialogWrapper'
 import { AddNewColumnButton } from './AddNewColumnButton'
 import { ModifyColumnDialogContent } from './ModifyColumnDialogContent'
-
-const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 export const ManageColumnsCard = () => {
   const { boardOrder, boards, columns } = usePlanner()
@@ -41,7 +38,7 @@ export const ManageColumnsCard = () => {
               </SelectTrigger>
               <SelectContent>
                 {boardOrder.map((boardId: string) => (
-                  <SelectItem key={boardId} value={boardId} className={quicksand.className}>
+                  <SelectItem key={boardId} value={boardId}>
                     {boards[boardId].name}
                   </SelectItem>
                 ))}

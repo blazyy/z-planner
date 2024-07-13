@@ -1,8 +1,5 @@
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Quicksand } from 'next/font/google'
 import { AddNewCategoryForm } from './AddNewCategoryForm'
-
-const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type AddNewCategoryDialogContentProps = {
   closeDialog: () => void
@@ -10,7 +7,7 @@ type AddNewCategoryDialogContentProps = {
 
 export const AddNewCategoryDialogContent = ({ closeDialog }: AddNewCategoryDialogContentProps) => {
   return (
-    <DialogContent className={quicksand.className}>
+    <DialogContent>
       <DialogHeader>
         <DialogTitle className='mb-5'>Add New Category</DialogTitle>
         <DialogDescription>
