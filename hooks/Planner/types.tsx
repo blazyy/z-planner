@@ -17,9 +17,8 @@ export type TaskCardInfoType = {
   title: string
   category: string
   content: string
-  checked: boolean
+  status: 'created' | 'archived' | 'completed' | 'deleted'
   subTasks: string[]
-  dueDate: string | null
 }
 
 export type TaskCardBeingInitializedType = {

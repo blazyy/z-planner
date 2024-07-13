@@ -66,7 +66,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
       <Card
         className={cn(
           idOfCardBeingDragged === taskCardId ? 'backdrop-blur-sm bg-white/70' : '',
-          task.checked ? 'opacity-50' : ''
+          task.status === 'completed' ? 'opacity-50' : ''
         )}
       >
         <CardHeader className='p-4'>
@@ -84,7 +84,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
           <div className='flex items-center gap-2'>
             <Checkbox
               className='rounded-xl w-5 h-5'
-              checked={task.checked}
+              checked={task.status === 'completed'}
               onClick={(event) => {
                 event.preventDefault() // Needed to prevent dialog from triggering
                 const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'

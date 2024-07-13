@@ -38,7 +38,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
               <div className='flex items-center gap-2'>
                 <Checkbox
                   className='w-5 h-5'
-                  checked={task.checked}
+                  checked={task.status === 'completed'}
                   onCheckedChange={(isChecked) =>
                     changeCardCheckedStatus(columnId, id, Boolean(isChecked), dispatch, getToken)
                   }

@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@clerk/nextjs'
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 import { handleOnDragEnd, handleOnDragStart } from '../../utils'
-import { AddNewColumnButton } from './AddNewColumnButton'
 import { TaskColumn } from './TaskColumn'
 
 type TaskColumnsPropsType = {
@@ -14,17 +13,8 @@ type TaskColumnsPropsType = {
 export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
   const plannerContext = usePlanner()
   const { boards, columns } = plannerContext
-  const numColumns = boards[boardId].columns.length
   const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
-
-  if (numColumns === 0) {
-    return (
-      <div className='flex flex-1 pl-2'>
-        <AddNewColumnButton boardId={boardId} />
-      </div>
-    )
-  }
 
   const hasCards = boards[boardId].columns.reduce((acc, col) => acc + columns[col].taskCards.length, 0) > 0
 
@@ -38,7 +28,7 @@ export const TaskColumns = ({ boardId }: TaskColumnsPropsType) => {
           {/* droppableId doesn't matter here because it won't be interacting with other droppables */}
           <Droppable droppableId='all-columns' direction='horizontal' type='column'>
             {(provided) => (
-              <div className='flex flex-row flex-1' {...provided.droppableProps} ref={provided.innerRef}>
+              <div className='flex flex-row' {...provided.droppableProps} ref={provided.innerRef}>
                 {boards[boardId].columns.map((columnId, index) => (
                   <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
                 ))}

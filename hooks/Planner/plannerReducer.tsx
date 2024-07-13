@@ -18,9 +18,8 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
         id: boardId,
         name: boardName,
         columns: [],
-        categories: [],
+        categories: [unassignedCategoryDetails.id],
       }
-      draft.boards[boardId].categories.push(unassignedCategoryDetails.id)
       draft.categories[unassignedCategoryDetails.id] = unassignedCategoryDetails
       break
     }
@@ -108,8 +107,8 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     }
     case 'taskCardCheckedStatusChanged': {
       const { columnId, taskCardId, isChecked } = action.payload
-      draft.taskCards[taskCardId].checked = isChecked
       if (isChecked) {
+        draft.taskCards[taskCardId].status = 'completed'
         const sourceIndex = draft.columns[columnId].taskCards.indexOf(taskCardId)
         const destIndex = draft.columns[columnId].taskCards.length - 1
         const startingColumn = draft.columns[columnId]
@@ -117,6 +116,8 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
         reorderedCardIds.splice(sourceIndex, 1)
         reorderedCardIds.splice(destIndex, 0, taskCardId)
         draft.columns[columnId].taskCards = reorderedCardIds
+      } else {
+        draft.taskCards[taskCardId].status = 'created'
       }
       break
     }

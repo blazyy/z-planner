@@ -24,6 +24,11 @@ export const FilterToolbar = ({ boardId }: FilterToolbarProps) => {
           <AddNewColumnButton key={boardId} boardId={boardId} />
         </div>
       )}
+      {numTaskCardsInBoard === 0 && (
+        <div className='flex justify-start gap-2 w-full'>
+          <AddNewColumnButton key={boardId} boardId={boardId} />
+        </div>
+      )}
     </div>
   )
 }

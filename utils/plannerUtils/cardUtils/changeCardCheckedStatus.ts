@@ -22,7 +22,7 @@ export default async function changeCardCheckedStatus(
     .patch(
       `/api/planner/cards/${taskCardId}`,
       {
-        checked: isChecked,
+        status: isChecked ? 'completed' : 'created',
       },
       {
         headers: {

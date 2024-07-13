@@ -53,7 +53,6 @@ export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Elem
             payload: {
               ...initialEmptyState,
               hasLoaded: true,
-              selectedBoard: data.boardOrder.length > 0 ? data.boardOrder[0] : '',
               boardOrder: data.boardOrder,
               boards: data.boards,
               columns: data.columns,

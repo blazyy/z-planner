@@ -1,4 +1,4 @@
-import { ColumnInfoType } from '@/hooks/Planner/types'
+import { ColumnInfoType, TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
 
@@ -8,17 +8,17 @@ export const addNewCardToColumn = async (
     id: string
     title: string
     category: string
-    content: string | undefined
+    content: string
   },
   dispatch: Dispatch<any>,
   getToken: () => Promise<string | null>
 ) => {
-  const newTaskCardDetails = {
+  const newTaskCardDetails: TaskCardInfoType = {
     id: cardDetails.id,
     title: cardDetails.title,
     category: cardDetails.category,
     content: cardDetails.content,
-    checked: false,
+    status: 'created',
     subTasks: [],
   }
   const updatedTaskCards = Array.from(column.taskCards)

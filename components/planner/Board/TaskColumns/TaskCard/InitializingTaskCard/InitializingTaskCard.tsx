@@ -25,7 +25,7 @@ const formSchema = z.object({
   taskCardTitle: z.string().min(2, {
     message: 'Card title must be at least 2 characters.',
   }),
-  taskCardDesc: z.string().optional(),
+  taskCardDesc: z.string(),
 })
 
 export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {

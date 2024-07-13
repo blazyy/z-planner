@@ -36,8 +36,7 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const boardId = nanoid()
-    const boardName = values.boardName
-    addNewBoardToPlanner(boardId, boardName, dispatch, getToken)
+    addNewBoardToPlanner(boardId, values.boardName, dispatch, getToken)
     toast.success('Board added.')
     closeDialog()
     router.push(`/boards/${boardId}`)

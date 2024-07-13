@@ -22,6 +22,7 @@ export const addNewBoardToPlanner = async (
       unassignedCategoryDetails,
     },
   })
+
   const token = await getToken()
   axios
     .post(

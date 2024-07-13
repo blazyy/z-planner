@@ -32,9 +32,7 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
       <AlertDialogContent className={quicksand.className}>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This will delete your task permanently and it cannot be recovered.
-          </AlertDialogDescription>
+          <AlertDialogDescription>This will delete your task permanently.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
