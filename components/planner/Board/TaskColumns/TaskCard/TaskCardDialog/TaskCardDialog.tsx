@@ -16,11 +16,12 @@ import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type TaskCardDialogProps = {
+  columnId: string
   boardId: string
   id: string
 }
 
-export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
+export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) => {
   const dispatch = usePlannerDispatch()!
   const { getToken } = useAuth()
   const { taskCards } = usePlanner()
@@ -38,7 +39,9 @@ export const TaskCardDialog = ({ boardId, id }: TaskCardDialogProps) => {
                 <Checkbox
                   className='w-5 h-5'
                   checked={task.checked}
-                  onCheckedChange={(isChecked) => changeCardCheckedStatus(id, Boolean(isChecked), dispatch, getToken)}
+                  onCheckedChange={(isChecked) =>
+                    changeCardCheckedStatus(columnId, id, Boolean(isChecked), dispatch, getToken)
+                  }
                 />
                 <Textarea
                   value={task.title}

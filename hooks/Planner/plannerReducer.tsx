@@ -107,8 +107,17 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       break
     }
     case 'taskCardCheckedStatusChanged': {
-      const { taskCardId, isChecked } = action.payload
+      const { columnId, taskCardId, isChecked } = action.payload
       draft.taskCards[taskCardId].checked = isChecked
+      if (isChecked) {
+        const sourceIndex = draft.columns[columnId].taskCards.indexOf(taskCardId)
+        const destIndex = draft.columns[columnId].taskCards.length - 1
+        const startingColumn = draft.columns[columnId]
+        const reorderedCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards
+        reorderedCardIds.splice(sourceIndex, 1)
+        reorderedCardIds.splice(destIndex, 0, taskCardId)
+        draft.columns[columnId].taskCards = reorderedCardIds
+      }
       break
     }
     case 'taskCardTitleChanged': {
