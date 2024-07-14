@@ -1,6 +1,6 @@
+import { NANOID } from '@/constants/constants'
 import { BoardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { nanoid } from 'nanoid'
 import { Dispatch } from 'react'
 
 export const addNewColumn = async (
@@ -9,7 +9,7 @@ export const addNewColumn = async (
   dispatch: Dispatch<any>,
   getToken: () => Promise<string | null>
 ) => {
-  const newColumnId = nanoid()
+  const newColumnId = NANOID()
   const newColumnDetails = {
     id: newColumnId,
     name: newColumnName,

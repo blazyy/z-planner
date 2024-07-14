@@ -20,11 +20,11 @@ export const ManageBoardsCard = () => {
 
   return (
     <ManageItemCardDialogWrapper onCloseDialog={onCloseDialog} conditionToOpenDialog={conditionToOpenDialog}>
-      <div className='flex flex-col justify-between gap-5 border-slate-200 p-5 border rounded-md w-1/4'>
+      <div className='flex flex-col justify-between gap-5 border-neutral-200 p-5 border rounded-md w-1/4'>
         <div className='flex flex-col justify-start gap-5 w-full'>
           <div className='flex flex-col'>
             <span className='font-bold text-lg'>Manage Boards</span>
-            <span className='text-muted-foreground text-sm'>
+            <span className='text-neutral-500 text-sm'>
               We recommend naming a board after an area of your life, i.e. Work, Home, etc.
             </span>
           </div>

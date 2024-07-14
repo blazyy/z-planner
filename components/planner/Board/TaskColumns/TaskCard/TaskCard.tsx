@@ -57,7 +57,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
   const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
-  const { columns, taskCards, idOfCardBeingDragged } = usePlanner()
+  const { taskCards, idOfCardBeingDragged } = usePlanner()
   const task = taskCards[taskCardId]
 
   return (

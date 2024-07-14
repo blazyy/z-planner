@@ -1,6 +1,6 @@
+import { NANOID } from '@/constants/constants'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { nanoid } from 'nanoid'
 import { Dispatch } from 'react'
 
 const addNewSubTask = async (
@@ -50,7 +50,7 @@ export const addNewSubTaskToCardOnEnterKeydown = async (
   dispatch: Dispatch<any>,
   getToken: () => Promise<string | null>
 ) => {
-  const newSubTaskId = nanoid()
+  const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
   let subTaskIndex = newSubTasksOrder.findIndex((id: string) => id === existingSubTaskId)
   newSubTasksOrder.splice(subTaskIndex + 1, 0, newSubTaskId)
@@ -62,7 +62,7 @@ export const addNewSubTaskOnButtonClick = async (
   dispatch: Dispatch<any>,
   getToken: () => Promise<string | null>
 ) => {
-  const newSubTaskId = nanoid()
+  const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
   newSubTasksOrder.push(newSubTaskId)
   addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch, getToken)

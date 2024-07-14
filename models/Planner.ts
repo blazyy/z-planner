@@ -17,7 +17,7 @@ const taskCardSchema = new Schema(
     category: { type: String, required: true },
     content: { type: String },
     status: { type: String, required: true },
-    subTasks: [subTaskSchema],
+    subTasks: [String],
   },
   { _id: false }
 )

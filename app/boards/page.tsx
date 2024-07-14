@@ -1,10 +1,18 @@
 'use client'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function PlannerPage() {
   const router = useRouter()
-  const plannerContext = usePlanner()
-  const redirectPath = `/boards/${plannerContext.boardOrder.length > 0 ? plannerContext.boardOrder[0] : 'new'}`
-  return router.push(redirectPath)
+  const { hasLoaded, boardOrder } = usePlanner()
+
+  useEffect(() => {
+    if (hasLoaded) {
+      const redirectPath = `/boards/${boardOrder.length > 0 ? boardOrder[0] : 'new'}`
+      router.push(redirectPath)
+    }
+  }, [hasLoaded, boardOrder, router])
+
+  return <></>
 }

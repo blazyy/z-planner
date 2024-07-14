@@ -8,7 +8,7 @@ import { usePlanner } from '@/hooks/Planner/Planner'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFilters, usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { FiPlusCircle } from 'react-icons/fi'
-import { badgeClassNames } from '../TaskColumns/TaskCard/utils'
+import { badgeClassNamesWithoutHover } from '../TaskColumns/TaskCard/utils'
 
 const getTaskCardBelongingToCategoryCount = (taskCards: TaskCardInfoType[], category: string) =>
   taskCards.filter((taskCard) => taskCard.category === category).length
@@ -24,8 +24,6 @@ export const CategoryFilter = ({ selectedBoard }: { selectedBoard: string }) => 
     .flat(1)
     .map((taskCardId) => taskCards[taskCardId])
 
-  console.log(allTaskCardsUnderAllColumns)
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -37,7 +35,11 @@ export const CategoryFilter = ({ selectedBoard }: { selectedBoard: string }) => 
               <>
                 <Separator orientation='vertical' className='mx-2 h-4' />
                 {selectedCategories.map((category, i) => (
-                  <Badge key={`filterbadge-${i}`} className={badgeClassNames[categories[category].color]}>
+                  <Badge
+                    variant='defaultNoHover'
+                    key={`filterbadge-${i}`}
+                    className={badgeClassNamesWithoutHover[categories[category].color]}
+                  >
                     {categories[category].name}
                   </Badge>
                 ))}
@@ -63,7 +65,10 @@ export const CategoryFilter = ({ selectedBoard }: { selectedBoard: string }) => 
                     >
                       <Checkbox checked={selectedCategories.indexOf(categoryId) !== -1} id='terms' />
                       <span>
-                        <Badge className={badgeClassNames[categories[categoryId].color]}>
+                        <Badge
+                          variant='defaultNoHover'
+                          className={badgeClassNamesWithoutHover[categories[categoryId].color]}
+                        >
                           {categories[categoryId].name}
                         </Badge>
                       </span>

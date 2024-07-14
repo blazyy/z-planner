@@ -11,7 +11,7 @@ export default function SettingsPage() {
     return <LoadingSpinner />
   }
   return (
-    <div className='flex flex-col flex-1 gap-5 w-full'>
+    <div className='flex flex-col flex-1 gap-5 mt-3 w-full'>
       <h1 className='font-bold text-2xl'>Settings</h1>
       <div className='flex gap-5 w-full'>
         <ManageBoardsCard />

@@ -17,24 +17,37 @@ type OnDragEndFunc = (
 export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, getToken, plannerContext, boardId) => {
   const { destination, source, draggableId, type } = result
   const { boards, columns, taskCards } = plannerContext
+
+  if (type === 'card') {
+    dispatch({
+      type: 'idOfCardBeingDraggedChanged',
+      payload: '',
+    })
+  }
+
+  // Needed to fix bug where subtask drag handle would behave weirdly after being dropped in
+  // position where it was originally dragged from
+  if (type === 'subtask') {
+    dispatch({
+      type: 'subTaskDragStatusChanged',
+      payload: false,
+    })
+  }
   // If there's no destination or if card is in original position from where it was dragged from, do nothing
   if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
     return
   }
 
-  if (type === 'subtask')
+  if (type === 'subtask') {
     return reorderSubTasks(taskCards, draggableId, source.index, destination.index, dispatch, getToken)
+  }
 
-  if (type === 'column')
+  if (type === 'column') {
     return changeColumnOrder(boards, boardId, draggableId, source.index, destination.index, dispatch, getToken)
-
-  dispatch({
-    type: 'idOfCardBeingDraggedChanged',
-    payload: '',
-  })
+  }
 
   // Moving a card within the same column
-  if (columns[source.droppableId] === columns[destination.droppableId])
+  if (columns[source.droppableId] === columns[destination.droppableId]) {
     return moveCardWithinColumn(
       columns,
       source.droppableId,
@@ -44,6 +57,7 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, getToken, plann
       dispatch,
       getToken
     )
+  }
 
   // Moving cards between columns
   moveCardAcrossColumns(columns, draggableId, source, destination, dispatch, getToken)
@@ -57,8 +71,7 @@ export const handleOnDragStart: OnDragStartFunction = (dragStartObj, dispatch) =
       type: 'subTaskDragStatusChanged',
       payload: true,
     })
-  }
-  if (dragStartObj.type === 'card') {
+  } else if (dragStartObj.type === 'card') {
     dispatch({
       type: 'idOfCardBeingDraggedChanged',
       payload: dragStartObj.draggableId,

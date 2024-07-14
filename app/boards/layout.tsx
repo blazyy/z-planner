@@ -1,7 +1,7 @@
 'use client'
 import { AlertCard, logError } from '@/components/global/AlertCard/AlertCard'
 import { Navbar } from '@/components/global/Navbar'
-import { Sidebar } from '@/components/planner/Sidebar'
+import { Sidebar } from '@/components/planner/Board/Sidebar/Sidebar'
 import { Toaster } from '@/components/ui/sonner'
 import { PlannerProvider } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
     <ClerkProvider afterSignOutUrl='/'>
       <div className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
         <Navbar />
-        <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
+        <main id='planner' className='flex flex-col flex-1 justify-start items-center p-2 w-full'>
           <ErrorBoundary FallbackComponent={AlertCard} onError={logError}>
             <PlannerProvider>
               <div className='flex flex-1 justify-start gap-2 w-full'>

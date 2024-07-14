@@ -24,11 +24,11 @@ export const ManageColumnsCard = () => {
 
   return (
     <ManageItemCardDialogWrapper onCloseDialog={onCloseDialog} conditionToOpenDialog={Boolean(columnBeingModified)}>
-      <div className='flex flex-col justify-between gap-5 border-slate-200 p-5 border rounded-md w-1/4'>
+      <div className='flex flex-col justify-between gap-5 border-neutral-200 p-5 border rounded-md w-1/4'>
         <div className='flex flex-col justify-start gap-5 w-full'>
           <div className='flex flex-col'>
             <span className='font-bold text-lg'>Manage Columns</span>
-            <span className='text-muted-foreground text-sm'>
+            <span className='text-neutral-500 text-sm'>
               You won&apos;t usually need more than 3-4 columns, but you are free to add more.
             </span>
           </div>
@@ -49,7 +49,7 @@ export const ManageColumnsCard = () => {
             </Select>
             {boards[selectedBoard].columns.length === 0 && (
               <div className='flex justify-center items-center gap-2 w-full'>
-                <span className='text-muted-foreground text-sm'>No columns yet</span>
+                <span className='text-neutral-500 text-sm'>No columns yet</span>
               </div>
             )}
             {boards[selectedBoard].columns.map((columnId: string) => {

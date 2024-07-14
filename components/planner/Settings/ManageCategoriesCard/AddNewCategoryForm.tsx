@@ -3,11 +3,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { NANOID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { addNewCategory } from '@/utils/plannerUtils/categoryUtils/addNewCategory'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { nanoid } from 'nanoid'
 import { Quicksand } from 'next/font/google'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -52,7 +52,7 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newCategoryDetails = {
-      id: nanoid(),
+      id: NANOID(),
       name: values.categoryName,
       color: categoryColor,
     }

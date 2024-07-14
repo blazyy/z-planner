@@ -29,7 +29,9 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
       {...provided.draggableProps}
       className={`flex gap-2 items-center ${isBeingDragged ? 'border-2 rounded-lg border-gray-400/50' : ''}`}
       onMouseEnter={() => {
-        if (!isSubTaskBeingDragged) setShowDragHandle(true) // Only show drag handle on hover when another subtask isn't being actively dragged
+        if (!isSubTaskBeingDragged) {
+          setShowDragHandle(true) // Only show drag handle on hover when another subtask isn't being actively dragged
+        }
       }}
       onMouseLeave={() => {
         setShowDragHandle(false)

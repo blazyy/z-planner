@@ -21,10 +21,6 @@ export const reorderSubTasks = async (
       reorderedSubTasks,
     },
   })
-  dispatch({
-    type: 'subTaskDragStatusChanged',
-    payload: false,
-  })
   const token = await getToken()
   axios
     .patch(

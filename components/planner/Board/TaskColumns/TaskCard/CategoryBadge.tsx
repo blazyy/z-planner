@@ -8,7 +8,7 @@ import {
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import changeCardCategory from '@/utils/plannerUtils/cardUtils/changeCardCategory'
 import { useAuth } from '@clerk/nextjs'
-import { badgeClassNames } from './utils'
+import { badgeClassNames, badgeClassNamesWithoutHover } from './utils'
 
 type CategoryBadgeProps = {
   boardId: string
@@ -37,7 +37,9 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
               changeCardCategory(taskCardId, categoryId, dispatch, getToken)
             }}
           >
-            <Badge className={badgeClassNames[categories[categoryId].color]}>{categories[categoryId].name}</Badge>
+            <Badge variant='defaultNoHover' className={badgeClassNamesWithoutHover[categories[categoryId].color]}>
+              {categories[categoryId].name}
+            </Badge>
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

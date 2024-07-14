@@ -1,9 +1,8 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { NANOID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { nanoid } from 'nanoid'
 import { useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa6'
-import { COLUMN_ACTION_ICON_COLOR } from './ColumnHeader'
 
 export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
   const { taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlanner()
@@ -20,7 +19,7 @@ export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
       <Tooltip>
         <TooltipTrigger>
           <FaPlus
-            className={`${COLUMN_ACTION_ICON_COLOR}`}
+            className='text-gray-400'
             onClick={() => {
               // Only allow an initializing task card to be added in an existing task card doesn't already exist,
               // or if it exists and does not have any info entered and the add button is clicked from another
@@ -31,7 +30,7 @@ export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
                   !dataEnteredInTaskCardBeingInitialized &&
                   taskCardBeingInitialized.columnId !== columnId)
               ) {
-                const newTaskCardId = nanoid()
+                const newTaskCardId = NANOID()
                 dispatch({
                   type: 'newTaskCardInitialized',
                   payload: {

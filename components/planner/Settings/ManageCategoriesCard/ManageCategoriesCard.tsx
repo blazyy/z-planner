@@ -31,12 +31,10 @@ export const ManageCategoriesCard = () => {
 
   return (
     <ManageItemCardDialogWrapper onCloseDialog={onCloseDialog} conditionToOpenDialog={conditionToOpenDialog}>
-      <div className='flex flex-col justify-start gap-5 border-slate-200 p-5 border rounded-md w-1/4'>
+      <div className='flex flex-col justify-between gap-5 border-neutral-200 p-5 border rounded-md w-1/4'>
         <div className='flex flex-col'>
           <span className='font-bold text-lg'>Manage Categories</span>
-          <span className='text-muted-foreground text-sm'>
-            Categories are specific to a board. Think of them as tags.
-          </span>
+          <span className='text-neutral-500 text-sm'>Categories are specific to a board. Think of them as tags.</span>
         </div>
         <Separator />
         {boardOrder.map((boardId, index) => {
@@ -45,7 +43,7 @@ export const ManageCategoriesCard = () => {
               <>
                 <div className='flex justify-between items-center gap-2 w-full'>
                   <span className='text-lg'>{boards[boardId].name}</span>
-                  <span className='text-muted-foreground text-sm'>0 categories</span>
+                  <span className='text-neutral-500 text-sm'>0 categories</span>
                 </div>
                 {index !== boardOrder.length - 1 && <Separator />}
               </>

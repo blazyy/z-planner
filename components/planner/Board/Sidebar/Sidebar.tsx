@@ -1,41 +1,8 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { ExternalLink, Github, Settings } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-
-const SidebarButton = ({
-  isCurrentlySelected,
-  label,
-  pathname,
-  icon,
-}: {
-  isCurrentlySelected: boolean
-  label: string
-  pathname: string
-  icon?: React.ReactNode
-}) => {
-  const router = useRouter()
-  const filtersDispatch = usePlannerFiltersDispatch()
-  return (
-    <Button
-      variant={isCurrentlySelected ? 'secondary' : 'ghost'}
-      className={`${isCurrentlySelected ? 'border-l-4 border-green-500' : ''}`}
-      onClick={() => {
-        router.push(pathname)
-        filtersDispatch({ type: 'filtersReset' })
-      }}
-    >
-      <div className='flex justify-between gap-2 w-full'>
-        <div className='flex'>
-          {icon ? icon : <></>}
-          <span className='ml-5'>{label}</span>
-        </div>
-      </div>
-    </Button>
-  )
-}
+import { SidebarButton } from './SidebarButton'
 
 export const Sidebar = ({ currentPage }: { currentPage: string }) => {
   const { boardOrder, boards, hasLoaded } = usePlanner()
@@ -43,7 +10,7 @@ export const Sidebar = ({ currentPage }: { currentPage: string }) => {
     return <></>
   }
   return (
-    <nav className='flex flex-col items-start gap-8 w-1/6'>
+    <nav className='flex flex-col items-start gap-8 w-72'>
       <div className='flex flex-col justify-between gap-2 w-full h-full'>
         <div>
           <div className='flex flex-col gap-2 w-full'>
