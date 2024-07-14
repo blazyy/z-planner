@@ -10,10 +10,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Quicksand } from 'next/font/google'
 import React, { useState } from 'react'
-
-const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 export const ManageItemAlertDialog = ({
   onCloseParentDialog,
@@ -67,7 +64,7 @@ export const ManageItemAlertDialog = ({
           </TooltipProvider>
         )}
       </div>
-      <AlertDialogContent className={quicksand.className}>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>{deleteConfirmationContent}</AlertDialogDescription>

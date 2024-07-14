@@ -11,10 +11,7 @@ import {
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 import deleteCard from '@/utils/plannerUtils/cardUtils/deleteCard'
 import { useAuth } from '@clerk/nextjs'
-import { Quicksand } from 'next/font/google'
 import { useErrorBoundary } from 'react-error-boundary'
-
-const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ContextMenuWrapperProps = {
   columnId: string
@@ -29,7 +26,7 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
   return (
     <AlertDialog>
       {children}
-      <AlertDialogContent className={quicksand.className}>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>This will delete your task permanently.</AlertDialogDescription>

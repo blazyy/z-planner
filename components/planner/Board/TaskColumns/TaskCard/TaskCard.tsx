@@ -36,7 +36,7 @@ const TaskCardWrapper = ({ index, boardId, columnId, taskCardId, children }: Tas
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1 w-full'>
           <Dialog>
             <ContextMenu>
-              <TaskCardContextMenu boardId={boardId} columnId={columnId} taskCardId={taskCardId} />
+              <TaskCardContextMenu columnId={columnId} taskCardId={taskCardId} />
               <ContextMenuTrigger>
                 {/* Dialog is the one that shows when you click on a card. This allows you to edit a card's information*/}
                 <DialogTrigger asChild>{children}</DialogTrigger>

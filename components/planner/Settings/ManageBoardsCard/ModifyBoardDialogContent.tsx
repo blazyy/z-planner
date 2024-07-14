@@ -7,13 +7,10 @@ import { changeBoardInfo } from '@/utils/plannerUtils/boardUtils/changeBoardInfo
 import deleteBoard from '@/utils/plannerUtils/boardUtils/deleteBoard'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Quicksand } from 'next/font/google'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
-
-const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyBoardDialogContentProps = {
   onCloseDialog: () => void
@@ -45,7 +42,7 @@ export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoard
   }
 
   return (
-    <DialogContent className={quicksand.className}>
+    <DialogContent>
       <DialogHeader>
         <DialogTitle className='mb-5'>Modify Board</DialogTitle>
         <DialogDescription>

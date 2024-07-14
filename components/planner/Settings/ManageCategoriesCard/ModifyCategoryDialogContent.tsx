@@ -10,15 +10,12 @@ import { changeCategoryInfo } from '@/utils/plannerUtils/categoryUtils/changeCat
 import deleteCategory from '@/utils/plannerUtils/categoryUtils/deleteCategory'
 import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Quicksand } from 'next/font/google'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 import { CategoryColorPicker } from './CategoryColorPicker'
-
-const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 type ModifyCategoryDialogContentProps = {
   boardId: string
@@ -57,7 +54,7 @@ export const ModifyCategoryDialogContent = ({
   }
 
   return (
-    <DialogContent className={quicksand.className}>
+    <DialogContent>
       <DialogHeader>
         <DialogTitle className='mb-5'>Modify Category</DialogTitle>
         <DialogDescription>
