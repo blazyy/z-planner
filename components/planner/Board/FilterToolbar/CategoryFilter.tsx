@@ -24,8 +24,6 @@ export const CategoryFilter = ({ selectedBoard }: { selectedBoard: string }) => 
     .flat(1)
     .map((taskCardId) => taskCards[taskCardId])
 
-  console.log(allTaskCardsUnderAllColumns)
-
   return (
     <Popover>
       <PopoverTrigger asChild>

@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
 
   return (
     <ClerkProvider afterSignOutUrl='/'>
-      <div className={cn('flex flex-col min-h-screen')}>
+      <div className={cn('flex flex-col min-h-screen')} style={{ backgroundColor: '#3B2F42' }}>
         <Navbar />
         <main id='planner' className='flex flex-col flex-1 justify-start items-center p-5 w-full'>
           <ErrorBoundary FallbackComponent={AlertCard} onError={logError}>
