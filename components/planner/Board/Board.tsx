@@ -3,11 +3,7 @@ import { PlannerFiltersProvider } from '@/hooks/PlannerFilters/PlannerFilters'
 import { FilterToolbar } from './FilterToolbar/FilterToolbar'
 import { TaskColumns } from './TaskColumns/TaskColumns'
 
-type BoardProps = {
-  boardId: string
-}
-
-export const Board = ({ boardId }: BoardProps) => {
+export const Board = ({ boardId }: { boardId: string }) => {
   return (
     <div className='flex flex-col gap-2 w-5/6'>
       <PlannerFiltersProvider>

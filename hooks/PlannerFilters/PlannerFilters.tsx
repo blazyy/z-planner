@@ -3,7 +3,6 @@ import { Dispatch, createContext, useContext, useReducer } from 'react'
 
 type PlannerFiltersType = {
   area: string
-  dateFilter: Date
   searchQuery: string
   selectedCategories: string[]
 }
@@ -25,18 +24,12 @@ const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action)
     case 'filtersReset':
       draft.searchQuery = ''
       draft.selectedCategories = []
-      draft.dateFilter = new Date()
-      break
-    case 'dateFilterChanged':
-      const { newDate } = action.payload
-      draft.dateFilter = newDate
       break
   }
 })
 
 const initialPlannerFilterEmptyState: PlannerFiltersType = {
   area: '',
-  dateFilter: new Date(),
   searchQuery: '',
   selectedCategories: [],
 }

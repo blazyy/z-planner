@@ -32,25 +32,25 @@ export const ManageCategoriesCard = () => {
   return (
     <ManageItemCardDialogWrapper onCloseDialog={onCloseDialog} conditionToOpenDialog={conditionToOpenDialog}>
       <div className='flex flex-col justify-between gap-5 border-neutral-200 p-5 border rounded-md w-1/4'>
-        <div className='flex flex-col'>
-          <span className='font-bold text-lg'>Manage Categories</span>
-          <span className='text-neutral-500 text-sm'>Categories are specific to a board. Think of them as tags.</span>
-        </div>
-        <Separator />
-        {boardOrder.map((boardId, index) => {
-          if (boards[boardId].categories.filter((category) => category !== UNASSIGNED_CATEGORY_ID).length === 0) {
+        <div className='flex flex-col gap-5'>
+          <div className='flex flex-col'>
+            <span className='font-bold text-lg'>Manage Categories</span>
+            <span className='text-neutral-500 text-sm'>Categories are specific to a board. Think of them as tags.</span>
+          </div>
+          <Separator />
+          {boardOrder.map((boardId, index) => {
+            if (boards[boardId].categories.filter((category) => category !== UNASSIGNED_CATEGORY_ID).length === 0) {
+              return (
+                <>
+                  <div className='flex justify-between items-center gap-2 w-full'>
+                    <span className='text-lg'>{boards[boardId].name}</span>
+                    <span className='text-neutral-500 text-sm'>0 categories</span>
+                  </div>
+                  {index !== boardOrder.length - 1 && <Separator />}
+                </>
+              )
+            }
             return (
-              <>
-                <div className='flex justify-between items-center gap-2 w-full'>
-                  <span className='text-lg'>{boards[boardId].name}</span>
-                  <span className='text-neutral-500 text-sm'>0 categories</span>
-                </div>
-                {index !== boardOrder.length - 1 && <Separator />}
-              </>
-            )
-          }
-          return (
-            <>
               <div key={boardId} className='flex flex-col gap-2 w-full'>
                 <span className='text-lg'>{boards[boardId].name}</span>
                 {boards[boardId].categories.map((categoryId: string, i: number) => {
@@ -81,17 +81,17 @@ export const ManageCategoriesCard = () => {
                 })}
                 {index !== boardOrder.length - 1 && <Separator />}
               </div>
-            </>
-          )
-        })}
-        {conditionToOpenDialog && (
-          <ModifyCategoryDialogContent
-            key={key}
-            boardId={detailsOfCategoryBeingModified.boardId}
-            categoryId={detailsOfCategoryBeingModified.categoryId}
-            onCloseDialog={onCloseDialog}
-          />
-        )}
+            )
+          })}
+          {conditionToOpenDialog && (
+            <ModifyCategoryDialogContent
+              key={key}
+              boardId={detailsOfCategoryBeingModified.boardId}
+              categoryId={detailsOfCategoryBeingModified.categoryId}
+              onCloseDialog={onCloseDialog}
+            />
+          )}
+        </div>
         <AddNewCategoryButton />
       </div>
     </ManageItemCardDialogWrapper>

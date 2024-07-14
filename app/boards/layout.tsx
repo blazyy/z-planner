@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
     <ClerkProvider afterSignOutUrl='/'>
       <div className={cn(quicksand.className, 'flex flex-col min-h-screen')}>
         <Navbar />
-        <main id='planner' className='flex flex-col flex-1 justify-start items-center p-2 w-full'>
+        <main id='planner' className='flex flex-col flex-1 justify-start items-center p-2 w-full overflow-hidden'>
           <ErrorBoundary FallbackComponent={AlertCard} onError={logError}>
             <PlannerProvider>
               <div className='flex flex-1 justify-start gap-2 w-full'>

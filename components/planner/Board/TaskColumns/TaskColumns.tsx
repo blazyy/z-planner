@@ -1,4 +1,5 @@
 'use client'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useAuth } from '@clerk/nextjs'
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
@@ -7,7 +8,7 @@ import { TaskColumn } from './TaskColumn'
 
 export const TaskColumns = ({ boardId }: { boardId: string }) => {
   const plannerContext = usePlanner()
-  const { boards, columns } = plannerContext
+  const { boards } = plannerContext
   const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
 
@@ -20,12 +21,20 @@ export const TaskColumns = ({ boardId }: { boardId: string }) => {
         {/* droppableId doesn't matter here because it won't be interacting with other droppables */}
         <Droppable droppableId='all-columns' direction='horizontal' type='column'>
           {(provided) => (
-            <div className='flex flex-row' {...provided.droppableProps} ref={provided.innerRef}>
-              {boards[boardId].columns.map((columnId, index) => (
-                <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
-              ))}
-              {provided.placeholder}
-            </div>
+            <ScrollArea>
+              <div
+                style={{ minHeight: '87vh' }}
+                className='flex flex-row'
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {boards[boardId].columns.map((columnId, index) => (
+                  <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
+                ))}
+                {provided.placeholder}
+                <ScrollBar orientation='horizontal' />
+              </div>
+            </ScrollArea>
           )}
         </Droppable>
       </DragDropContext>

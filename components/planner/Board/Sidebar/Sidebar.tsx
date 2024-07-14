@@ -10,7 +10,7 @@ export const Sidebar = ({ currentPage }: { currentPage: string }) => {
     return <></>
   }
   return (
-    <nav className='flex flex-col items-start gap-8 w-72'>
+    <nav className='flex flex-col items-start gap-8 w-64'>
       <div className='flex flex-col justify-between gap-2 w-full h-full'>
         <div>
           <div className='flex flex-col gap-2 w-full'>

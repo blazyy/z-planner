@@ -14,7 +14,7 @@ type TaskColumnProps = {
 
 const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string }) => {
   const { boards, columns, taskCards, taskCardBeingInitialized } = usePlanner()
-  const { searchQuery, selectedCategories, dateFilter } = usePlannerFilters()
+  const { searchQuery, selectedCategories } = usePlannerFilters()
   const categoriesInBoard = boards[boardId].categories
   const columnInfo = columns[columnId]
   return (
@@ -42,10 +42,6 @@ const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string 
               const doesTaskCardBelongToSelectedCategories =
                 selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
 
-              // const doesTaskCardBelongToDateFilter =
-              //   (dateFilter && areDatesEqual(new Date(), dateFilter)) ||
-              //   (taskCards[taskCardId].dueDate && areDatesEqual(new Date(taskCards[taskCardId].dueDate), dateFilter))
-
               if (doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories)
                 return (
                   <TaskCard
@@ -65,12 +61,17 @@ const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string 
 }
 
 export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
-  const { columns } = usePlanner()
+  const { boards, columns } = usePlanner()
   const columnInfo = columns[columnId]
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
-        <div className='flex flex-col gap-1 mr-2 w-96 min-h-full' {...provided.draggableProps} ref={provided.innerRef}>
+        // mr-2 is used instead of gap on parent div because of the dnd library. It does weird things if gap is used.
+        <div
+          className={cn('flex flex-col gap-1 w-96', index < boards[boardId].columns.length - 1 && 'mr-2')}
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+        >
           <ColumnHeader columnId={columnInfo.id} dragHandleProps={provided.dragHandleProps} />
           <ColumnTasks boardId={boardId} columnId={columnInfo.id} />
         </div>
