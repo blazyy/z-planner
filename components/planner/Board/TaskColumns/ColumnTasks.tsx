@@ -1,3 +1,4 @@
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
 import { cn } from '@/lib/utils'
@@ -13,41 +14,44 @@ export const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: 
   return (
     <Droppable droppableId={columnInfo.id} type='card'>
       {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-          className={cn(
-            'flex flex-col transition ease grow p-1 px-2 rounded-lg',
-            snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
-          )}
-        >
-          {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
-            <InitializingTaskCard boardId={boardId} columnId={columnId} />
-          )}
+        <ScrollArea>
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className={cn(
+              'flex flex-col transition ease grow p-1 px-2 rounded-lg',
+              snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
+            )}
+            style={{ minHeight: '82vh', maxHeight: '82vh' }}
+          >
+            {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
+              <InitializingTaskCard boardId={boardId} columnId={columnId} />
+            )}
+            {columnInfo.taskCards
+              .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
+              .map((taskCardId, index) => {
+                const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase())
 
-          {columnInfo.taskCards
-            .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
-            .map((taskCardId, index) => {
-              const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase())
+                const doesTaskCardBelongToSelectedCategories =
+                  selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
 
-              const doesTaskCardBelongToSelectedCategories =
-                selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
-
-              if (doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories)
-                return (
-                  <TaskCard
-                    key={taskCardId}
-                    index={index}
-                    boardId={boardId}
-                    columnId={columnId}
-                    taskCardId={taskCardId}
-                  />
-                )
-            })}
-          {provided.placeholder}
-        </div>
+                if (doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories)
+                  return (
+                    <TaskCard
+                      key={taskCardId}
+                      index={index}
+                      boardId={boardId}
+                      columnId={columnId}
+                      taskCardId={taskCardId}
+                    />
+                  )
+              })}
+            {provided.placeholder}
+          </div>
+          <ScrollBar orientation='vertical' />
+        </ScrollArea>
       )}
     </Droppable>
   )

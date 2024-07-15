@@ -23,12 +23,12 @@ export const TaskColumns = ({ boardId }: { boardId: string }) => {
           {(provided) => (
             <ScrollArea>
               <div
-                style={{ minHeight: '87vh' }}
+                style={{ minHeight: '87vh', maxHeight: '87vh' }}
                 className='flex flex-row'
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {boards[boardId].columns.map((columnId, index) => (
+                {boards[boardId].columns.map((columnId: string, index: number) => (
                   <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
                 ))}
                 {provided.placeholder}
