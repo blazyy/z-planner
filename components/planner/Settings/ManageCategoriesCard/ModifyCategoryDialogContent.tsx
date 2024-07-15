@@ -51,6 +51,7 @@ export const ModifyCategoryDialogContent = ({
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, getToken)
     onCloseDialog()
+    toast.success('Category details changed.')
   }
 
   return (

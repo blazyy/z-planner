@@ -26,7 +26,7 @@ export const AddNewBoardButton = () => {
       }}
     >
       <DialogTrigger>
-        <Button className='w-full' variant='outline'>
+        <Button variant='outline'>
           <Plus className='mr-2 w-4 h-4' /> Add a new board
         </Button>
       </DialogTrigger>

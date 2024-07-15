@@ -40,6 +40,7 @@ export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     onCloseDialog()
     changeColumnName(columnId, values.columnName, dispatch, getToken)
+    toast.success('Column name changed.')
   }
 
   return (

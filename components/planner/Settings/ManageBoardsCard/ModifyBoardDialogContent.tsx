@@ -39,6 +39,7 @@ export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoard
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     onCloseDialog()
     changeBoardInfo(boardId, values.boardName, dispatch, getToken)
+    toast.success('Board name changed.')
   }
 
   return (
