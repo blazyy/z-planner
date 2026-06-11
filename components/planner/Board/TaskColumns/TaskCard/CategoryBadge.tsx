@@ -26,10 +26,10 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
         <Badge className={badgeClassNames[categoryInfo.color]}>{categoryInfo.name}</Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
-        {categoriesInBoard.map((categoryId, index) => (
+        {categoriesInBoard.map((categoryId) => (
           <DropdownMenuCheckboxItem
-            key={index}
-            checked={categoryInfo.name === categories[categoryId].name}
+            key={categoryId}
+            checked={taskCards[taskCardId].category === categoryId}
             onClick={(event) => {
               event.preventDefault()
               changeCardCategory(taskCardId, categoryId, dispatch)

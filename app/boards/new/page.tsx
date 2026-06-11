@@ -11,7 +11,7 @@ export default function AddBoardCallout() {
 
   useEffect(() => {
     if (boardOrder.length > 0) {
-      router.push(`/boards/${boardOrder[0]}`)
+      router.replace(`/boards/${boardOrder[0]}`)
     }
   }, [boardOrder, router])
 

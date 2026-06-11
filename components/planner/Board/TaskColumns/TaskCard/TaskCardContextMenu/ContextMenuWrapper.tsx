@@ -14,7 +14,7 @@ import deleteCard from '@/utils/plannerUtils/cardUtils/deleteCard'
 type ContextMenuWrapperProps = {
   columnId: string
   taskCardId: string
-  children: JSX.Element
+  children: React.ReactNode
 }
 
 export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {

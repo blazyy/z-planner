@@ -1,4 +1,5 @@
 'use client'
+import { LoadingSpinner } from '@/components/global/LoadingSpinner'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -10,9 +11,9 @@ export default function PlannerPage() {
   useEffect(() => {
     if (hasLoaded) {
       const redirectPath = `/boards/${boardOrder.length > 0 ? boardOrder[0] : 'new'}`
-      router.push(redirectPath)
+      router.replace(redirectPath)
     }
   }, [hasLoaded, boardOrder, router])
 
-  return <></>
+  return <LoadingSpinner />
 }

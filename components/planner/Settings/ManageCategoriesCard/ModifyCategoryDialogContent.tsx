@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -56,7 +56,10 @@ export const ModifyCategoryDialogContent = ({
     <DialogContent>
       <DialogHeader>
         <DialogTitle className='mb-5'>Modify Category</DialogTitle>
-        <DialogDescription>
+        {/* A div, not DialogDescription: that component renders a <p>, and a form
+            inside a paragraph is invalid HTML that browsers re-parent. Classes
+            match DialogDescription so the rendering is identical. */}
+        <div className='text-sm text-muted-foreground'>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
@@ -103,7 +106,7 @@ export const ModifyCategoryDialogContent = ({
               </Button>
             </span>
           </div>
-        </DialogDescription>
+        </div>
       </DialogHeader>
     </DialogContent>
   )

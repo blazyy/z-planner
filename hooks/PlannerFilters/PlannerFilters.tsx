@@ -1,5 +1,5 @@
 import { Draft, produce } from 'immer'
-import { Dispatch, createContext, useContext, useReducer } from 'react'
+import { Dispatch, ReactNode, createContext, useContext, useReducer } from 'react'
 
 type PlannerFiltersType = {
   area: string
@@ -55,7 +55,7 @@ export const usePlannerFiltersDispatch = () => {
   return useContext(PlannerFiltersDispatchContext)
 }
 
-export const PlannerFiltersProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+export const PlannerFiltersProvider = ({ children }: { children: ReactNode }) => {
   const [plannerFiltersData, dispatch] = useReducer(plannerFiltersReducer, initialPlannerFilterEmptyState)
 
   return (

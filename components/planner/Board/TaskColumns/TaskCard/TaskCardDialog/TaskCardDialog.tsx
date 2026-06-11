@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { DialogContent } from '@/components/ui/dialog'
+import { DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
@@ -23,6 +23,9 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
 
   return (
     <DialogContent className='p-0'>
+      {/* Screen-reader-only title: Radix warns without one, and assistive tech
+          announces nothing when the dialog opens. */}
+      <DialogTitle className='sr-only'>{task.title || 'Task card'}</DialogTitle>
       <Card className='p-2'>
         <CardHeader className='gap-2 pb-0 pl-7'>
           <div className='flex gap-2'>
