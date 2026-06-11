@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export default async function changeCardCheckedStatus(
+export default function changeCardCheckedStatus(
   columnId: string,
   taskCardId: string,
   isChecked: boolean,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
+  columnTaskCardIds: string[],
+  dispatch: Dispatch<any>
 ) {
   dispatch({
     type: 'taskCardCheckedStatusChanged',
@@ -17,22 +18,19 @@ export default async function changeCardCheckedStatus(
     },
   })
 
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/cards/${taskCardId}`,
-      {
-        status: isChecked ? 'completed' : 'created',
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
+  if (isChecked) {
+    // The reducer moves a completed card to the bottom of its column; mirror
+    // that here so the new order persists instead of diverging on reload.
+    const taskCardOrder = columnTaskCardIds.filter((id) => id !== taskCardId)
+    taskCardOrder.push(taskCardId)
+    sendMutation(dispatch, () =>
+      axios.patch(`/api/planner/cards/${taskCardId}`, {
+        status: 'completed',
+        columnId,
+        taskCardOrder,
       })
-    })
+    )
+  } else {
+    sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}`, { status: 'created' }))
+  }
 }

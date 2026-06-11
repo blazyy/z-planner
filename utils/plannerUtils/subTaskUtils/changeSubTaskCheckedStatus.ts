@@ -1,12 +1,8 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export default async function changeSubTaskCheckedStatus(
-  subTaskId: string,
-  isChecked: boolean,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) {
+export default function changeSubTaskCheckedStatus(subTaskId: string, isChecked: boolean, dispatch: Dispatch<any>) {
   dispatch({
     type: 'subTasksCheckedStatusChanged',
     payload: {
@@ -14,22 +10,5 @@ export default async function changeSubTaskCheckedStatus(
       isChecked,
     },
   })
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/subtasks/${subTaskId}`,
-      {
-        checked: isChecked,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.patch(`/api/planner/subtasks/${subTaskId}`, { checked: isChecked }))
 }

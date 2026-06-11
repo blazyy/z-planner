@@ -1,13 +1,8 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export const changeCategoryInfo = async (
-  categoryId: string,
-  newName: string,
-  newColor: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) => {
+export const changeCategoryInfo = (categoryId: string, newName: string, newColor: string, dispatch: Dispatch<any>) => {
   const categoryDetails = {
     id: categoryId,
     name: newName,
@@ -19,23 +14,5 @@ export const changeCategoryInfo = async (
       categoryDetails,
     },
   })
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/categories/${categoryId}`,
-      {
-        newName,
-        newColor,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.patch(`/api/planner/categories/${categoryId}`, { newName, newColor }))
 }

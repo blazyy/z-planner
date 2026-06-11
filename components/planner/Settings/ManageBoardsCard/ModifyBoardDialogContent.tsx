@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { changeBoardInfo } from '@/utils/plannerUtils/boardUtils/changeBoardInfo'
 import deleteBoard from '@/utils/plannerUtils/boardUtils/deleteBoard'
-import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -24,7 +23,6 @@ const formSchema = z.object({
 })
 
 export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoardDialogContentProps) => {
-  const { getToken } = useAuth()
   const { boards } = usePlanner()
   const dispatch = usePlannerDispatch()
 
@@ -38,7 +36,7 @@ export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoard
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     onCloseDialog()
-    changeBoardInfo(boardId, values.boardName, dispatch, getToken)
+    changeBoardInfo(boardId, values.boardName, dispatch)
     toast.success('Board name changed.')
   }
 
@@ -68,7 +66,7 @@ export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoard
             <ManageItemAlertDialog
               onCloseParentDialog={onCloseDialog}
               onClickDelete={() => {
-                deleteBoard(boardId, dispatch, getToken)
+                deleteBoard(boardId, dispatch)
                 toast.success('Board deleted.')
               }}
               isDeleteButtonDisabled={boards[boardId].columns.length > 0}

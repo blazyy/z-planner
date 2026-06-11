@@ -5,7 +5,6 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
-import { useAuth } from '@clerk/nextjs'
 import { Draggable } from '@hello-pangea/dnd'
 import { toast } from 'sonner'
 import { CategoryBadge } from './CategoryBadge'
@@ -55,9 +54,8 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
   // was in the wrapper component. There was no straightforward way to pass that info down to it's children (i.e. TaskCard).
   // Using ContextProvider is possible but was way too convoluted- i.e. the isDragging property wouldn't cause re-renders,
   // and thus the card wouldn't turn transparent, which is the reason why we need to know if the card is being dragged.
-  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
-  const { taskCards, idOfCardBeingDragged } = usePlanner()
+  const { taskCards, columns, idOfCardBeingDragged } = usePlanner()
   const task = taskCards[taskCardId]
 
   return (
@@ -93,7 +91,7 @@ export const TaskCard = ({ index, boardId, columnId, taskCardId }: TaskCardProps
                 } else {
                   toast.info('Task marked as incomplete.')
                 }
-                changeCardCheckedStatus(columnId, taskCardId, !isChecked, dispatch, getToken)
+                changeCardCheckedStatus(columnId, taskCardId, !isChecked, columns[columnId].taskCards, dispatch)
               }}
             />
           </div>

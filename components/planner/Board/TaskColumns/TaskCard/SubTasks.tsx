@@ -1,14 +1,12 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
-import { useAuth } from '@clerk/nextjs'
 
 type SubTasksProps = {
   taskCardId: string
 }
 
 export const SubTasks = ({ taskCardId }: SubTasksProps) => {
-  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
   const { taskCards, subTasks } = usePlanner()
   const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
@@ -24,7 +22,7 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
               if (isEditable) {
                 event.preventDefault() // Neede to prevent dialog from triggering
                 const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-                changeSubTaskCheckedStatus(subTask.id, !isChecked, dispatch, getToken)
+                changeSubTaskCheckedStatus(subTask.id, !isChecked, dispatch)
               }
             }}
           />

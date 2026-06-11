@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input'
 import { NANOID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { addNewBoardToPlanner } from '@/utils/plannerUtils/boardUtils/addNewBoardToPlanner'
-import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -17,7 +16,6 @@ type AddNewBoardFormProps = {
 }
 
 export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardFormProps) => {
-  const { getToken } = useAuth()
   const router = useRouter()
   const dispatch = usePlannerDispatch()
   const { boardOrder } = usePlanner()
@@ -42,7 +40,7 @@ export const AddNewBoardForm = ({ isCallout = false, closeDialog }: AddNewBoardF
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const boardId = NANOID()
-    addNewBoardToPlanner(boardId, values.boardName, dispatch, getToken)
+    addNewBoardToPlanner(boardId, values.boardName, dispatch)
     toast.success('Board added.')
     closeDialog()
     if (isCallout) {

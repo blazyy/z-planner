@@ -1,38 +1,8 @@
-import { DEBOUNCE_TIME_MS } from '@/constants/constants'
 import axios from 'axios'
-import debounce from 'lodash/debounce'
 import { Dispatch } from 'react'
+import { sendDebouncedMutation } from '../apiClient'
 
-const debouncedApiCall = debounce(
-  async (taskCardId: string, newContent: string, dispatch: Dispatch<any>, token: string | null) => {
-    axios
-      .patch(
-        `/api/planner/cards/${taskCardId}`,
-        {
-          content: newContent,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .catch((error) => {
-        dispatch({
-          type: 'backendErrorOccurred',
-        })
-      })
-  },
-  DEBOUNCE_TIME_MS
-)
-
-export default async function changeCardContent(
-  taskCardId: string,
-  newContent: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) {
-  const token = await getToken()
+export default function changeCardContent(taskCardId: string, newContent: string, dispatch: Dispatch<any>) {
   dispatch({
     type: 'taskCardContentChanged',
     payload: {
@@ -40,5 +10,7 @@ export default async function changeCardContent(
       newContent,
     },
   })
-  debouncedApiCall(taskCardId, newContent, dispatch, token)
+  sendDebouncedMutation(`card-content:${taskCardId}`, dispatch, () =>
+    axios.patch(`/api/planner/cards/${taskCardId}`, { content: newContent })
+  )
 }

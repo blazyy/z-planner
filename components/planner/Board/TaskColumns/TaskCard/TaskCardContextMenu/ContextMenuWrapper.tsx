@@ -10,8 +10,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 import deleteCard from '@/utils/plannerUtils/cardUtils/deleteCard'
-import { useAuth } from '@clerk/nextjs'
-import { useErrorBoundary } from 'react-error-boundary'
 
 type ContextMenuWrapperProps = {
   columnId: string
@@ -20,9 +18,7 @@ type ContextMenuWrapperProps = {
 }
 
 export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {
-  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
-  const { showBoundary } = useErrorBoundary()
   return (
     <AlertDialog>
       {children}
@@ -35,7 +31,7 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              deleteCard(columnId, taskCardId, dispatch, getToken)
+              deleteCard(columnId, taskCardId, dispatch)
             }}
           >
             Continue

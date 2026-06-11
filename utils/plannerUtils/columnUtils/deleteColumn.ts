@@ -1,12 +1,8 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export default async function deleteColumn(
-  boardId: string,
-  columnId: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) {
+export default function deleteColumn(boardId: string, columnId: string, dispatch: Dispatch<any>) {
   dispatch({
     type: 'columnDeleted',
     payload: {
@@ -14,17 +10,5 @@ export default async function deleteColumn(
       columnId,
     },
   })
-  const token = await getToken()
-
-  axios
-    .delete(`/api/planner/boards/${boardId}/columns/${columnId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.delete(`/api/planner/boards/${boardId}/columns/${columnId}`))
 }

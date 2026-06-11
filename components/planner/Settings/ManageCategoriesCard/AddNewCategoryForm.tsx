@@ -6,7 +6,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { NANOID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { addNewCategory } from '@/utils/plannerUtils/categoryUtils/addNewCategory'
-import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -32,7 +31,6 @@ function getRandomBadgeClassName() {
 }
 
 export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => {
-  const { getToken } = useAuth()
   const { boardOrder, boards } = usePlanner()
   const dispatch = usePlannerDispatch()
   const [selectedBoard, setSelectedBoard] = useState(boardOrder[0])
@@ -53,7 +51,7 @@ export const AddNewCategoryForm = ({ closeDialog }: AddNewCategoryFormProps) => 
       name: values.categoryName,
       color: categoryColor,
     }
-    addNewCategory(selectedBoard, newCategoryDetails, dispatch, getToken)
+    addNewCategory(selectedBoard, newCategoryDetails, dispatch)
     toast.success('Category added.')
     closeDialog()
   }

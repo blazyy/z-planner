@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import changeColumnName from '@/utils/plannerUtils/columnUtils/changeColumnName'
 import deleteColumn from '@/utils/plannerUtils/columnUtils/deleteColumn'
-import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -25,7 +24,6 @@ const formSchema = z.object({
 })
 
 export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: ModifyBoardDialogContentProps) => {
-  const { getToken } = useAuth()
   const { columns } = usePlanner()
   const dispatch = usePlannerDispatch()
 
@@ -39,7 +37,7 @@ export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: 
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     onCloseDialog()
-    changeColumnName(columnId, values.columnName, dispatch, getToken)
+    changeColumnName(columnId, values.columnName, dispatch)
     toast.success('Column name changed.')
   }
 
@@ -71,7 +69,7 @@ export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: 
               isDeleteButtonDisabled={columns[columnId].taskCards.length > 0}
               deleteButtonDisabledTooltipContent='A column with tasks cannot be deleted.'
               onClickDelete={() => {
-                deleteColumn(boardId, columnId, dispatch, getToken)
+                deleteColumn(boardId, columnId, dispatch)
                 toast.success('Column deleted.')
               }}
             />

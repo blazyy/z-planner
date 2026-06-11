@@ -1,12 +1,8 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export default async function changeCardCategory(
-  taskCardId: string,
-  newCategoryId: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) {
+export default function changeCardCategory(taskCardId: string, newCategoryId: string, dispatch: Dispatch<any>) {
   dispatch({
     type: 'taskCategoryChanged',
     payload: {
@@ -14,22 +10,5 @@ export default async function changeCardCategory(
       newCategoryId,
     },
   })
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/cards/${taskCardId}`,
-      {
-        category: newCategoryId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}`, { category: newCategoryId }))
 }

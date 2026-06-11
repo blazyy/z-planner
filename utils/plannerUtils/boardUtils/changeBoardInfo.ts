@@ -1,12 +1,8 @@
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export const changeBoardInfo = async (
-  boardId: string,
-  newName: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) => {
+export const changeBoardInfo = (boardId: string, newName: string, dispatch: Dispatch<any>) => {
   dispatch({
     type: 'boardNameChanged',
     payload: {
@@ -14,22 +10,5 @@ export const changeBoardInfo = async (
       newName,
     },
   })
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/boards/${boardId}`,
-      {
-        newName,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.patch(`/api/planner/boards/${boardId}`, { newName }))
 }

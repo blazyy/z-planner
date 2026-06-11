@@ -2,13 +2,13 @@ import { NANOID } from '@/constants/constants'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-const addNewSubTask = async (
+const addNewSubTask = (
   taskCardId: string,
   newSubTaskId: string,
   newSubTasksOrder: string[],
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
+  dispatch: Dispatch<any>
 ) => {
   const newSubTaskDetails = {
     id: newSubTaskId,
@@ -23,47 +23,29 @@ const addNewSubTask = async (
       newSubTasksOrder,
     },
   })
-  const token = await getToken()
-  axios
-    .post(
-      `/api/planner/cards/${taskCardId}/subtasks`,
-      {
-        newSubTaskDetails,
-        newSubTasksOrder,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
+  sendMutation(dispatch, () =>
+    axios.post(`/api/planner/cards/${taskCardId}/subtasks`, {
+      newSubTaskDetails,
+      newSubTasksOrder,
     })
+  )
 }
 
-export const addNewSubTaskToCardOnEnterKeydown = async (
+export const addNewSubTaskToCardOnEnterKeydown = (
   taskCard: TaskCardInfoType,
   existingSubTaskId: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
+  dispatch: Dispatch<any>
 ) => {
   const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
-  let subTaskIndex = newSubTasksOrder.findIndex((id: string) => id === existingSubTaskId)
+  const subTaskIndex = newSubTasksOrder.findIndex((id: string) => id === existingSubTaskId)
   newSubTasksOrder.splice(subTaskIndex + 1, 0, newSubTaskId)
-  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch, getToken)
+  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch)
 }
 
-export const addNewSubTaskOnButtonClick = async (
-  taskCard: TaskCardInfoType,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) => {
+export const addNewSubTaskOnButtonClick = (taskCard: TaskCardInfoType, dispatch: Dispatch<any>) => {
   const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
   newSubTasksOrder.push(newSubTaskId)
-  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch, getToken)
+  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch)
 }
