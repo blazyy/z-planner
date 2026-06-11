@@ -1,51 +1,63 @@
-import { TaskCardInfoType } from '@/hooks/Planner/types'
 import { ExtendedNextRequest, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
 
 export const GET = withMiddleware(async (req: ExtendedNextRequest) => {
   const { userId } = req
-  let user = await Planner.findOne({ clerkUserId: userId }).lean()
 
-  if (!user) {
-    user = new Planner({
-      clerkUserId: userId,
-      boardOrder: [],
-      boards: {},
-      columns: {},
-      categories: {},
-      taskCards: {},
-      subTasks: {},
-    })
-    await user.save()
-    user = user.toObject()
-  } else {
-    // Update task cards with status 'completed' to 'archived'. This is because the task cards are
-    // shown in the UI whenever they're completed, but on subsequent API calls, they should not be shown.
-    // These cards will only be shown in the archive section.
-    const updatedTaskCards = { ...user.taskCards }
-    const updatedColumns = { ...user.columns }
+  // Race-proof get-or-create: the unique index on clerkUserId guarantees that
+  // concurrent first loads converge on a single document.
+  const user = await Planner.findOneAndUpdate(
+    { clerkUserId: userId },
+    {
+      $setOnInsert: {
+        clerkUserId: userId,
+        boardOrder: [],
+        boards: {},
+        columns: {},
+        categories: {},
+        taskCards: {},
+        subTasks: {},
+      },
+    },
+    { upsert: true, new: true }
+  ).lean()
 
-    for (const taskId in updatedTaskCards) {
-      if (updatedTaskCards[taskId].status === 'completed') {
-        updatedTaskCards[taskId].status = 'archived'
-        // Remove archived task cards from their columns
-        for (const columnId in updatedColumns) {
-          const column = updatedColumns[columnId]
-          const taskIndex = column.taskCards.indexOf(taskId)
-          if (taskIndex > -1) {
-            column.taskCards.splice(taskIndex, 1)
-          }
-        }
+  // Cards completed since the last fetch get archived: they were shown in the UI
+  // when completed, but on subsequent loads they only appear in the archive section.
+  const archivedIds = Object.keys(user.taskCards).filter((taskId) => user.taskCards[taskId].status === 'completed')
+
+  if (archivedIds.length > 0) {
+    const set: Record<string, string> = {}
+    const pull: Record<string, { $in: string[] }> = {}
+
+    for (const taskId of archivedIds) {
+      set[`taskCards.${taskId}.status`] = 'archived'
+      user.taskCards[taskId].status = 'archived'
+    }
+
+    for (const columnId in user.columns) {
+      const column = user.columns[columnId]
+      const remaining = column.taskCards.filter((taskId) => !archivedIds.includes(taskId))
+      if (remaining.length !== column.taskCards.length) {
+        pull[`columns.${columnId}.taskCards`] = { $in: archivedIds }
+        column.taskCards = remaining
       }
     }
-    await Planner.updateOne({ clerkUserId: userId }, { taskCards: updatedTaskCards, columns: updatedColumns })
 
-    // Filter task cards to only return those with status 'created'
-    user.taskCards = Object.fromEntries(
-      Object.entries(updatedTaskCards).filter(([_, taskCard]) => (taskCard as TaskCardInfoType).status === 'created')
+    // Targeted paths only — never overwrite whole maps, so concurrent writes
+    // to other cards/columns are preserved.
+    await Planner.updateOne(
+      { clerkUserId: userId },
+      Object.keys(pull).length > 0 ? { $set: set, $pull: pull } : { $set: set }
     )
   }
+
+  // Only 'created' cards are returned; 'archived' ones stay in the document
+  // for the future archive view to read.
+  user.taskCards = Object.fromEntries(
+    Object.entries(user.taskCards).filter(([, taskCard]) => taskCard.status === 'created')
+  )
 
   return NextResponse.json(user)
 })

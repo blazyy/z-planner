@@ -1,27 +1,33 @@
-// pages/api/planner/columns/[columnId]/name/route.ts
-import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
+import { columnPatch, entityId } from '@/lib/apiSchemas'
+import { ExtendedNextRequest, Params, jsonError, parseBody, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
-
-interface ChangeColumnNameRequestBody {
-  newName: string
-}
 
 export const PATCH = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
-    const { columnId } = params
-    const { newName }: ChangeColumnNameRequestBody = await req.json()
 
-    await Planner.updateOne(
-      { clerkUserId: userId },
-      {
-        $set: {
-          [`columns.${columnId}.name`]: newName,
-        },
-      }
+    const parsedColumnId = entityId.safeParse(params.columnId)
+    if (!parsedColumnId.success) {
+      return jsonError(400, 'Invalid column id')
+    }
+    const columnId = parsedColumnId.data
+
+    const body = await parseBody(req, columnPatch)
+    if (body.error) {
+      return body.error
+    }
+    const { newName } = body.data
+
+    const result = await Planner.updateOne(
+      { clerkUserId: userId, [`columns.${columnId}.id`]: columnId },
+      { $set: { [`columns.${columnId}.name`]: newName } }
     )
 
-    return NextResponse.json({})
+    if (result.matchedCount === 0) {
+      return jsonError(404, 'Column not found')
+    }
+
+    return NextResponse.json({ ok: true }, { status: 200 })
   }
 )

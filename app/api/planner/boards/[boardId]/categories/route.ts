@@ -1,32 +1,31 @@
-// pages/api/planner/boards/[boardId]/categories/route.ts
-import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
+import { categoryCreate, entityId } from '@/lib/apiSchemas'
+import { ExtendedNextRequest, Params, jsonError, parseBody, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
-
-interface AddNewCategoryRequestBody {
-  newCategoryDetails: { id: string; [key: string]: any }
-}
 
 export const POST = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
     const { boardId } = params
-    const { newCategoryDetails }: AddNewCategoryRequestBody = await req.json()
+    if (!entityId.safeParse(boardId).success) {
+      return jsonError(400, 'Invalid board id')
+    }
 
-    await Planner.updateOne(
-      { clerkUserId: userId },
+    const body = await parseBody(req, categoryCreate)
+    if (body.error) return body.error
+    const { newCategoryDetails } = body.data
+
+    const result = await Planner.updateOne(
+      { clerkUserId: userId, [`boards.${boardId}.id`]: boardId },
       {
-        $set: {
-          [`categories.${newCategoryDetails.id}`]: newCategoryDetails,
-        },
+        $set: { [`categories.${newCategoryDetails.id}`]: newCategoryDetails },
+        $push: { [`boards.${boardId}.categories`]: newCategoryDetails.id },
       }
     )
+    if (result.matchedCount === 0) {
+      return jsonError(404, 'Board not found')
+    }
 
-    await Planner.updateOne(
-      { clerkUserId: userId },
-      { $push: { [`boards.${boardId}.categories`]: newCategoryDetails.id } }
-    )
-
-    return NextResponse.json({ status: 201 })
+    return NextResponse.json({ categoryId: newCategoryDetails.id }, { status: 201 })
   }
 )

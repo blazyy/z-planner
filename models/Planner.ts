@@ -1,10 +1,9 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
+import mongoose, { InferSchemaType, Model, Schema } from 'mongoose'
 
 const subTaskSchema = new Schema(
   {
     id: { type: String, required: true },
-    title: { type: String, required: true },
+    title: { type: String, default: '' },
     checked: { type: Boolean, default: false },
   },
   { _id: false }
@@ -13,10 +12,10 @@ const subTaskSchema = new Schema(
 const taskCardSchema = new Schema(
   {
     id: { type: String, required: true },
-    title: { type: String, required: true },
+    title: { type: String, default: '' },
     category: { type: String, required: true },
-    content: { type: String },
-    status: { type: String, required: true },
+    content: { type: String, default: '' },
+    status: { type: String, required: true, enum: ['created', 'completed', 'archived'] },
     subTasks: [String],
   },
   { _id: false }
@@ -52,7 +51,8 @@ const categorySchema = new Schema(
 
 const plannerSchema = new Schema(
   {
-    clerkUserId: { type: String, required: true },
+    // The tenancy key for every query in the app — unique creates the index.
+    clerkUserId: { type: String, required: true, unique: true },
     boardOrder: [String],
     boards: { type: Map, of: boardSchema, default: {} },
     columns: { type: Map, of: columnSchema, default: {} },
@@ -60,7 +60,12 @@ const plannerSchema = new Schema(
     taskCards: { type: Map, of: taskCardSchema, default: {} },
     subTasks: { type: Map, of: subTaskSchema, default: {} },
   },
-  { minimize: false }
+  { minimize: false, timestamps: true }
 )
 
-export default mongoose.models.Planner || mongoose.model('Planner', plannerSchema, 'planner')
+export type PlannerDoc = InferSchemaType<typeof plannerSchema>
+
+const Planner: Model<PlannerDoc> =
+  (mongoose.models.Planner as Model<PlannerDoc>) || mongoose.model<PlannerDoc>('Planner', plannerSchema, 'planner')
+
+export default Planner

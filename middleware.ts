@@ -7,5 +7,10 @@ export default clerkMiddleware((auth, req) => {
 })
 
 export const config = {
-  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  // Skip Next.js internals and static assets by extension instead of excluding
+  // every path containing a dot (which let dotted routes bypass Clerk entirely).
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
 }

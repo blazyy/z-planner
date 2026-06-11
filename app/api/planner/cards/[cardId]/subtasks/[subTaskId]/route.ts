@@ -1,21 +1,36 @@
-import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
+import { entityId } from '@/lib/apiSchemas'
+import { ExtendedNextRequest, Params, jsonError, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
 
 export const DELETE = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
-    const { cardId, subTaskId } = params
 
-    // Remove the subtask from the subtask object using $unset
-    await Planner.updateOne({ clerkUserId: userId }, { $unset: { [`subTasks.${subTaskId}`]: '' } })
+    const parsedCardId = entityId.safeParse(params.cardId)
+    if (!parsedCardId.success) {
+      return jsonError(400, 'Invalid card id')
+    }
+    const parsedSubTaskId = entityId.safeParse(params.subTaskId)
+    if (!parsedSubTaskId.success) {
+      return jsonError(400, 'Invalid subtask id')
+    }
+    const cardId = parsedCardId.data
+    const subTaskId = parsedSubTaskId.data
 
-    // Remove the subtask from the subtask list within the specified taskcard using $pull
-    await Planner.updateOne(
+    // Remove the subtask entry and its reference in the card's order array atomically.
+    const result = await Planner.updateOne(
       { clerkUserId: userId, [`taskCards.${cardId}.id`]: cardId },
-      { $pull: { [`taskCards.${cardId}.subTasks`]: subTaskId } }
+      {
+        $unset: { [`subTasks.${subTaskId}`]: '' },
+        $pull: { [`taskCards.${cardId}.subTasks`]: subTaskId },
+      }
     )
 
-    return NextResponse.json({ status: 204 })
+    if (result.matchedCount === 0) {
+      return jsonError(404, 'Card not found')
+    }
+
+    return NextResponse.json({ deleted: subTaskId })
   }
 )

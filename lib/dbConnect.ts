@@ -1,11 +1,5 @@
 import mongoose, { Mongoose } from 'mongoose'
 
-const MONGO_URI: string | undefined = process.env.MONGO_URI
-
-if (!MONGO_URI) {
-  throw new Error('Please define the MONGO_URI environment variable')
-}
-
 interface CachedType {
   conn: Mongoose | null
   promise: Promise<Mongoose> | null
@@ -24,6 +18,13 @@ if (!cached) {
 }
 
 async function dbConnect(): Promise<Mongoose> {
+  // Checked at connect time, not import time, so `next build` can collect
+  // page data without a database configured.
+  const MONGO_URI = process.env.MONGO_URI
+  if (!MONGO_URI) {
+    throw new Error('Please define the MONGO_URI environment variable')
+  }
+
   if (cached.conn) {
     return cached.conn
   }
@@ -33,7 +34,7 @@ async function dbConnect(): Promise<Mongoose> {
       bufferCommands: false,
     }
 
-    cached.promise = mongoose.connect(MONGO_URI!, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGO_URI, opts).then((mongoose) => {
       return mongoose
     })
   }

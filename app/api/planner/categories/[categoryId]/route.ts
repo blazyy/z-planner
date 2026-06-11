@@ -1,21 +1,22 @@
-// pages/api/planner/categories/[categoryId]/route.ts
-import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
+import { categoryId as categoryIdSchema, categoryPatch } from '@/lib/apiSchemas'
+import { ExtendedNextRequest, Params, jsonError, parseBody, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
-
-interface ChangeCategoryInfoRequestBody {
-  newName: string
-  newColor: string
-}
 
 export const PATCH = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
     const { categoryId } = params
-    const { newName, newColor }: ChangeCategoryInfoRequestBody = await req.json()
+    if (!categoryIdSchema.safeParse(categoryId).success) {
+      return jsonError(400, 'Invalid category id')
+    }
 
-    await Planner.updateOne(
-      { clerkUserId: userId },
+    const body = await parseBody(req, categoryPatch)
+    if (body.error) return body.error
+    const { newName, newColor } = body.data
+
+    const result = await Planner.updateOne(
+      { clerkUserId: userId, [`categories.${categoryId}.id`]: categoryId },
       {
         $set: {
           [`categories.${categoryId}.name`]: newName,
@@ -23,7 +24,10 @@ export const PATCH = withMiddleware(
         },
       }
     )
+    if (result.matchedCount === 0) {
+      return jsonError(404, 'Category not found')
+    }
 
-    return NextResponse.json({ status: 201 })
+    return NextResponse.json({ ok: true }, { status: 200 })
   }
 )

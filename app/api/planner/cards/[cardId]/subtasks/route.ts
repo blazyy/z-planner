@@ -1,21 +1,26 @@
-// pages/api/planner/cards/[taskCardId]/subtasks/route.ts
-import { ExtendedNextRequest, Params, withMiddleware } from '@/lib/middleware'
+import { entityId, subTaskCreate } from '@/lib/apiSchemas'
+import { ExtendedNextRequest, Params, jsonError, parseBody, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
 import { NextResponse } from 'next/server'
-
-interface AddNewSubTaskRequestBody {
-  newSubTaskDetails: { id: string; [key: string]: any }
-  newSubTasksOrder: string[]
-}
 
 export const POST = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {
     const { userId } = req
-    const { cardId } = params
-    const { newSubTaskDetails, newSubTasksOrder }: AddNewSubTaskRequestBody = await req.json()
 
-    await Planner.updateOne(
-      { clerkUserId: userId },
+    const parsedCardId = entityId.safeParse(params.cardId)
+    if (!parsedCardId.success) {
+      return jsonError(400, 'Invalid card id')
+    }
+    const cardId = parsedCardId.data
+
+    const body = await parseBody(req, subTaskCreate)
+    if (body.error) {
+      return body.error
+    }
+    const { newSubTaskDetails, newSubTasksOrder } = body.data
+
+    const result = await Planner.updateOne(
+      { clerkUserId: userId, [`taskCards.${cardId}.id`]: cardId },
       {
         $set: {
           [`taskCards.${cardId}.subTasks`]: newSubTasksOrder,
@@ -24,6 +29,10 @@ export const POST = withMiddleware(
       }
     )
 
-    return NextResponse.json({ status: 201 })
+    if (result.matchedCount === 0) {
+      return jsonError(404, 'Card not found')
+    }
+
+    return NextResponse.json({ subTaskId: newSubTaskDetails.id }, { status: 201 })
   }
 )
