@@ -23,15 +23,6 @@ export const Sidebar = ({ currentPage }: { currentPage: string }) => {
               />
             ))}
           </div>
-          {/* <div className='flex flex-col gap-2 mt-5 w-full'> */}
-          {/* <Separator /> */}
-          {/* <SidebarButton
-              isCurrentlySelected={currentPage === 'archive'}
-              label='Archive'
-              pathname='/boards/archive'
-              icon={<Archive className='w-5 h-5' />}
-            /> */}
-          {/* </div> */}
         </div>
         <div className='flex flex-col gap-2 mt-5 w-full'>
           <SidebarButton
