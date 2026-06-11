@@ -16,7 +16,7 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
       {subTasksUnderTaskCard.map((subTask, index) => (
         <div key={subTask.id} className='flex items-center gap-2'>
           <Checkbox
-            id={`${index}`}
+            id={`subtask-check-${subTask.id}`}
             checked={subTask.checked}
             onClick={(event) => {
               if (isEditable) {
@@ -26,7 +26,7 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
               }
             }}
           />
-          <label htmlFor={subTask.id} className='text-gray-500 text-sm cursor-pointer'>
+          <label htmlFor={`subtask-check-${subTask.id}`} className='text-gray-500 text-sm cursor-pointer'>
             {subTask.title}
           </label>
         </div>

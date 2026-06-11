@@ -75,6 +75,17 @@ export const TaskCard = memo(function TaskCard({
     >
       {(isDragging) => (
         <Card
+          // DialogTrigger asChild attaches the open handler here; the card itself
+          // is a div, so it needs button semantics to be keyboard-openable.
+          role='button'
+          tabIndex={0}
+          aria-label={`Open task "${task.title}"`}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              event.currentTarget.click()
+            }
+          }}
           className={cn(
             isDragging ? 'backdrop-blur-sm bg-white/70' : '',
             task.status === 'completed' ? 'opacity-50' : ''

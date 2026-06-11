@@ -35,7 +35,9 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         setShowDragHandle(false)
       }}
     >
-      <div {...provided.dragHandleProps} className={showDragHandle ? 'visible' : 'invisible'}>
+      {/* focus-visible keeps the handle reachable by keyboard (dnd's dragHandleProps
+          make it focusable) without changing the mouse hover behavior */}
+      <div {...provided.dragHandleProps} className={showDragHandle ? 'visible' : 'invisible focus-visible:visible'}>
         <GripVertical size={14} />
       </div>
       <Checkbox

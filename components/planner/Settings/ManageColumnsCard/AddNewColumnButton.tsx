@@ -25,7 +25,7 @@ export const AddNewColumnButton = ({ boardId }: { boardId: string }) => {
         }
       }}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant='outline'>
           <Plus className='mr-2 w-4 h-4' /> Add a new column
         </Button>

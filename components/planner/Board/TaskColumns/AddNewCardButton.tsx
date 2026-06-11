@@ -17,36 +17,38 @@ export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
   return (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
-        <TooltipTrigger>
-          <FaPlus
-            className='text-gray-400'
-            onClick={() => {
-              // Only allow an initializing task card to be added in an existing task card doesn't already exist,
-              // or if it exists and does not have any info entered and the add button is clicked from another
-              // column
-              if (
-                !taskCardBeingInitialized ||
-                (taskCardBeingInitialized &&
-                  !dataEnteredInTaskCardBeingInitialized &&
-                  taskCardBeingInitialized.columnId !== columnId)
-              ) {
-                const newTaskCardId = NANOID()
-                dispatch({
-                  type: 'newTaskCardInitialized',
-                  payload: {
-                    taskCardId: newTaskCardId,
-                    columnId,
-                    isHighlighted: false,
-                  },
-                })
-              } else {
-                dispatch({
-                  type: 'taskCardBeingInitializedHighlightStatusChange',
-                  payload: true,
-                })
-              }
-            }}
-          />
+        {/* TooltipTrigger renders a real <button>; the click handler lives on it
+            (not the svg) so the action is reachable by keyboard. */}
+        <TooltipTrigger
+          aria-label='Add new card'
+          onClick={() => {
+            // Only allow an initializing task card to be added in an existing task card doesn't already exist,
+            // or if it exists and does not have any info entered and the add button is clicked from another
+            // column
+            if (
+              !taskCardBeingInitialized ||
+              (taskCardBeingInitialized &&
+                !dataEnteredInTaskCardBeingInitialized &&
+                taskCardBeingInitialized.columnId !== columnId)
+            ) {
+              const newTaskCardId = NANOID()
+              dispatch({
+                type: 'newTaskCardInitialized',
+                payload: {
+                  taskCardId: newTaskCardId,
+                  columnId,
+                  isHighlighted: false,
+                },
+              })
+            } else {
+              dispatch({
+                type: 'taskCardBeingInitializedHighlightStatusChange',
+                payload: true,
+              })
+            }
+          }}
+        >
+          <FaPlus className='text-gray-400' />
         </TooltipTrigger>
         <TooltipContent>Add new card</TooltipContent>
       </Tooltip>

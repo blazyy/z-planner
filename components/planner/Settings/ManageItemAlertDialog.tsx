@@ -48,10 +48,15 @@ export const ManageItemAlertDialog = ({
         {isDeleteButtonDisabled && (
           <TooltipProvider delayDuration={0}>
             <Tooltip>
-              <TooltipTrigger className='cursor-default'>
-                <Button size='sm' variant='destructive' disabled={true}>
-                  Delete
-                </Button>
+              {/* asChild + focusable span: a disabled button swallows pointer events
+                  (the tooltip would never fire) and the old wrapper nested a button
+                  inside the trigger's own button — invalid HTML. */}
+              <TooltipTrigger asChild>
+                <span tabIndex={0} className='cursor-default'>
+                  <Button size='sm' variant='destructive' disabled={true}>
+                    Delete
+                  </Button>
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>{deleteButtonDisabledTooltipContent}</p>

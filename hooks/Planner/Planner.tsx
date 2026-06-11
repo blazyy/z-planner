@@ -1,6 +1,6 @@
 import { emptyPlannerState, fetchPlannerData } from '@/utils/plannerUtils/apiClient'
 import axios from 'axios'
-import { createContext, useContext, useEffect, useReducer } from 'react'
+import { ReactNode, createContext, useContext, useEffect, useReducer } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { plannerReducer } from './plannerReducer'
 import { PlannerDispatchContextType, PlannerType } from './types'
@@ -16,7 +16,7 @@ export const usePlannerDispatch = () => {
   return useContext(PlannerDispatchContext)
 }
 
-export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+export const PlannerProvider = ({ children }: { children: ReactNode }) => {
   const { showBoundary } = useErrorBoundary()
   const [plannerData, dispatch] = useReducer(plannerReducer, emptyPlannerState)
 

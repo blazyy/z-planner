@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
@@ -44,7 +44,10 @@ export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoard
     <DialogContent>
       <DialogHeader>
         <DialogTitle className='mb-5'>Modify Board</DialogTitle>
-        <DialogDescription>
+        {/* A div, not DialogDescription: that component renders a <p>, and a form
+            inside a paragraph is invalid HTML that browsers re-parent. Classes
+            match DialogDescription so the rendering is identical. */}
+        <div className='text-sm text-muted-foreground'>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
@@ -81,7 +84,7 @@ export const ModifyBoardDialogContent = ({ onCloseDialog, boardId }: ModifyBoard
               </Button>
             </span>
           </div>
-        </DialogDescription>
+        </div>
       </DialogHeader>
     </DialogContent>
   )

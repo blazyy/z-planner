@@ -15,7 +15,7 @@ type CategoryColorPickerProps = {
 export const CategoryColorPicker = ({ color, setColor }: CategoryColorPickerProps) => {
   return (
     <Popover modal={true}>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button variant='outline' className='justify-start w-[230px] font-normal'>
           <div className='flex items-center gap-2 w-full'>
             <div className={cn('h-4 w-4 rounded !bg-center !bg-cover transition-all', badgeClassNames[color])} />

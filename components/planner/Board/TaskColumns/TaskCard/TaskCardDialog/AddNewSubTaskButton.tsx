@@ -13,7 +13,9 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
   const { taskCards, isSubTaskBeingDragged } = usePlanner()
 
   return (
-    <div
+    <button
+      type='button'
+      aria-label='Add subtask'
       className='flex items-center gap-2 mt-1 hover:cursor-pointer'
       onMouseEnter={() => setIsHoveringOver(true)}
       onMouseLeave={() => setIsHoveringOver(false)}
@@ -27,6 +29,6 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
       <span className={`ml-2 text-sm ${isHoveringOver && !isSubTaskBeingDragged ? 'text-blue-500' : 'text-gray-400'}`}>
         Add subtask
       </span>
-    </div>
+    </button>
   )
 }

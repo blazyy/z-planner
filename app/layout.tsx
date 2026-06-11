@@ -1,12 +1,22 @@
+import type { Metadata } from 'next'
 import { Quicksand } from 'next/font/google'
+import { ReactNode } from 'react'
 import './globals.css'
 
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
-export default function RootLayout({ children }: { children: JSX.Element }) {
+export const metadata: Metadata = {
+  title: {
+    default: 'z-planner',
+    template: '%s · z-planner',
+  },
+  description: 'A Kanban-style planner. Boards, columns, drag-and-drop cards, subtasks, and categories.',
+}
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='en' className={quicksand.className}>
-      <body suppressHydrationWarning>{children}</body>
+      <body>{children}</body>
     </html>
   )
 }
