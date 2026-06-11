@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { AddNewColumnDialogContent } from './AddNewColumnDialogContent'
-// import { AddNewBoardDialogContent } from './AddNewBoardDialogContent'
 
 export const AddNewColumnButton = ({ boardId }: { boardId: string }) => {
   const [key, setKey] = useState(0)

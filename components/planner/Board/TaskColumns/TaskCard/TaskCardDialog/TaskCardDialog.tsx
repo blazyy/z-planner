@@ -59,7 +59,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
             onChange={(event) => changeCardContent(id, event.target.value, dispatch, getToken)}
           />
         </CardContent>
-        <CardFooter className='flex justify-between'>{/* <CategoryBadge taskCardId={id} /> */}</CardFooter>
+        <CardFooter className='flex justify-between'></CardFooter>
       </Card>
     </DialogContent>
   )

@@ -46,7 +46,6 @@ export const TaskCardContextMenu = ({ columnId, taskCardId }: TaskCardContextMen
           <DeleteCardContextMenuItem />
           <MoveToBottomContextMenuItem />
           <MoveToTopContextMenuItem />
-          {/* <MoveCardToOtherBoardContextMenuItem boardId={boardId} /> */}
         </ContextMenuContent>
       </ContextMenuItemContext.Provider>
     </ContextMenuWrapper>

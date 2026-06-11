@@ -75,8 +75,6 @@ export type BoardsType = {
 // dataEnteredInTaskCardBeingInitialized - Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
 // in the previous one.
 
-// const initialState = useState(undefined)
-
 export type PlannerType = {
   hasLoaded: boolean
   backendErrorOccurred: boolean
