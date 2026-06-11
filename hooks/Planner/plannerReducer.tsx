@@ -1,8 +1,8 @@
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { Draft, produce } from 'immer'
-import { PlannerType } from './types'
+import { PlannerAction, PlannerType } from './types'
 
-export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
+export const plannerReducer = produce((draft: Draft<PlannerType>, action: PlannerAction) => {
   switch (action.type) {
     case 'dataFetchedFromDatabase': {
       return action.payload
@@ -61,11 +61,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       const { sourceColumnId, destColumnId, sourceColumnTaskCardIds, destColumnTaskCardIds } = action.payload
       draft.columns[sourceColumnId].taskCards = sourceColumnTaskCardIds
       draft.columns[destColumnId].taskCards = destColumnTaskCardIds
-      break
-    }
-    // NO NEED
-    case 'idOfCardBeingDraggedChanged': {
-      draft.idOfCardBeingDragged = action.payload
       break
     }
     // NO NEED
@@ -190,6 +185,11 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       })
       delete draft.categories[categoryId]
       break
+    }
+    default: {
+      // Exhaustiveness check: a new PlannerAction without a case here is a compile error.
+      const unhandled: never = action
+      return unhandled
     }
   }
 })

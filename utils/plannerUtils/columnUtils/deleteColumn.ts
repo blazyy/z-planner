@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
-export default function deleteColumn(boardId: string, columnId: string, dispatch: Dispatch<any>) {
+export default function deleteColumn(boardId: string, columnId: string, dispatch: PlannerDispatchContextType) {
   dispatch({
     type: 'columnDeleted',
     payload: {

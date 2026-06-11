@@ -14,9 +14,9 @@ export const Sidebar = ({ currentPage }: { currentPage: string }) => {
       <div className='flex flex-col justify-between gap-2 w-full h-full'>
         <div>
           <div className='flex flex-col gap-2 w-full'>
-            {boardOrder.map((boardId, i) => (
+            {boardOrder.map((boardId) => (
               <SidebarButton
-                key={i}
+                key={boardId}
                 isCurrentlySelected={boardId === currentPage}
                 label={boards[boardId].name}
                 pathname={`/boards/${boardId}`}

@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 import { useRouter } from 'next/navigation'
 
 export const SidebarButton = ({
@@ -14,13 +13,14 @@ export const SidebarButton = ({
   icon?: React.ReactNode
 }) => {
   const router = useRouter()
-  const filtersDispatch = usePlannerFiltersDispatch()
   return (
     <Button
       variant={isCurrentlySelected ? 'default' : 'ghost'}
       onClick={() => {
+        // Filters live in a provider that remounts with each board page, so
+        // navigation resets them without an explicit dispatch. The old dispatch
+        // here landed in a default context value and silently no-opped anyway.
         router.push(pathname)
-        filtersDispatch({ type: 'filtersReset' })
       }}
     >
       <div className='flex justify-between gap-2 w-full'>

@@ -1,6 +1,7 @@
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { Draggable } from '@hello-pangea/dnd'
+import { memo } from 'react'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnTasks } from './ColumnTasks'
 
@@ -10,7 +11,7 @@ type TaskColumnProps = {
   columnId: string
 }
 
-export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
+export const TaskColumn = memo(function TaskColumn({ index, boardId, columnId }: TaskColumnProps) {
   const { boards, columns } = usePlanner()
   const columnInfo = columns[columnId]
   return (
@@ -28,4 +29,4 @@ export const TaskColumn = ({ index, boardId, columnId }: TaskColumnProps) => {
       )}
     </Draggable>
   )
-}
+})

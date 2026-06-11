@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 export const addNewCategory = (
@@ -9,7 +9,7 @@ export const addNewCategory = (
     name: string
     color: string
   },
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) => {
   dispatch({
     type: 'newCategoryAdded',

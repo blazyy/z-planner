@@ -64,6 +64,7 @@ export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
               })
               plannerDispatch({
                 type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
+                payload: false,
               })
             }}
           >

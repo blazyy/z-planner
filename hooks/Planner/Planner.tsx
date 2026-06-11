@@ -1,12 +1,12 @@
 import { emptyPlannerState, fetchPlannerData } from '@/utils/plannerUtils/apiClient'
 import axios from 'axios'
-import { Dispatch, createContext, useContext, useEffect, useReducer } from 'react'
+import { createContext, useContext, useEffect, useReducer } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { plannerReducer } from './plannerReducer'
-import { PlannerType } from './types'
+import { PlannerDispatchContextType, PlannerType } from './types'
 
 export const PlannerContext = createContext<PlannerType>(emptyPlannerState)
-export const PlannerDispatchContext = createContext<Dispatch<any>>(() => {})
+export const PlannerDispatchContext = createContext<PlannerDispatchContextType>(() => {})
 
 export const usePlanner = () => {
   return useContext(PlannerContext)

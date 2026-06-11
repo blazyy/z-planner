@@ -1,5 +1,5 @@
 import { Dialog } from '@/components/ui/dialog'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 export const ManageItemCardDialogWrapper = ({
   children,
@@ -10,32 +10,27 @@ export const ManageItemCardDialogWrapper = ({
   onCloseDialog: () => void
   conditionToOpenDialog: boolean
 }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
+  // When the nested AlertDialog confirms a delete, the Dialog and the
+  // AlertDialog close in the same update. Radix's dismissable layers race each
+  // other's cleanup and can leave `pointer-events: none` on <body>, freezing
+  // the page. https://github.com/shadcn-ui/ui/issues/1912
+  // Clearing the style once the dialog state has settled to closed (an effect,
+  // which runs after Radix's unmount cleanup) fixes this deterministically.
   useEffect(() => {
-    if (conditionToOpenDialog) {
-      setIsDialogOpen(true)
+    if (!conditionToOpenDialog) {
+      document.body.style.pointerEvents = ''
     }
   }, [conditionToOpenDialog])
 
-  function onOpenChangeHandler(newOpen: boolean) {
-    // shadcn / Radix UI is awful with nested dialogs. What a pain.
-    // https://github.com/shadcn-ui/ui/issues/1912#issuecomment-2187447622
-    // The setTimeout is a workaround for a bug where after you clicked on an action on the alert dialog,
-    // both dialogs would close but the page would become unresponsive-- you couldn't click on anything.
-    if (!newOpen) {
-      onCloseDialog()
-      setIsDialogOpen(false)
-    }
-    setTimeout(() => {
-      if (!newOpen) {
-        document.body.style.pointerEvents = ''
-      }
-    }, 100)
-  }
-
   return (
-    <Dialog open={isDialogOpen} onOpenChange={onOpenChangeHandler}>
+    <Dialog
+      open={conditionToOpenDialog}
+      onOpenChange={(newOpen) => {
+        if (!newOpen) {
+          onCloseDialog()
+        }
+      }}
+    >
       {children}
     </Dialog>
   )

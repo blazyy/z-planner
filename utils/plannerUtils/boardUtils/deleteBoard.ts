@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
-export default function deleteBoard(boardId: string, dispatch: Dispatch<any>) {
+export default function deleteBoard(boardId: string, dispatch: PlannerDispatchContextType) {
   dispatch({
     type: 'boardDeleted',
     payload: {

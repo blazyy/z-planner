@@ -1,6 +1,6 @@
 import { BoardsType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 export const changeColumnOrder = (
@@ -9,7 +9,7 @@ export const changeColumnOrder = (
   draggableId: string,
   sourceIndex: number,
   destIndex: number,
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) => {
   const newColumnOrder = Array.from(boards[boardId].columns)
   newColumnOrder.splice(sourceIndex, 1)

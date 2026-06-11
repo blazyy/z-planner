@@ -17,13 +17,6 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
   const { destination, source, draggableId, type } = result
   const { boards, columns, taskCards } = plannerContext
 
-  if (type === 'card') {
-    dispatch({
-      type: 'idOfCardBeingDraggedChanged',
-      payload: '',
-    })
-  }
-
   // Needed to fix bug where subtask drag handle would behave weirdly after being dropped in
   // position where it was originally dragged from
   if (type === 'subtask') {
@@ -61,11 +54,6 @@ export const handleOnDragStart: OnDragStartFunction = (dragStartObj, dispatch) =
     dispatch({
       type: 'subTaskDragStatusChanged',
       payload: true,
-    })
-  } else if (dragStartObj.type === 'card') {
-    dispatch({
-      type: 'idOfCardBeingDraggedChanged',
-      payload: dragStartObj.draggableId,
     })
   }
 }

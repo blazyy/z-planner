@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
-export default function deleteCard(columnId: string, taskCardId: string, dispatch: Dispatch<any>) {
+export default function deleteCard(columnId: string, taskCardId: string, dispatch: PlannerDispatchContextType) {
   dispatch({
     type: 'taskCardDeleted',
     payload: {
