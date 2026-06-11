@@ -1,14 +1,14 @@
 import { TaskCardsType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export const reorderSubTasks = async (
+export const reorderSubTasks = (
   taskCards: TaskCardsType,
   draggableId: string,
-  sourceIndex: any,
-  destIndex: any,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
+  sourceIndex: number,
+  destIndex: number,
+  dispatch: Dispatch<any>
 ) => {
   const [taskCardId, subTaskId] = draggableId.split('~')
   const reorderedSubTasks = Array.from(taskCards[taskCardId].subTasks)
@@ -21,22 +21,5 @@ export const reorderSubTasks = async (
       reorderedSubTasks,
     },
   })
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/cards/${taskCardId}/subtasks/move`,
-      {
-        reorderedSubTasks,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}/subtasks/move`, { reorderedSubTasks }))
 }

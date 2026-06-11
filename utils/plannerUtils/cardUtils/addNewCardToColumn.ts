@@ -1,8 +1,9 @@
 import { ColumnInfoType, TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export const addNewCardToColumn = async (
+export const addNewCardToColumn = (
   column: ColumnInfoType,
   cardDetails: {
     id: string
@@ -10,8 +11,7 @@ export const addNewCardToColumn = async (
     category: string
     content: string
   },
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
+  dispatch: Dispatch<any>
 ) => {
   const newTaskCardDetails: TaskCardInfoType = {
     id: cardDetails.id,
@@ -31,23 +31,10 @@ export const addNewCardToColumn = async (
       updatedTaskCards,
     },
   })
-  const token = await getToken()
-  axios
-    .post(
-      `/api/planner/columns/${column.id}/cards`,
-      {
-        newTaskCardDetails,
-        updatedTaskCards,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
+  sendMutation(dispatch, () =>
+    axios.post(`/api/planner/columns/${column.id}/cards`, {
+      newTaskCardDetails,
+      updatedTaskCards,
     })
+  )
 }

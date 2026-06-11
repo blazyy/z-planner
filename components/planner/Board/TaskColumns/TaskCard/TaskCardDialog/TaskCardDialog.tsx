@@ -7,7 +7,6 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import changeCardContent from '@/utils/plannerUtils/cardUtils/changeCardContent'
 import changeCardTitle from '@/utils/plannerUtils/cardUtils/changeCardTitle'
-import { useAuth } from '@clerk/nextjs'
 import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 
@@ -19,8 +18,7 @@ type TaskCardDialogProps = {
 
 export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) => {
   const dispatch = usePlannerDispatch()!
-  const { getToken } = useAuth()
-  const { taskCards } = usePlanner()
+  const { taskCards, columns } = usePlanner()
   const task = taskCards[id]
 
   return (
@@ -37,13 +35,13 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
                   className='w-5 h-5'
                   checked={task.status === 'completed'}
                   onCheckedChange={(isChecked) =>
-                    changeCardCheckedStatus(columnId, id, Boolean(isChecked), dispatch, getToken)
+                    changeCardCheckedStatus(columnId, id, Boolean(isChecked), columns[columnId].taskCards, dispatch)
                   }
                 />
                 <Textarea
                   value={task.title}
                   className='items-center p-0 border-none h-[35px] text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-                  onChange={(event) => changeCardTitle(id, event.target.value, dispatch, getToken)}
+                  onChange={(event) => changeCardTitle(id, event.target.value, dispatch)}
                 />
               </div>
             </div>
@@ -56,7 +54,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
             placeholder='Notes...'
             value={task.content}
             className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
-            onChange={(event) => changeCardContent(id, event.target.value, dispatch, getToken)}
+            onChange={(event) => changeCardContent(id, event.target.value, dispatch)}
           />
         </CardContent>
         <CardFooter className='flex justify-between'></CardFooter>

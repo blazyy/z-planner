@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import changeCardCategory from '@/utils/plannerUtils/cardUtils/changeCardCategory'
-import { useAuth } from '@clerk/nextjs'
 import { badgeClassNames, badgeClassNamesWithoutHover } from './utils'
 
 type CategoryBadgeProps = {
@@ -16,7 +15,6 @@ type CategoryBadgeProps = {
 }
 
 export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
-  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()!
   const { boards, taskCards, categories } = usePlanner()
   const categoryInfo = categories[taskCards[taskCardId].category]
@@ -34,7 +32,7 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
             checked={categoryInfo.name === categories[categoryId].name}
             onClick={(event) => {
               event.preventDefault()
-              changeCardCategory(taskCardId, categoryId, dispatch, getToken)
+              changeCardCategory(taskCardId, categoryId, dispatch)
             }}
           >
             <Badge variant='defaultNoHover' className={badgeClassNamesWithoutHover[categories[categoryId].color]}>

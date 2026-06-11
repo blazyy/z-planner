@@ -7,7 +7,6 @@ import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { addNewCardToColumn } from '@/utils/plannerUtils/cardUtils/addNewCardToColumn'
-import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -29,7 +28,6 @@ const formSchema = z.object({
 })
 
 export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {
-  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()
   const { columns, taskCardBeingInitialized } = usePlanner()
   const [selectedCategory, setSelectedCategory] = useState(UNASSIGNED_CATEGORY_ID)
@@ -64,7 +62,7 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
       category: selectedCategory,
       content: values.taskCardDesc,
     }
-    addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch, getToken)
+    addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch)
     toast.success('Task added.')
   }
 

@@ -8,7 +8,6 @@ import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { changeCategoryInfo } from '@/utils/plannerUtils/categoryUtils/changeCategoryInfo'
 import deleteCategory from '@/utils/plannerUtils/categoryUtils/deleteCategory'
-import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -34,7 +33,6 @@ export const ModifyCategoryDialogContent = ({
   categoryId,
   onCloseDialog,
 }: ModifyCategoryDialogContentProps) => {
-  const { getToken } = useAuth()
   const { categories } = usePlanner()
   const dispatch = usePlannerDispatch()
 
@@ -49,7 +47,7 @@ export const ModifyCategoryDialogContent = ({
   const [categoryColor, setCategoryColor] = useState(categories[categoryId].color)
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch, getToken)
+    changeCategoryInfo(categoryId, values.categoryName, categoryColor, dispatch)
     onCloseDialog()
     toast.success('Category details changed.')
   }
@@ -84,7 +82,7 @@ export const ModifyCategoryDialogContent = ({
             <ManageItemAlertDialog
               onCloseParentDialog={onCloseDialog}
               onClickDelete={() => {
-                deleteCategory(boardId, categoryId, dispatch, getToken)
+                deleteCategory(boardId, categoryId, dispatch)
                 toast.success('Category deleted.')
               }}
               isDeleteButtonDisabled={false}

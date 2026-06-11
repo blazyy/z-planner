@@ -1,13 +1,9 @@
 import { UNASSIGNED_CATEGORY_COLOR, UNASSIGNED_CATEGORY_ID, UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export const addNewBoardToPlanner = async (
-  boardId: string,
-  boardName: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) => {
+export const addNewBoardToPlanner = (boardId: string, boardName: string, dispatch: Dispatch<any>) => {
   const unassignedCategoryDetails = {
     id: UNASSIGNED_CATEGORY_ID,
     name: UNASSIGNED_CATEGORY_NAME,
@@ -22,25 +18,11 @@ export const addNewBoardToPlanner = async (
       unassignedCategoryDetails,
     },
   })
-
-  const token = await getToken()
-  axios
-    .post(
-      '/api/planner/boards',
-      {
-        boardId,
-        boardName,
-        unassignedCategoryDetails,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
+  sendMutation(dispatch, () =>
+    axios.post('/api/planner/boards', {
+      boardId,
+      boardName,
+      unassignedCategoryDetails,
     })
+  )
 }

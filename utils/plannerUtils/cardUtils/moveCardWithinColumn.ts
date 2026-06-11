@@ -1,15 +1,15 @@
 import { ColumnsType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export default async function moveCardWithinColumn(
+export default function moveCardWithinColumn(
   columns: ColumnsType,
   columnId: string,
   cardId: string,
-  sourceIndex: any,
-  destIndex: any,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
+  sourceIndex: number,
+  destIndex: number,
+  dispatch: Dispatch<any>
 ) {
   const startingColumn = columns[columnId]
   const reorderedCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards
@@ -23,20 +23,5 @@ export default async function moveCardWithinColumn(
       reorderedCardIds,
     },
   })
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/columns/${columnId}/cards/reorder`,
-      { reorderedCardIds },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.patch(`/api/planner/columns/${columnId}/cards/reorder`, { reorderedCardIds }))
 }

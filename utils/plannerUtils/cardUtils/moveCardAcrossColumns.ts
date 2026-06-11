@@ -1,14 +1,15 @@
 import { ColumnsType } from '@/hooks/Planner/types'
+import type { DraggableLocation } from '@hello-pangea/dnd'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export default async function moveCardAcrossColumns(
+export default function moveCardAcrossColumns(
   columns: ColumnsType,
   draggedCardId: string,
-  source: any,
-  destination: any,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
+  source: DraggableLocation,
+  destination: DraggableLocation,
+  dispatch: Dispatch<any>
 ) {
   const sourceColumnId = source.droppableId
   const sourceColumn = columns[sourceColumnId]
@@ -29,25 +30,12 @@ export default async function moveCardAcrossColumns(
       destColumnTaskCardIds,
     },
   })
-  const token = await getToken()
-  axios
-    .patch(
-      `/api/planner/cards/${draggedCardId}/move`,
-      {
-        sourceColumnId,
-        destColumnId,
-        sourceColumnTaskCardIds,
-        destColumnTaskCardIds,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
+  sendMutation(dispatch, () =>
+    axios.patch(`/api/planner/cards/${draggedCardId}/move`, {
+      sourceColumnId,
+      destColumnId,
+      sourceColumnTaskCardIds,
+      destColumnTaskCardIds,
     })
+  )
 }

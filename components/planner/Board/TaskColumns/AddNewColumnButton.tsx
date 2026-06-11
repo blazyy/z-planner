@@ -3,7 +3,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { addNewColumn } from '@/utils/plannerUtils/columnUtils/addNewColumn'
-import { useAuth } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -16,7 +15,6 @@ type AddNewColumnFormProps = {
 }
 
 const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps) => {
-  const { getToken } = useAuth()
   const dispatch = usePlannerDispatch()!
   const { boards } = usePlanner()
 
@@ -34,7 +32,7 @@ const AddNewColumnForm = ({ boardId, setIsAddingColumn }: AddNewColumnFormProps)
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addNewColumn(boards[boardId], values.columnName, dispatch, getToken)
+    addNewColumn(boards[boardId], values.columnName, dispatch)
     setIsAddingColumn(false)
   }
 

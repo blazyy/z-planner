@@ -1,13 +1,9 @@
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export default async function deleteSubTask(
-  taskCard: TaskCardInfoType,
-  subTaskId: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) {
+export default function deleteSubTask(taskCard: TaskCardInfoType, subTaskId: string, dispatch: Dispatch<any>) {
   /* Moves cursor focus to subtask above using the subtask ID */
   const subTasksCopy = Array.from(taskCard.subTasks)
   const subTaskIndex = subTasksCopy.findIndex((id: string) => id === subTaskId)
@@ -24,16 +20,5 @@ export default async function deleteSubTask(
       newSubtasks,
     },
   })
-  const token = await getToken()
-  axios
-    .delete(`/api/planner/cards/${taskCard.id}/subtasks/${subTaskId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
-    })
+  sendMutation(dispatch, () => axios.delete(`/api/planner/cards/${taskCard.id}/subtasks/${subTaskId}`))
 }

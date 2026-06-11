@@ -2,13 +2,9 @@ import { NANOID } from '@/constants/constants'
 import { BoardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { Dispatch } from 'react'
+import { sendMutation } from '../apiClient'
 
-export const addNewColumn = async (
-  board: BoardInfoType,
-  newColumnName: string,
-  dispatch: Dispatch<any>,
-  getToken: () => Promise<string | null>
-) => {
+export const addNewColumn = (board: BoardInfoType, newColumnName: string, dispatch: Dispatch<any>) => {
   const newColumnId = NANOID()
   const newColumnDetails = {
     id: newColumnId,
@@ -16,7 +12,7 @@ export const addNewColumn = async (
     taskCards: [],
   }
   const updatedColumns = Array.from(board.columns)
-  updatedColumns.push(newColumnDetails.id) // Add to beginning of array
+  updatedColumns.push(newColumnDetails.id)
   dispatch({
     type: 'newColumnAdded',
     payload: {
@@ -25,23 +21,10 @@ export const addNewColumn = async (
       updatedColumns,
     },
   })
-  const token = await getToken()
-  axios
-    .post(
-      `/api/planner/boards/${board.id}/columns`,
-      {
-        newColumnDetails,
-        updatedColumns,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .catch((error) => {
-      dispatch({
-        type: 'backendErrorOccurred',
-      })
+  sendMutation(dispatch, () =>
+    axios.post(`/api/planner/boards/${board.id}/columns`, {
+      newColumnDetails,
+      updatedColumns,
     })
+  )
 }

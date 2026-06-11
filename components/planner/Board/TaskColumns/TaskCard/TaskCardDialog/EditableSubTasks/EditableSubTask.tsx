@@ -4,7 +4,6 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { SubTaskInfoType } from '@/hooks/Planner/types'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 import changeSubTaskTitle from '@/utils/plannerUtils/subTaskUtils/changeSubTaskTitle'
-import { useAuth } from '@clerk/nextjs'
 import { DraggableProvided } from '@hello-pangea/dnd'
 import { GripVertical } from 'lucide-react'
 import { useState } from 'react'
@@ -22,7 +21,6 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
   const { isSubTaskBeingDragged, taskCards, subTasks } = usePlanner()
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = usePlannerDispatch()!
-  const { getToken } = useAuth()
   return (
     <div
       ref={provided.innerRef}
@@ -43,7 +41,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
       <Checkbox
         id={`${index}`}
         checked={subTask.checked}
-        onCheckedChange={(isChecked) => changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch, getToken)}
+        onCheckedChange={(isChecked) => changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch)}
       />
       <Input
         autoFocus
@@ -51,10 +49,8 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         type='text'
         value={subTask.title}
         className='my-1 px-1 border-none h-1 text-gray-500 text-sm focus-visible:ring-0 focus-visible:ring-transparent'
-        onKeyDown={(event) =>
-          handleKeyDownOnSubTask(taskCards, subTasks, taskCardId, subTask, event, dispatch, getToken)
-        }
-        onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch, getToken)}
+        onKeyDown={(event) => handleKeyDownOnSubTask(taskCards, subTasks, taskCardId, subTask, event, dispatch)}
+        onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch)}
       />
     </div>
   )

@@ -1,27 +1,11 @@
-import { useAuth } from '@clerk/nextjs'
+import { emptyPlannerState, fetchPlannerData } from '@/utils/plannerUtils/apiClient'
 import axios from 'axios'
 import { Dispatch, createContext, useContext, useEffect, useReducer } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { plannerReducer } from './plannerReducer'
 import { PlannerType } from './types'
 
-const initialEmptyState: PlannerType = {
-  hasLoaded: false,
-  backendErrorOccurred: false,
-  isSubTaskBeingDragged: false,
-  idOfCardBeingDragged: '',
-  taskCardBeingInitialized: null,
-  dataEnteredInTaskCardBeingInitialized: false,
-  scheduledTaskCards: [],
-  boardOrder: [],
-  boards: {},
-  columns: {},
-  categories: {},
-  taskCards: {},
-  subTasks: {},
-}
-
-export const PlannerContext = createContext<PlannerType>(initialEmptyState)
+export const PlannerContext = createContext<PlannerType>(emptyPlannerState)
 export const PlannerDispatchContext = createContext<Dispatch<any>>(() => {})
 
 export const usePlanner = () => {
@@ -34,40 +18,26 @@ export const usePlannerDispatch = () => {
 
 export const PlannerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
   const { showBoundary } = useErrorBoundary()
-  const [plannerData, dispatch] = useReducer(plannerReducer, initialEmptyState)
-  const { getToken } = useAuth()
+  const [plannerData, dispatch] = useReducer(plannerReducer, emptyPlannerState)
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = await getToken()
-      axios
-        .get('/api/planner', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          const data = response.data
-          dispatch({
-            type: 'dataFetchedFromDatabase',
-            payload: {
-              ...initialEmptyState,
-              hasLoaded: true,
-              boardOrder: data.boardOrder,
-              boards: data.boards,
-              columns: data.columns,
-              categories: data.categories,
-              taskCards: data.taskCards,
-              subTasks: data.subTasks,
-            },
-          })
-        })
-        .catch((error) => showBoundary(error))
+    if (plannerData.hasLoaded) {
+      return
     }
-    if (!plannerData.hasLoaded) {
-      fetchData()
-    }
-  }, [showBoundary, getToken, plannerData.hasLoaded])
+    // Abort on unmount so a StrictMode double-mount (or quick navigation) can't
+    // resolve a stale fetch over the live store.
+    const controller = new AbortController()
+    fetchPlannerData(controller.signal)
+      .then((payload) => {
+        dispatch({ type: 'dataFetchedFromDatabase', payload })
+      })
+      .catch((error) => {
+        if (!axios.isCancel(error)) {
+          showBoundary(error)
+        }
+      })
+    return () => controller.abort()
+  }, [showBoundary, plannerData.hasLoaded])
 
   return (
     <PlannerContext.Provider value={plannerData}>

@@ -77,12 +77,10 @@ export type BoardsType = {
 
 export type PlannerType = {
   hasLoaded: boolean
-  backendErrorOccurred: boolean
   isSubTaskBeingDragged: boolean
   idOfCardBeingDragged: string
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   dataEnteredInTaskCardBeingInitialized: boolean
-  scheduledTaskCards: string[]
   boardOrder: string[]
   boards: BoardsType
   columns: ColumnsType

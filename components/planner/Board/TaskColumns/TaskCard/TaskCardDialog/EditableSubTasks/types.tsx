@@ -12,8 +12,7 @@ export type HandleKeyDownOnSubTaskFunc = (
   taskCardId: string,
   subTask: SubTaskInfoType,
   event: React.KeyboardEvent<HTMLInputElement>,
-  dispatch: PlannerDispatchContextType,
-  getToken: () => Promise<string | null>
+  dispatch: PlannerDispatchContextType
 ) => void
 
 export type HandleArrowDownFunc = (taskCards: TaskCardsType, taskCardId: string, subTask: SubTaskInfoType) => void
@@ -24,14 +23,12 @@ export type HandleBackspaceFunc = (
   taskCard: TaskCardInfoType,
   subTaskId: string,
   event: React.KeyboardEvent<HTMLInputElement>,
-  dispatch: PlannerDispatchContextType,
-  getToken: () => Promise<string | null>
+  dispatch: PlannerDispatchContextType
 ) => void
 
 export type HandleEnterFunc = (
   taskCards: TaskCardsType,
   taskCardId: string,
   subTask: SubTaskInfoType,
-  dispatch: PlannerDispatchContextType,
-  getToken: () => Promise<string | null>
+  dispatch: PlannerDispatchContextType
 ) => void

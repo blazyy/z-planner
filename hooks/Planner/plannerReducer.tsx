@@ -7,10 +7,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
     case 'dataFetchedFromDatabase': {
       return action.payload
     }
-    case 'backendErrorOccurred': {
-      draft.backendErrorOccurred = true
-      break
-    }
     case 'newBoardAdded': {
       const { boardId, boardName, unassignedCategoryDetails } = action.payload
       draft.boardOrder.push(boardId)
@@ -65,11 +61,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action) => {
       const { sourceColumnId, destColumnId, sourceColumnTaskCardIds, destColumnTaskCardIds } = action.payload
       draft.columns[sourceColumnId].taskCards = sourceColumnTaskCardIds
       draft.columns[destColumnId].taskCards = destColumnTaskCardIds
-      break
-    }
-    case 'cardScheduledOnCalendar': {
-      const { taskCardId } = action.payload
-      if (draft.scheduledTaskCards.indexOf(taskCardId) === -1) draft.scheduledTaskCards.push(taskCardId)
       break
     }
     // NO NEED
