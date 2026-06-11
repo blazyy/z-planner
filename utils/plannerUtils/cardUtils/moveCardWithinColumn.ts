@@ -1,6 +1,6 @@
 import { ColumnsType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 export default function moveCardWithinColumn(
@@ -9,7 +9,7 @@ export default function moveCardWithinColumn(
   cardId: string,
   sourceIndex: number,
   destIndex: number,
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) {
   const startingColumn = columns[columnId]
   const reorderedCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards

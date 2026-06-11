@@ -1,15 +1,13 @@
 import { DEBOUNCE_TIME_MS } from '@/constants/constants'
-import { PlannerType } from '@/hooks/Planner/types'
+import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import axios from 'axios'
 import { DebouncedFunc } from 'lodash'
 import debounce from 'lodash/debounce'
-import { Dispatch } from 'react'
 import { toast } from 'sonner'
 
 export const emptyPlannerState: PlannerType = {
   hasLoaded: false,
   isSubTaskBeingDragged: false,
-  idOfCardBeingDragged: '',
   taskCardBeingInitialized: null,
   dataEnteredInTaskCardBeingInitialized: false,
   boardOrder: [],
@@ -48,7 +46,7 @@ export async function fetchPlannerData(signal?: AbortSignal): Promise<PlannerTyp
 let writeChain: Promise<unknown> = Promise.resolve()
 let refetchScheduled = false
 
-export function sendMutation(dispatch: Dispatch<any>, request: () => Promise<unknown>): void {
+export function sendMutation(dispatch: PlannerDispatchContextType, request: () => Promise<unknown>): void {
   writeChain = writeChain.then(request).catch((error) => {
     console.error('Mutation failed:', error)
     if (refetchScheduled) {
@@ -74,12 +72,12 @@ export function sendMutation(dispatch: Dispatch<any>, request: () => Promise<unk
  * editing card A's title and then clicking into card B within 500ms silently
  * cancelled A's save forever.
  */
-const debouncedSenders = new Map<string, DebouncedFunc<(dispatch: Dispatch<any>, request: () => Promise<unknown>) => void>>()
+const debouncedSenders = new Map<string, DebouncedFunc<(dispatch: PlannerDispatchContextType, request: () => Promise<unknown>) => void>>()
 
-export function sendDebouncedMutation(key: string, dispatch: Dispatch<any>, request: () => Promise<unknown>): void {
+export function sendDebouncedMutation(key: string, dispatch: PlannerDispatchContextType, request: () => Promise<unknown>): void {
   let sender = debouncedSenders.get(key)
   if (!sender) {
-    sender = debounce((latestDispatch: Dispatch<any>, latestRequest: () => Promise<unknown>) => {
+    sender = debounce((latestDispatch: PlannerDispatchContextType, latestRequest: () => Promise<unknown>) => {
       debouncedSenders.delete(key)
       sendMutation(latestDispatch, latestRequest)
     }, DEBOUNCE_TIME_MS)

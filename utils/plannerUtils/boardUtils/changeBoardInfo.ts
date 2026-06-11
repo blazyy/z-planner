@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
-export const changeBoardInfo = (boardId: string, newName: string, dispatch: Dispatch<any>) => {
+export const changeBoardInfo = (boardId: string, newName: string, dispatch: PlannerDispatchContextType) => {
   dispatch({
     type: 'boardNameChanged',
     payload: {

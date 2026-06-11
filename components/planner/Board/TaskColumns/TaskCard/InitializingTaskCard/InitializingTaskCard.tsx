@@ -8,7 +8,7 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { addNewCardToColumn } from '@/utils/plannerUtils/cardUtils/addNewCardToColumn'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
@@ -42,18 +42,24 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
 
   const [isFormEmpty, setIsFormEmpty] = useState(true)
 
-  form.watch((value) => {
-    dispatch({
-      type: 'taskCardBeingInitializedHighlightStatusChange',
-      payload: false,
+  // The callback form of watch() registers a subscription, so it belongs in an
+  // effect with cleanup — calling it in the render body leaked one subscription
+  // per keystroke.
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      dispatch({
+        type: 'taskCardBeingInitializedHighlightStatusChange',
+        payload: false,
+      })
+      const dataEntered = value.taskCardTitle !== '' || value.taskCardDesc !== ''
+      setIsFormEmpty(!dataEntered)
+      dispatch({
+        type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
+        payload: dataEntered,
+      })
     })
-    const dataEntered = value.taskCardTitle !== '' || value.taskCardDesc !== ''
-    setIsFormEmpty(!dataEntered)
-    dispatch({
-      type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
-      payload: dataEntered,
-    })
-  })
+    return () => subscription.unsubscribe()
+  }, [form, dispatch])
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newTaskCardDetails = {

@@ -1,14 +1,14 @@
 import { NANOID } from '@/constants/constants'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 const addNewSubTask = (
   taskCardId: string,
   newSubTaskId: string,
   newSubTasksOrder: string[],
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) => {
   const newSubTaskDetails = {
     id: newSubTaskId,
@@ -34,7 +34,7 @@ const addNewSubTask = (
 export const addNewSubTaskToCardOnEnterKeydown = (
   taskCard: TaskCardInfoType,
   existingSubTaskId: string,
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) => {
   const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
@@ -43,7 +43,7 @@ export const addNewSubTaskToCardOnEnterKeydown = (
   addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch)
 }
 
-export const addNewSubTaskOnButtonClick = (taskCard: TaskCardInfoType, dispatch: Dispatch<any>) => {
+export const addNewSubTaskOnButtonClick = (taskCard: TaskCardInfoType, dispatch: PlannerDispatchContextType) => {
   const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
   newSubTasksOrder.push(newSubTaskId)

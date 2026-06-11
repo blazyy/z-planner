@@ -1,7 +1,7 @@
 import { ColumnsType } from '@/hooks/Planner/types'
 import type { DraggableLocation } from '@hello-pangea/dnd'
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 export default function moveCardAcrossColumns(
@@ -9,7 +9,7 @@ export default function moveCardAcrossColumns(
   draggedCardId: string,
   source: DraggableLocation,
   destination: DraggableLocation,
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) {
   const sourceColumnId = source.droppableId
   const sourceColumn = columns[sourceColumnId]

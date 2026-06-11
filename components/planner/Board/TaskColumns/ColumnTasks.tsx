@@ -3,14 +3,19 @@ import { usePlanner } from '@/hooks/Planner/Planner'
 import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
 import { cn } from '@/lib/utils'
 import { Droppable } from '@hello-pangea/dnd'
+import { memo } from 'react'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 import { TaskCard } from './TaskCard/TaskCard'
 
-export const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: string }) => {
+export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { boardId: string; columnId: string }) {
   const { boards, columns, taskCards, taskCardBeingInitialized } = usePlanner()
   const { searchQuery, selectedCategories } = usePlannerFilters()
   const categoriesInBoard = boards[boardId].categories
   const columnInfo = columns[columnId]
+  // While a filter is active the rendered list diverges from the canonical column order, so a drop
+  // index can't be mapped back to the right position in the canonical array. Dragging is disabled
+  // instead; filtering then mapping keeps Draggable indices consecutive, which the dnd library requires.
+  const isFilterActive = searchQuery !== '' || selectedCategories.length > 0
   return (
     <Droppable droppableId={columnInfo.id} type='card'>
       {(provided, snapshot) => (
@@ -29,7 +34,7 @@ export const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: 
             )}
             {columnInfo.taskCards
               .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
-              .map((taskCardId, index) => {
+              .filter((taskCardId) => {
                 const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
                   .toLowerCase()
                   .includes(searchQuery.toLowerCase())
@@ -37,17 +42,18 @@ export const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: 
                 const doesTaskCardBelongToSelectedCategories =
                   selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
 
-                if (doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories)
-                  return (
-                    <TaskCard
-                      key={taskCardId}
-                      index={index}
-                      boardId={boardId}
-                      columnId={columnId}
-                      taskCardId={taskCardId}
-                    />
-                  )
-              })}
+                return doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories
+              })
+              .map((taskCardId, index) => (
+                <TaskCard
+                  key={taskCardId}
+                  index={index}
+                  boardId={boardId}
+                  columnId={columnId}
+                  taskCardId={taskCardId}
+                  isDragDisabled={isFilterActive}
+                />
+              ))}
             {provided.placeholder}
           </div>
           <ScrollBar orientation='vertical' />
@@ -55,4 +61,4 @@ export const ColumnTasks = ({ boardId, columnId }: { boardId: string; columnId: 
       )}
     </Droppable>
   )
-}
+})

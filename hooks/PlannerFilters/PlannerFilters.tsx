@@ -7,9 +7,16 @@ type PlannerFiltersType = {
   selectedCategories: string[]
 }
 
-const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action) => {
+export type PlannerFiltersAction =
+  | { type: 'selectedCategoriesChanged'; payload: { clickedCategory: string } }
+  | { type: 'searchQueryChanged'; payload: { searchQuery: string } }
+  | { type: 'filtersReset' }
+
+export type PlannerFiltersDispatchType = Dispatch<PlannerFiltersAction>
+
+const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action: PlannerFiltersAction) => {
   switch (action.type) {
-    case 'selectedCategoriesChanged':
+    case 'selectedCategoriesChanged': {
       const { clickedCategory } = action.payload
       if (draft.selectedCategories.indexOf(clickedCategory) === -1) {
         draft.selectedCategories.push(clickedCategory)
@@ -17,14 +24,17 @@ const plannerFiltersReducer = produce((draft: Draft<PlannerFiltersType>, action)
         draft.selectedCategories = draft.selectedCategories.filter((cat: string) => cat != clickedCategory)
       }
       break
-    case 'searchQueryChanged':
+    }
+    case 'searchQueryChanged': {
       const { searchQuery } = action.payload
       draft.searchQuery = searchQuery
       break
-    case 'filtersReset':
+    }
+    case 'filtersReset': {
       draft.searchQuery = ''
       draft.selectedCategories = []
       break
+    }
   }
 })
 
@@ -35,7 +45,7 @@ const initialPlannerFilterEmptyState: PlannerFiltersType = {
 }
 
 export const PlannerFiltersContext = createContext<PlannerFiltersType>(initialPlannerFilterEmptyState)
-export const PlannerFiltersDispatchContext = createContext<Dispatch<any>>(() => {})
+export const PlannerFiltersDispatchContext = createContext<PlannerFiltersDispatchType>(() => {})
 
 export const usePlannerFilters = () => {
   return useContext(PlannerFiltersContext)

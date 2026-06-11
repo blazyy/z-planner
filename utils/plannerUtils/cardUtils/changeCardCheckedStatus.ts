@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 export default function changeCardCheckedStatus(
@@ -7,7 +7,7 @@ export default function changeCardCheckedStatus(
   taskCardId: string,
   isChecked: boolean,
   columnTaskCardIds: string[],
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) {
   dispatch({
     type: 'taskCardCheckedStatusChanged',

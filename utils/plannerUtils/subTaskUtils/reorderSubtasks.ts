@@ -1,6 +1,6 @@
 import { TaskCardsType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 export const reorderSubTasks = (
@@ -8,7 +8,7 @@ export const reorderSubTasks = (
   draggableId: string,
   sourceIndex: number,
   destIndex: number,
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) => {
   const [taskCardId, subTaskId] = draggableId.split('~')
   const reorderedSubTasks = Array.from(taskCards[taskCardId].subTasks)

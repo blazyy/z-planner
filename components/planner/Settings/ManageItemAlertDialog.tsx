@@ -30,17 +30,13 @@ export const ManageItemAlertDialog = ({
     <AlertDialog
       open={isOpen}
       onOpenChange={(newOpen) => {
+        // The stuck `pointer-events: none` on <body> after the simultaneous
+        // dialog + alert-dialog close (shadcn-ui/ui#1912) is cleaned up
+        // deterministically by ManageItemCardDialogWrapper when the parent
+        // dialog closes, so no workaround is needed here.
         if (!newOpen) {
           setIsOpen(false)
         }
-        // https://github.com/shadcn-ui/ui/issues/1912#issuecomment-2187447622
-        // The setTimeout is a workaround for a bug where after you clicked on an action on the alert dialog,
-        // both dialogs would close but the page would become unresponsive-- you couldn't click on anything.
-        setTimeout(() => {
-          if (!newOpen) {
-            document.body.style.pointerEvents = ''
-          }
-        }, 100)
       }}
     >
       <div className='flex justify-between items-end gap-2'>

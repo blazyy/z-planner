@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
-export default function changeSubTaskCheckedStatus(subTaskId: string, isChecked: boolean, dispatch: Dispatch<any>) {
+export default function changeSubTaskCheckedStatus(subTaskId: string, isChecked: boolean, dispatch: PlannerDispatchContextType) {
   dispatch({
     type: 'subTasksCheckedStatusChanged',
     payload: {

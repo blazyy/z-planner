@@ -1,6 +1,6 @@
 import { ColumnInfoType, TaskCardInfoType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { Dispatch } from 'react'
+import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
 export const addNewCardToColumn = (
@@ -11,7 +11,7 @@ export const addNewCardToColumn = (
     category: string
     content: string
   },
-  dispatch: Dispatch<any>
+  dispatch: PlannerDispatchContextType
 ) => {
   const newTaskCardDetails: TaskCardInfoType = {
     id: cardDetails.id,
