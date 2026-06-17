@@ -93,6 +93,80 @@ export function withDbConnect(handler: Handler): Handler {
   }
 }
 
+/*
+ * In-memory per-user token-bucket rate limiter.
+ *
+ * Numbers (documented): the app fires debounced autosaves on keystrokes plus
+ * drag-and-drop reorders, so a single active user can legitimately burst a lot
+ * of mutations in a short window. We size for that:
+ *   - RATE_LIMIT_CAPACITY = 60 tokens — burst budget. A user can fire up to 60
+ *     requests back-to-back (covers a flurry of debounced saves + a DnD spree)
+ *     before being throttled.
+ *   - RATE_LIMIT_REFILL_PER_SEC = 10 tokens/sec — steady-state replenish. Once
+ *     the burst is spent, sustained traffic is capped at ~10 req/s/user, which
+ *     is well above any human-driven save/reorder cadence but bounds abuse.
+ * A full bucket therefore tolerates a 60-request burst, then 10 req/s forever.
+ *
+ * SERVERLESS CAVEAT: this state is a module-level Map, so it is per-process.
+ * Under serverless (multiple lambda instances) the effective limit is
+ * per-instance, not global — N instances => up to N*capacity burst. That is
+ * acceptable for this app: the goal is cheap, dependency-free protection
+ * against a single runaway client/tab, not a hard global quota. A global cap
+ * would need an external store (Redis et al.), deliberately out of scope here.
+ */
+export const RATE_LIMIT_CAPACITY = 60
+export const RATE_LIMIT_REFILL_PER_SEC = 10
+
+interface TokenBucket {
+  tokens: number
+  lastRefill: number
+}
+
+// Keyed by userId. Module-level so it survives across requests within a process.
+const rateLimitBuckets = new Map<string, TokenBucket>()
+
+/** Test-only: clear all buckets so suites don't leak token state across cases. */
+export function __resetRateLimit(): void {
+  rateLimitBuckets.clear()
+}
+
+/*
+ * Per-user token bucket. Inserted AFTER withAuth so req.userId is populated and
+ * the limit is keyed per tenant. Refills lazily from elapsed wall-clock time on
+ * each request (no timers). On exhaustion returns 429 with a Retry-After hint.
+ */
+export function withRateLimit(handler: Handler): Handler {
+  return async (req, context) => {
+    // Should always be set (withAuth runs first); fall back defensively so an
+    // unkeyed request can't bypass the limiter entirely.
+    const key = req.userId ?? '__anonymous__'
+    const now = Date.now()
+
+    let bucket = rateLimitBuckets.get(key)
+    if (!bucket) {
+      bucket = { tokens: RATE_LIMIT_CAPACITY, lastRefill: now }
+      rateLimitBuckets.set(key, bucket)
+    } else {
+      const elapsedSec = (now - bucket.lastRefill) / 1000
+      if (elapsedSec > 0) {
+        bucket.tokens = Math.min(RATE_LIMIT_CAPACITY, bucket.tokens + elapsedSec * RATE_LIMIT_REFILL_PER_SEC)
+        bucket.lastRefill = now
+      }
+    }
+
+    if (bucket.tokens < 1) {
+      // Seconds until one whole token is available again.
+      const retryAfter = Math.ceil((1 - bucket.tokens) / RATE_LIMIT_REFILL_PER_SEC)
+      const res = jsonError(429, 'Too many requests')
+      res.headers.set('Retry-After', String(retryAfter))
+      return res
+    }
+
+    bucket.tokens -= 1
+    return await handler(req, context)
+  }
+}
+
 export function withAuth(handler: Handler): Handler {
   return async (req, context) => {
     // Clerk v6: auth() is async and must be awaited.
@@ -119,6 +193,15 @@ export function withErrorHandling(handler: Handler): Handler {
   }
 }
 
+/*
+ * Composition order (outer -> inner):
+ *   withErrorHandling( withAuth( withRateLimit( withDbConnect(h) ) ) )
+ *
+ * - withAuth before withRateLimit so the limiter keys on req.userId (per tenant)
+ *   and unauthenticated traffic 401s without consuming any bucket.
+ * - withRateLimit before the DB connect/handler so throttled requests are cheap
+ *   (no DB work for a 429).
+ */
 export function withMiddleware(handler: Handler): Handler {
-  return withErrorHandling(withAuth(withDbConnect(handler)))
+  return withErrorHandling(withAuth(withRateLimit(withDbConnect(handler))))
 }
