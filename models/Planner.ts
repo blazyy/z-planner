@@ -17,6 +17,11 @@ const taskCardSchema = new Schema(
     content: { type: String, default: '' },
     status: { type: String, required: true, enum: ['created', 'completed', 'archived'] },
     subTasks: [String],
+    // Internal, UI-invisible. Set the moment a card is archived on read so the
+    // archived-card purge (app/api/planner/route.ts) can keep the N most-recent
+    // archived cards and drop the oldest. Optional: legacy archived cards
+    // predating this field have no archivedAt and are treated as oldest.
+    archivedAt: { type: Date },
   },
   { _id: false }
 )
