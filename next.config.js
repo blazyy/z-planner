@@ -5,12 +5,12 @@ const nextConfig = {
     return [
       {
         // Canonicalize the auto-assigned Vercel domain onto the custom domain
-        // where the Clerk production instance is configured. 307 during cutover
-        // so browsers don't hard-cache it; flip to permanent once stable.
+        // where the Clerk production instance is configured. Permanent (308)
+        // now that the cutover is verified stable.
         source: '/:path*',
         has: [{ type: 'host', value: 'zenith-planner.vercel.app' }],
         destination: 'https://zplanner.faaez.co.in/:path*',
-        permanent: false,
+        permanent: true,
       },
     ]
   },
