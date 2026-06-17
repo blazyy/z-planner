@@ -6,7 +6,7 @@ import { addNewColumn } from '@/utils/plannerUtils/columnUtils/addNewColumn'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { MdAdd } from 'react-icons/md'
+import { Plus } from 'lucide-react'
 import * as z from 'zod'
 
 type AddNewColumnFormProps = {
@@ -69,7 +69,7 @@ export const AddNewColumnButton = ({ boardId }: AddNewColumnButtonProps) => {
         <div className='flex justify-center items-center gap-2 cursor-pointer'>
           <Button variant='secondary' onClick={() => setIsAddingColumn(true)}>
             Add New Column
-            <MdAdd className='ml-2 w-5 h-5' />
+            <Plus className='ml-2 w-5 h-5' />
           </Button>
         </div>
       )}

@@ -2,7 +2,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { NANOID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { useEffect } from 'react'
-import { FaPlus } from 'react-icons/fa6'
+import { Plus } from 'lucide-react'
 
 export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
   const { taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlanner()
@@ -48,7 +48,7 @@ export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
             }
           }}
         >
-          <FaPlus className='text-gray-400' />
+          <Plus className='text-gray-400' size='1em' />
         </TooltipTrigger>
         <TooltipContent>Add new card</TooltipContent>
       </Tooltip>
