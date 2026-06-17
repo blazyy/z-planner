@@ -22,7 +22,7 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger aria-label={`Change category (currently ${categoryInfo.name})`}>
         <Badge className={badgeClassNames[categoryInfo.color]}>{categoryInfo.name}</Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>

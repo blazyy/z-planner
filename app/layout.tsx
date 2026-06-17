@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@/components/theme-provider'
 import type { Metadata } from 'next'
 import { Quicksand } from 'next/font/google'
 import { ReactNode } from 'react'
@@ -15,8 +16,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' className={quicksand.className}>
-      <body>{children}</body>
+    <html lang='en' className={quicksand.className} suppressHydrationWarning>
+      <body>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
