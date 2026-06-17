@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils'
 import localFont from 'next/font/local'
+
+import { cn } from '@/lib/utils'
 
 const calsans = localFont({
   src: '../../../assets/fonts/CalSans-SemiBold.woff2',

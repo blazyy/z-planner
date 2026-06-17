@@ -1,12 +1,14 @@
+import { DraggableProvided } from '@hello-pangea/dnd'
+import { GripVertical } from 'lucide-react'
+import { useState } from 'react'
+
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { SubTaskInfoType } from '@/hooks/Planner/types'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 import changeSubTaskTitle from '@/utils/plannerUtils/subTaskUtils/changeSubTaskTitle'
-import { DraggableProvided } from '@hello-pangea/dnd'
-import { GripVertical } from 'lucide-react'
-import { useState } from 'react'
+
 import { handleKeyDownOnSubTask } from './utils'
 
 type EditableSubTaskProps = {
@@ -46,6 +48,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         onCheckedChange={(isChecked) => changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch)}
       />
       <Input
+        // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: a freshly-created sub-task input auto-focuses so the user can type the title immediately.
         autoFocus
         id={subTask.id}
         type='text'

@@ -1,7 +1,9 @@
-import { ColumnsType } from '@/hooks/Planner/types'
 import type { DraggableLocation } from '@hello-pangea/dnd'
 import axios from 'axios'
+
+import { ColumnsType } from '@/hooks/Planner/types'
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
+
 import { sendMutation } from '../apiClient'
 
 export default function moveCardAcrossColumns(

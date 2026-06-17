@@ -1,5 +1,7 @@
-import { ModeToggle } from '@/components/global/ModeToggle'
 import { SignedIn, UserButton } from '@clerk/nextjs'
+
+import { ModeToggle } from '@/components/global/ModeToggle'
+
 import { SiteLogo } from './SiteLogo'
 
 export function Navbar() {

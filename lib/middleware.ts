@@ -1,9 +1,10 @@
-import dbConnect from '@/lib/dbConnect'
-import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import mongoose from 'mongoose'
 import { NextRequest, NextResponse } from 'next/server'
 import { ZodSchema } from 'zod'
+
+import dbConnect from '@/lib/dbConnect'
+import { logger } from '@/lib/logger'
 
 export interface ExtendedNextRequest extends NextRequest {
   userId?: string

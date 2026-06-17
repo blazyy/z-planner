@@ -1,5 +1,6 @@
-import type { ExtendedNextContext, ExtendedNextRequest, Params } from '@/lib/middleware'
 import { NextRequest, NextResponse } from 'next/server'
+
+import type { ExtendedNextContext, ExtendedNextRequest, Params } from '@/lib/middleware'
 
 type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 

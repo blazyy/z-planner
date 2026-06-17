@@ -1,3 +1,5 @@
+import React, { useState } from 'react'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +12,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import React, { useState } from 'react'
 
 export const ManageItemAlertDialog = ({
   onCloseParentDialog,
@@ -52,6 +53,7 @@ export const ManageItemAlertDialog = ({
                   (the tooltip would never fire) and the old wrapper nested a button
                   inside the trigger's own button — invalid HTML. */}
               <TooltipTrigger asChild>
+                {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- intentional: makes the disabled-button tooltip keyboard-reachable (see comment above). */}
                 <span tabIndex={0} className='cursor-default'>
                   <Button size='sm' variant='destructive' disabled={true}>
                     Delete

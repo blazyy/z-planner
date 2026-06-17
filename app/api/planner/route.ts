@@ -1,6 +1,7 @@
+import { NextResponse } from 'next/server'
+
 import { ExtendedNextRequest, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
-import { NextResponse } from 'next/server'
 
 export const GET = withMiddleware(async (req: ExtendedNextRequest) => {
   const { userId } = req

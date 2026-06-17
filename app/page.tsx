@@ -1,9 +1,10 @@
 'use client'
-import { AuroraBackground } from '@/components/ui/aurora-background'
-import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import localFont from 'next/font/local'
 import Link from 'next/link'
+
+import { AuroraBackground } from '@/components/ui/aurora-background'
+import { cn } from '@/lib/utils'
 
 const calsans = localFont({
   src: '../assets/fonts/CalSans-SemiBold.woff2',

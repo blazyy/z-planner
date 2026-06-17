@@ -1,8 +1,9 @@
+import { Plus } from 'lucide-react'
+import { useEffect } from 'react'
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { NANOID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { useEffect } from 'react'
-import { Plus } from 'lucide-react'
 
 export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
   const { taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlanner()

@@ -1,8 +1,10 @@
+import { PopoverTrigger } from '@radix-ui/react-popover'
+import { Dispatch, SetStateAction } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { PopoverTrigger } from '@radix-ui/react-popover'
-import { Dispatch, SetStateAction } from 'react'
+
 import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 
 export const getCapitalizedColorName = (color: string) => color.charAt(0).toUpperCase() + color.slice(1)

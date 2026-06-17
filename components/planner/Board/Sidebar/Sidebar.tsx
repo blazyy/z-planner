@@ -1,7 +1,9 @@
 'use client'
+import { ExternalLink, Github, Settings } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { ExternalLink, Github, Settings } from 'lucide-react'
+
 import { SidebarButton } from './SidebarButton'
 
 export const Sidebar = ({ currentPage }: { currentPage: string }) => {

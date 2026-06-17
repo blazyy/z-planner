@@ -1,9 +1,11 @@
 'use client'
+import { DragDropContext, Droppable } from '@hello-pangea/dnd'
+
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
-import { DragDropContext, Droppable } from '@hello-pangea/dnd'
-import { handleOnDragEnd, handleOnDragStart } from '../../utils'
+
 import { TaskColumn } from './TaskColumn'
+import { handleOnDragEnd, handleOnDragStart } from '../../utils'
 
 export const TaskColumns = ({ boardId }: { boardId: string }) => {
   const plannerContext = usePlanner()

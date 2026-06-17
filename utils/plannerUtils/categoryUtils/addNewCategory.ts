@@ -1,5 +1,7 @@
 import axios from 'axios'
+
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
+
 import { sendMutation } from '../apiClient'
 
 export const addNewCategory = (

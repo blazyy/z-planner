@@ -1,6 +1,7 @@
-import { PlannerType } from '@/hooks/Planner/types'
 import type { DropResult } from '@hello-pangea/dnd'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { PlannerType } from '@/hooks/Planner/types'
 
 vi.mock('@/utils/plannerUtils/cardUtils/moveCardAcrossColumns', () => ({ default: vi.fn() }))
 vi.mock('@/utils/plannerUtils/cardUtils/moveCardWithinColumn', () => ({ default: vi.fn() }))
@@ -11,6 +12,7 @@ import moveCardAcrossColumns from '@/utils/plannerUtils/cardUtils/moveCardAcross
 import moveCardWithinColumn from '@/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { changeColumnOrder } from '@/utils/plannerUtils/columnUtils/changeColumnOrder'
 import { reorderSubTasks } from '@/utils/plannerUtils/subTaskUtils/reorderSubtasks'
+
 import { handleOnDragEnd, handleOnDragStart } from './utils'
 
 const planner = {

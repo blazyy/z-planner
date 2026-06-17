@@ -1,6 +1,7 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import { FallbackProps } from 'react-error-boundary'
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 export const logError = (error: Error, info: { componentStack: string }) => {
   console.error('Unhandled error reached the boundary:', error, info.componentStack)

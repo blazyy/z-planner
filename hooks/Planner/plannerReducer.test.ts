@@ -1,5 +1,7 @@
-import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { describe, expect, it } from 'vitest'
+
+import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
+
 import { plannerReducer } from './plannerReducer'
 import { PlannerType } from './types'
 

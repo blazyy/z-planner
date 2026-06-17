@@ -1,7 +1,8 @@
-import { ThemeProvider } from '@/components/theme-provider'
 import type { Metadata } from 'next'
 import { Quicksand } from 'next/font/google'
 import { ReactNode } from 'react'
+
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })

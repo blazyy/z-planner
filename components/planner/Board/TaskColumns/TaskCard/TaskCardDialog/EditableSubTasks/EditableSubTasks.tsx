@@ -1,7 +1,9 @@
-import { usePlanner } from '@/hooks/Planner/Planner'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
+
+import { usePlanner } from '@/hooks/Planner/Planner'
+
 import { AddNewSubTaskButton } from '../AddNewSubTaskButton'
 import { EditableSubTask } from './EditableSubTask'
 

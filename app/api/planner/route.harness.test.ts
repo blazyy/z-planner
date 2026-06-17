@@ -1,3 +1,5 @@
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+
 import {
   clearAuthUser,
   getPlanner,
@@ -8,7 +10,6 @@ import {
   startMemoryMongo,
   stopMemoryMongo,
 } from '@/test/helpers/routeHarness'
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
 // The harness import above registers the clerk + dbConnect mocks; the route
 // must be imported afterwards so it binds to them.

@@ -1,3 +1,5 @@
+import { PlusCircle } from 'lucide-react'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -7,7 +9,7 @@ import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFilters, usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
-import { PlusCircle } from 'lucide-react'
+
 import { badgeClassNamesWithoutHover } from '../TaskColumns/TaskCard/utils'
 
 const getTaskCardBelongingToCategoryCount = (taskCards: TaskCardInfoType[], category: string) =>

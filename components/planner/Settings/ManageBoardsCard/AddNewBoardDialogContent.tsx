@@ -1,4 +1,5 @@
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+
 import { AddNewBoardForm } from './AddNewBoardForm'
 
 export const AddNewBoardDialogContent = ({ closeDialog }: { closeDialog: () => void }) => {

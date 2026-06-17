@@ -1,6 +1,7 @@
+import { X } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { usePlannerFilters, usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
-import { X } from 'lucide-react'
 
 export const ResetButton = () => {
   const { selectedCategories, searchQuery } = usePlannerFilters()

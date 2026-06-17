@@ -1,13 +1,14 @@
 'use client'
+import { ClerkProvider } from '@clerk/nextjs'
+import { usePathname } from 'next/navigation'
+import { ReactNode } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
+
 import { AlertCard, logError } from '@/components/global/AlertCard/AlertCard'
 import { Navbar } from '@/components/global/Navbar'
 import { Sidebar } from '@/components/planner/Board/Sidebar/Sidebar'
 import { Toaster } from '@/components/ui/sonner'
 import { PlannerProvider } from '@/hooks/Planner/Planner'
-import { ClerkProvider } from '@clerk/nextjs'
-import { usePathname } from 'next/navigation'
-import { ReactNode } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const pathname = usePathname()

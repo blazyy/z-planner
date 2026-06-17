@@ -1,8 +1,9 @@
+import { NextResponse } from 'next/server'
+
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { boardPatch, entityId } from '@/lib/apiSchemas'
 import { ExtendedNextRequest, jsonError, Params, parseBody, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
-import { NextResponse } from 'next/server'
 
 export const PATCH = withMiddleware(async (req: ExtendedNextRequest, { params }: { params: Params }) => {
   const { userId } = req

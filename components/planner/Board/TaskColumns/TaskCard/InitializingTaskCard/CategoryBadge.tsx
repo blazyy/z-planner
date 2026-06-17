@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react'
+
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -6,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePlanner } from '@/hooks/Planner/Planner'
-import { Dispatch, SetStateAction } from 'react'
+
 import { badgeClassNames } from '../utils'
 
 export type TaskCategoryType = {

@@ -1,3 +1,9 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -6,13 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { NANOID } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { addNewCategory } from '@/utils/plannerUtils/categoryUtils/addNewCategory'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { z } from 'zod'
-import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
+
 import { CategoryColorPicker } from './CategoryColorPicker'
+import { badgeClassNames } from '../../Board/TaskColumns/TaskCard/utils'
 
 type AddNewCategoryFormProps = {
   closeDialog: () => void

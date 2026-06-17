@@ -7,6 +7,7 @@ import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import changeCardContent from '@/utils/plannerUtils/cardUtils/changeCardContent'
 import changeCardTitle from '@/utils/plannerUtils/cardUtils/changeCardTitle'
+
 import { CategoryBadge } from '../CategoryBadge'
 import { EditableSubTasks } from './EditableSubTasks/EditableSubTasks'
 

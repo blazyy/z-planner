@@ -1,7 +1,9 @@
+import axios from 'axios'
+
 import { NANOID } from '@/constants/constants'
 import { BoardInfoType } from '@/hooks/Planner/types'
-import axios from 'axios'
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
+
 import { sendMutation } from '../apiClient'
 
 export const addNewColumn = (board: BoardInfoType, newColumnName: string, dispatch: PlannerDispatchContextType) => {

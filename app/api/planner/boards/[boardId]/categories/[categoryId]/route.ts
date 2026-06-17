@@ -1,8 +1,9 @@
+import { NextResponse } from 'next/server'
+
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { categoryId as categoryIdSchema, entityId } from '@/lib/apiSchemas'
 import { ExtendedNextRequest, Params, jsonError, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
-import { NextResponse } from 'next/server'
 
 export const DELETE = withMiddleware(
   async (req: ExtendedNextRequest, { params }: { params: Params }): Promise<NextResponse> => {

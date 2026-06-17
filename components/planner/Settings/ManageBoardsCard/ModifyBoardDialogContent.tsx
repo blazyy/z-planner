@@ -1,3 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -5,10 +10,7 @@ import { Input } from '@/components/ui/input'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { changeBoardInfo } from '@/utils/plannerUtils/boardUtils/changeBoardInfo'
 import deleteBoard from '@/utils/plannerUtils/boardUtils/deleteBoard'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { z } from 'zod'
+
 import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 
 type ModifyBoardDialogContentProps = {

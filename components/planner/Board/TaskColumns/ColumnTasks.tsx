@@ -1,9 +1,11 @@
+import { Droppable } from '@hello-pangea/dnd'
+import { memo } from 'react'
+
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
 import { cn } from '@/lib/utils'
-import { Droppable } from '@hello-pangea/dnd'
-import { memo } from 'react'
+
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 import { TaskCard } from './TaskCard/TaskCard'
 

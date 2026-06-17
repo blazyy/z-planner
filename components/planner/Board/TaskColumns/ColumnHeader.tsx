@@ -1,7 +1,9 @@
+import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd'
+
 import { Card, CardHeader } from '@/components/ui/card'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
-import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd'
+
 import { AddNewCardButton } from './AddNewCardButton'
 
 type ColumnHeaderProps = {

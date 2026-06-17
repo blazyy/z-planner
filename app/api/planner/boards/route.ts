@@ -1,7 +1,8 @@
+import { NextResponse } from 'next/server'
+
 import { boardCreate } from '@/lib/apiSchemas'
 import { ExtendedNextRequest, jsonError, parseBody, withMiddleware } from '@/lib/middleware'
 import Planner from '@/models/Planner'
-import { NextResponse } from 'next/server'
 
 export const POST = withMiddleware(async (req: ExtendedNextRequest) => {
   const { userId } = req

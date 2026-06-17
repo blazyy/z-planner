@@ -1,5 +1,7 @@
-import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { Draft, produce } from 'immer'
+
+import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
+
 import { PlannerAction, PlannerType } from './types'
 
 export const plannerReducer = produce((draft: Draft<PlannerType>, action: PlannerAction) => {

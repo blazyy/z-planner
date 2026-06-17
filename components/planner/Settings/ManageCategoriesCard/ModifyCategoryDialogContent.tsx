@@ -1,3 +1,9 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -8,11 +14,7 @@ import { UNASSIGNED_CATEGORY_NAME } from '@/constants/constants'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 import { changeCategoryInfo } from '@/utils/plannerUtils/categoryUtils/changeCategoryInfo'
 import deleteCategory from '@/utils/plannerUtils/categoryUtils/deleteCategory'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { z } from 'zod'
+
 import { ManageItemAlertDialog } from '../ManageItemAlertDialog'
 import { CategoryColorPicker } from './CategoryColorPicker'
 

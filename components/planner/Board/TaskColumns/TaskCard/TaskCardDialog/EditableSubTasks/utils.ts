@@ -1,5 +1,6 @@
 import { addNewSubTaskToCardOnEnterKeydown } from '@/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
 import deleteSubTask from '@/utils/plannerUtils/subTaskUtils/deleteSubTask'
+
 import {
   HandleArrowDownFunc,
   HandleArrowUpFunc,

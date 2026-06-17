@@ -1,5 +1,7 @@
 import axios from 'axios'
+
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
+
 import { sendDebouncedMutation } from '../apiClient'
 
 export default function changeSubTaskTitle(subTaskId: string, newTitle: string, dispatch: PlannerDispatchContextType) {

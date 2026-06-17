@@ -1,6 +1,8 @@
-import { ColumnsType } from '@/hooks/Planner/types'
 import axios from 'axios'
+
+import { ColumnsType } from '@/hooks/Planner/types'
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
+
 import { sendMutation } from '../apiClient'
 
 export default function moveCardWithinColumn(

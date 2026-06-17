@@ -1,5 +1,6 @@
-import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import { z } from 'zod'
+
+import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 
 /*
  * Single source of truth for API request validation. Every schema mirrors the
