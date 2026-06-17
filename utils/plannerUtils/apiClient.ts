@@ -1,9 +1,30 @@
 import { DEBOUNCE_TIME_MS } from '@/constants/constants'
 import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import axios from 'axios'
-import { DebouncedFunc } from 'lodash'
-import debounce from 'lodash/debounce'
 import { toast } from 'sonner'
+
+/*
+ * Minimal trailing-edge debounce, replacing lodash/debounce. Each call resets
+ * the timer; when it fires, the wrapped fn runs once with the LATEST args. This
+ * matches lodash's default { leading: false, trailing: true } semantics, which
+ * is all the per-key debouncedSenders Map relied on.
+ */
+type DebouncedFn<A extends unknown[]> = (...args: A) => void
+
+function debounce<A extends unknown[]>(fn: (...args: A) => void, waitMs: number): DebouncedFn<A> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let latestArgs: A
+  return (...args: A) => {
+    latestArgs = args
+    if (timer !== undefined) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      timer = undefined
+      fn(...latestArgs)
+    }, waitMs)
+  }
+}
 
 export const emptyPlannerState: PlannerType = {
   hasLoaded: false,
@@ -72,7 +93,7 @@ export function sendMutation(dispatch: PlannerDispatchContextType, request: () =
  * editing card A's title and then clicking into card B within 500ms silently
  * cancelled A's save forever.
  */
-const debouncedSenders = new Map<string, DebouncedFunc<(dispatch: PlannerDispatchContextType, request: () => Promise<unknown>) => void>>()
+const debouncedSenders = new Map<string, DebouncedFn<[PlannerDispatchContextType, () => Promise<unknown>]>>()
 
 export function sendDebouncedMutation(key: string, dispatch: PlannerDispatchContextType, request: () => Promise<unknown>): void {
   let sender = debouncedSenders.get(key)
