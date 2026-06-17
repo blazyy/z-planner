@@ -1,6 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        // Canonicalize the auto-assigned Vercel domain onto the custom domain
+        // where the Clerk production instance is configured. 307 during cutover
+        // so browsers don't hard-cache it; flip to permanent once stable.
+        source: '/:path*',
+        has: [{ type: 'host', value: 'zenith-planner.vercel.app' }],
+        destination: 'https://zplanner.faaez.co.in/:path*',
+        permanent: false,
+      },
+    ]
+  },
   async headers() {
     return [
       {
