@@ -17,6 +17,7 @@ import { z } from 'zod'
 import {
   ExtendedNextRequest,
   jsonError,
+  MAX_BODY_BYTES,
   parseBody,
   withAuth,
   withDbConnect,
@@ -86,6 +87,67 @@ describe('parseBody', () => {
     const result = await parseBody(makeReq({ body: JSON.stringify('a string') }), schema)
     const payload = (await result.error?.json()) as { error: string }
     expect(payload.error).toContain('body:')
+  })
+
+  it('rejects a non-JSON Content-Type with 415', async () => {
+    const req = new NextRequest('http://localhost/api/planner', {
+      method: 'POST',
+      headers: { 'content-type': 'text/plain' },
+      body: JSON.stringify({ name: 'ok' }),
+    })
+    const result = await parseBody(req, schema)
+    expect(result.data).toBeUndefined()
+    expect(result.error?.status).toBe(415)
+    expect(await result.error?.json()).toEqual({ error: 'Content-Type must be application/json' })
+  })
+
+  it('accepts application/json with charset params (only the media type matters)', async () => {
+    const req = new NextRequest('http://localhost/api/planner', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ name: 'ok' }),
+    })
+    const result = await parseBody(req, schema)
+    expect(result.error).toBeUndefined()
+    expect(result.data).toEqual({ name: 'ok' })
+  })
+
+  it('rejects an oversized body via the Content-Length header with 413', async () => {
+    const req = new NextRequest('http://localhost/api/planner', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'content-length': String(MAX_BODY_BYTES + 1) },
+      body: JSON.stringify({ name: 'small' }),
+    })
+    const result = await parseBody(req, schema)
+    expect(result.data).toBeUndefined()
+    expect(result.error?.status).toBe(413)
+    expect(await result.error?.json()).toEqual({ error: 'Request body too large' })
+  })
+
+  it('rejects an oversized body by decoded length when no Content-Length is declared', async () => {
+    // Build a payload whose UTF-8 byte length exceeds the cap; the value schema
+    // is permissive so the size guard (not zod) is what rejects it.
+    const big = 'x'.repeat(MAX_BODY_BYTES + 10)
+    const req = new NextRequest('http://localhost/api/planner', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: big }),
+    })
+    const result = await parseBody(req, schema)
+    expect(result.error?.status).toBe(413)
+    expect(await result.error?.json()).toEqual({ error: 'Request body too large' })
+  })
+
+  it('a body exactly at the cap still parses', async () => {
+    const body = JSON.stringify({ name: 'ok' })
+    const req = new NextRequest('http://localhost/api/planner', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'content-length': String(Buffer.byteLength(body)) },
+      body,
+    })
+    const result = await parseBody(req, schema)
+    expect(result.error).toBeUndefined()
+    expect(result.data).toEqual({ name: 'ok' })
   })
 })
 

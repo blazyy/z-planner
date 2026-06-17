@@ -28,17 +28,52 @@ export function jsonError(status: number, error: string): NextResponse {
 }
 
 /*
+ * Hard cap on request body size. The largest legitimate payload is a card's
+ * content field (max 50000 chars ~= 50KB per apiSchemas.ts), so 1MB leaves a
+ * generous margin while bounding memory spent parsing hostile/oversized bodies.
+ */
+export const MAX_BODY_BYTES = 1024 * 1024
+
+/*
  * Parses and validates a request body against a zod schema. Returns either the
- * typed data or a ready-to-return 400 response (covers malformed/empty JSON too,
- * which used to escape the error handler entirely as an unawaited rejection).
+ * typed data or a ready-to-return error response.
+ *
+ * Input hardening (additive — valid JSON requests are unaffected):
+ *   - If a Content-Type header is present it must be application/json, else 415.
+ *     (A missing Content-Type falls through to the JSON parse, which yields the
+ *     existing 400 for empty/malformed bodies.)
+ *   - Bodies above MAX_BODY_BYTES are rejected with 413, checked both via the
+ *     declared Content-Length and against the actual decoded byte length.
+ *   - Malformed/empty JSON -> 400; zod violations -> 400 (unchanged).
  */
 export async function parseBody<T>(
   req: NextRequest,
   schema: ZodSchema<T>
 ): Promise<{ data: T; error?: never } | { data?: never; error: NextResponse }> {
+  const contentType = req.headers.get('content-type')
+  if (contentType !== null && !contentType.toLowerCase().split(';')[0].trim().startsWith('application/json')) {
+    return { error: jsonError(415, 'Content-Type must be application/json') }
+  }
+
+  const declaredLength = Number(req.headers.get('content-length'))
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
+    return { error: jsonError(413, 'Request body too large') }
+  }
+
+  let text: string
+  try {
+    text = await req.text()
+  } catch {
+    return { error: jsonError(400, 'Request body must be valid JSON') }
+  }
+  // Guard chunked/Content-Length-less bodies against the same cap.
+  if (Buffer.byteLength(text, 'utf8') > MAX_BODY_BYTES) {
+    return { error: jsonError(413, 'Request body too large') }
+  }
+
   let raw: unknown
   try {
-    raw = await req.json()
+    raw = JSON.parse(text)
   } catch {
     return { error: jsonError(400, 'Request body must be valid JSON') }
   }

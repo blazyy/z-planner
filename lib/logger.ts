@@ -10,7 +10,9 @@ import pino from 'pino'
  * server logs and stays dependency-light. If you want pretty local output, set
  * the transport via env without adding it to the bundle's required deps.
  */
-const level = process.env.LOG_LEVEL ?? (process.env.NODE_ENV === 'production' ? 'info' : 'debug')
+const level =
+  process.env.LOG_LEVEL ??
+  (process.env.VITEST ? 'silent' : process.env.NODE_ENV === 'production' ? 'info' : 'debug')
 
 export const logger = pino({ level })
 
