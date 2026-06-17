@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='en' className={quicksand.className} suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute='class' defaultTheme='light' enableSystem={false} disableTransitionOnChange>
           {children}
         </ThemeProvider>
       </body>
