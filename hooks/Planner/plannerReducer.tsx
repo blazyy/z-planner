@@ -65,32 +65,10 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action: Planne
       draft.columns[destColumnId].taskCards = destColumnTaskCardIds
       break
     }
-    // NO NEED
-    case 'taskCardInitializationCancelled': {
-      draft.taskCardBeingInitialized = null
-      break
-    }
-    // NO NEED
-    case 'newTaskCardInitialized': {
-      draft.taskCardBeingInitialized = action.payload
-      break
-    }
-    // NO NEED
-    case 'taskCardBeingInitializedHighlightStatusChange': {
-      draft.taskCardBeingInitialized!.isHighlighted = action.payload
-      break
-    }
-    // NO NEED
-    case 'dataEnteredInTaskCardBeingInitializedStatusChanged': {
-      draft.dataEnteredInTaskCardBeingInitialized = action.payload
-      break
-    }
     case 'newTaskCardAdded': {
       const { columnId, newTaskCardDetails: newTaskCard, updatedTaskCards } = action.payload
       draft.taskCards[newTaskCard.id] = newTaskCard
       draft.columns[columnId].taskCards = updatedTaskCards
-      draft.dataEnteredInTaskCardBeingInitialized = false
-      draft.taskCardBeingInitialized = null
       break
     }
     case 'taskCardCheckedStatusChanged': {
@@ -125,11 +103,6 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action: Planne
         (cardId: string) => cardId !== taskCardId
       )
       delete draft.taskCards[taskCardId]
-      break
-    }
-    // NO NEED
-    case 'subTaskDragStatusChanged': {
-      draft.isSubTaskBeingDragged = action.payload
       break
     }
     case 'subTasksReordered': {

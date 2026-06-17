@@ -41,11 +41,7 @@ function debounce<A extends unknown[]>(fn: (...args: A) => void, waitMs: number)
   return debounced
 }
 
-export const emptyPlannerState: PlannerType = {
-  hasLoaded: false,
-  isSubTaskBeingDragged: false,
-  taskCardBeingInitialized: null,
-  dataEnteredInTaskCardBeingInitialized: false,
+export const emptyPlannerData: PlannerType = {
   boardOrder: [],
   boards: {},
   columns: {},
@@ -57,8 +53,6 @@ export const emptyPlannerState: PlannerType = {
 export async function fetchPlannerData(signal?: AbortSignal): Promise<PlannerType> {
   const { data } = await axios.get('/api/planner', { signal })
   return {
-    ...emptyPlannerState,
-    hasLoaded: true,
     boardOrder: data.boardOrder,
     boards: data.boards,
     columns: data.columns,

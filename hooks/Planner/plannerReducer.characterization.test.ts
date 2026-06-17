@@ -9,16 +9,12 @@ import { PlannerType } from './types'
  * Characterization tests complementing plannerReducer.test.ts. The sibling file
  * already covers dataFetchedFromDatabase, board/column/category/card/subtask
  * CRUD, card check/uncheck, cross/within-column moves, and category delete
- * reassignment. This file pins the remaining actions — column rename and every
- * ephemeral UI flag — plus exact output shapes and edge cases that guard the
- * Phase-2 reducer refactor.
+ * reassignment. This file pins the remaining data actions — column rename — plus
+ * exact output shapes and edge cases. Ephemeral UI flags moved out of this
+ * reducer and are pinned in ephemeralReducer.test.ts.
  */
 
 const baseState = (): PlannerType => ({
-  hasLoaded: true,
-  isSubTaskBeingDragged: false,
-  taskCardBeingInitialized: null,
-  dataEnteredInTaskCardBeingInitialized: false,
   boardOrder: ['board1'],
   boards: {
     board1: { id: 'board1', name: 'Work', columns: ['col1', 'col2'], categories: [UNASSIGNED_CATEGORY_ID, 'cat1'] },
@@ -57,52 +53,6 @@ describe('plannerReducer — column rename (gap)', () => {
     expect(next.columns.col1).toEqual({ id: 'col1', name: 'In Progress', taskCards: ['card1', 'card2', 'card3'] })
     // Other columns untouched.
     expect(next.columns.col2).toEqual({ id: 'col2', name: 'Done', taskCards: [] })
-  })
-})
-
-describe('plannerReducer — ephemeral UI flags (gap)', () => {
-  it('newTaskCardInitialized stores the initialization descriptor verbatim', () => {
-    const descriptor = { taskCardId: 'cardNew', columnId: 'col1', isHighlighted: false }
-    const next = plannerReducer(baseState(), { type: 'newTaskCardInitialized', payload: descriptor })
-    expect(next.taskCardBeingInitialized).toEqual(descriptor)
-  })
-
-  it('taskCardBeingInitializedHighlightStatusChange flips isHighlighted on the active descriptor', () => {
-    const start: PlannerType = {
-      ...baseState(),
-      taskCardBeingInitialized: { taskCardId: 'cardNew', columnId: 'col1', isHighlighted: false },
-    }
-    const next = plannerReducer(start, { type: 'taskCardBeingInitializedHighlightStatusChange', payload: true })
-    expect(next.taskCardBeingInitialized).toEqual({ taskCardId: 'cardNew', columnId: 'col1', isHighlighted: true })
-  })
-
-  it('taskCardInitializationCancelled clears the descriptor to null', () => {
-    const start: PlannerType = {
-      ...baseState(),
-      taskCardBeingInitialized: { taskCardId: 'cardNew', columnId: 'col1', isHighlighted: true },
-    }
-    const next = plannerReducer(start, { type: 'taskCardInitializationCancelled' })
-    expect(next.taskCardBeingInitialized).toBeNull()
-  })
-
-  it('dataEnteredInTaskCardBeingInitializedStatusChanged sets the boolean flag both ways', () => {
-    const on = plannerReducer(baseState(), {
-      type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
-      payload: true,
-    })
-    expect(on.dataEnteredInTaskCardBeingInitialized).toBe(true)
-    const off = plannerReducer(on, {
-      type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
-      payload: false,
-    })
-    expect(off.dataEnteredInTaskCardBeingInitialized).toBe(false)
-  })
-
-  it('subTaskDragStatusChanged sets isSubTaskBeingDragged both ways', () => {
-    const on = plannerReducer(baseState(), { type: 'subTaskDragStatusChanged', payload: true })
-    expect(on.isSubTaskBeingDragged).toBe(true)
-    const off = plannerReducer(on, { type: 'subTaskDragStatusChanged', payload: false })
-    expect(off.isSubTaskBeingDragged).toBe(false)
   })
 })
 
@@ -156,9 +106,6 @@ describe('plannerReducer — exact-shape pins for already-tested actions', () =>
     })
     expect(next.taskCards.card4).toEqual(card)
     expect(next.columns.col2.taskCards).toEqual(['card4'])
-    // Always resets the initialization scratch state on add.
-    expect(next.taskCardBeingInitialized).toBeNull()
-    expect(next.dataEnteredInTaskCardBeingInitialized).toBe(false)
   })
 
   it('newSubTaskAdded writes the subtask verbatim and replaces the parent ordering', () => {
@@ -179,7 +126,6 @@ describe('plannerReducer — immutability of source state (immer)', () => {
   it('does not mutate prior state across a representative spread of actions', () => {
     const actions = [
       { type: 'columnNameChanged', payload: { columnId: 'col1', newName: 'X' } },
-      { type: 'subTaskDragStatusChanged', payload: true },
       { type: 'taskCardCheckedStatusChanged', payload: { columnId: 'col1', taskCardId: 'card1', isChecked: true } },
       {
         type: 'newCategoryAdded',

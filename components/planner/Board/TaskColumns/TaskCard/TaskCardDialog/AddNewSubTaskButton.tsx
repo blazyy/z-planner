@@ -1,7 +1,7 @@
 import { GripVertical, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlanner, usePlannerDispatch, usePlannerEphemeral } from '@/hooks/Planner/Planner'
 import { addNewSubTaskOnButtonClick } from '@/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
 
 type AddNewSubTaskButtonProps = {
@@ -11,7 +11,8 @@ type AddNewSubTaskButtonProps = {
 export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) => {
   const dispatch = usePlannerDispatch()
   const [isHoveringOver, setIsHoveringOver] = useState(false)
-  const { taskCards, isSubTaskBeingDragged } = usePlanner()
+  const { taskCards } = usePlanner()
+  const { isSubTaskBeingDragged } = usePlannerEphemeral()
 
   return (
     <button

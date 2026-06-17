@@ -44,19 +44,19 @@ describe('handleOnDragEnd', () => {
   })
 
   it('does nothing without a destination', () => {
-    handleOnDragEnd(drop({ destination: null }), vi.fn(), planner, 'board1')
+    handleOnDragEnd(drop({ destination: null }), vi.fn(), vi.fn(), planner, 'board1')
     expect(moveCardWithinColumn).not.toHaveBeenCalled()
     expect(moveCardAcrossColumns).not.toHaveBeenCalled()
   })
 
   it('does nothing when dropped in the original position', () => {
-    handleOnDragEnd(drop({ destination: { droppableId: 'col1', index: 0 } }), vi.fn(), planner, 'board1')
+    handleOnDragEnd(drop({ destination: { droppableId: 'col1', index: 0 } }), vi.fn(), vi.fn(), planner, 'board1')
     expect(moveCardWithinColumn).not.toHaveBeenCalled()
   })
 
   it('routes same-column card drops to moveCardWithinColumn', () => {
     const dispatch = vi.fn()
-    handleOnDragEnd(drop({}), dispatch, planner, 'board1')
+    handleOnDragEnd(drop({}), dispatch, vi.fn(), planner, 'board1')
     expect(moveCardWithinColumn).toHaveBeenCalledWith(planner.columns, 'col1', 'card1', 0, 1, dispatch)
     expect(moveCardAcrossColumns).not.toHaveBeenCalled()
   })
@@ -64,7 +64,7 @@ describe('handleOnDragEnd', () => {
   it('routes cross-column card drops to moveCardAcrossColumns', () => {
     const dispatch = vi.fn()
     const result = drop({ destination: { droppableId: 'col2', index: 0 } })
-    handleOnDragEnd(result, dispatch, planner, 'board1')
+    handleOnDragEnd(result, dispatch, vi.fn(), planner, 'board1')
     expect(moveCardAcrossColumns).toHaveBeenCalledWith(
       planner.columns,
       'card1',
@@ -79,33 +79,37 @@ describe('handleOnDragEnd', () => {
     handleOnDragEnd(
       drop({ type: 'column', draggableId: 'col1', destination: { droppableId: 'board', index: 1 } }),
       dispatch,
+      vi.fn(),
       planner,
       'board1'
     )
     expect(changeColumnOrder).toHaveBeenCalledWith(planner.boards, 'board1', 'col1', 0, 1, dispatch)
   })
 
-  it('routes subtask drops to reorderSubTasks and clears the drag flag', () => {
+  it('routes subtask drops to reorderSubTasks and clears the drag flag on the ephemeral dispatch', () => {
     const dispatch = vi.fn()
+    const ephemeralDispatch = vi.fn()
     handleOnDragEnd(
       drop({ type: 'subtask', draggableId: 'card1~sub1', destination: { droppableId: 'card1', index: 1 } }),
       dispatch,
+      ephemeralDispatch,
       planner,
       'board1'
     )
-    expect(dispatch).toHaveBeenCalledWith({ type: 'subTaskDragStatusChanged', payload: false })
+    expect(ephemeralDispatch).toHaveBeenCalledWith({ type: 'subTaskDragStatusChanged', payload: false })
+    expect(dispatch).not.toHaveBeenCalled()
     expect(reorderSubTasks).toHaveBeenCalledWith(planner.taskCards, 'card1~sub1', 0, 1, dispatch)
   })
 })
 
 describe('handleOnDragStart', () => {
-  it('sets the subtask drag flag for subtask drags only', () => {
-    const dispatch = vi.fn()
-    handleOnDragStart({ type: 'subtask' } as Parameters<typeof handleOnDragStart>[0], dispatch)
-    expect(dispatch).toHaveBeenCalledWith({ type: 'subTaskDragStatusChanged', payload: true })
+  it('sets the subtask drag flag on the ephemeral dispatch for subtask drags only', () => {
+    const ephemeralDispatch = vi.fn()
+    handleOnDragStart({ type: 'subtask' } as Parameters<typeof handleOnDragStart>[0], ephemeralDispatch)
+    expect(ephemeralDispatch).toHaveBeenCalledWith({ type: 'subTaskDragStatusChanged', payload: true })
 
-    dispatch.mockClear()
-    handleOnDragStart({ type: 'card' } as Parameters<typeof handleOnDragStart>[0], dispatch)
-    expect(dispatch).not.toHaveBeenCalled()
+    ephemeralDispatch.mockClear()
+    handleOnDragStart({ type: 'card' } as Parameters<typeof handleOnDragStart>[0], ephemeralDispatch)
+    expect(ephemeralDispatch).not.toHaveBeenCalled()
   })
 })

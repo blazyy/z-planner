@@ -1,7 +1,7 @@
 'use client'
 import type { DragStart, DropResult } from '@hello-pangea/dnd'
 
-import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
+import { EphemeralDispatchContextType, PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
 import moveCardAcrossColumns from '@/utils/plannerUtils/cardUtils/moveCardAcrossColumns'
 import moveCardWithinColumn from '@/utils/plannerUtils/cardUtils/moveCardWithinColumn'
 import { changeColumnOrder } from '@/utils/plannerUtils/columnUtils/changeColumnOrder'
@@ -10,18 +10,19 @@ import { reorderSubTasks } from '@/utils/plannerUtils/subTaskUtils/reorderSubtas
 type OnDragEndFunc = (
   result: DropResult,
   dispatch: PlannerDispatchContextType,
+  ephemeralDispatch: EphemeralDispatchContextType,
   plannerContext: PlannerType,
   boardId: string
 ) => void
 
-export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext, boardId) => {
+export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, ephemeralDispatch, plannerContext, boardId) => {
   const { destination, source, draggableId, type } = result
   const { boards, columns, taskCards } = plannerContext
 
   // Needed to fix bug where subtask drag handle would behave weirdly after being dropped in
   // position where it was originally dragged from
   if (type === 'subtask') {
-    dispatch({
+    ephemeralDispatch({
       type: 'subTaskDragStatusChanged',
       payload: false,
     })
@@ -48,11 +49,11 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, plannerContext,
   moveCardAcrossColumns(columns, draggableId, source, destination, dispatch)
 }
 
-type OnDragStartFunction = (dragStartObj: DragStart, dispatch: PlannerDispatchContextType) => void
+type OnDragStartFunction = (dragStartObj: DragStart, ephemeralDispatch: EphemeralDispatchContextType) => void
 
-export const handleOnDragStart: OnDragStartFunction = (dragStartObj, dispatch) => {
+export const handleOnDragStart: OnDragStartFunction = (dragStartObj, ephemeralDispatch) => {
   if (dragStartObj.type === 'subtask') {
-    dispatch({
+    ephemeralDispatch({
       type: 'subTaskDragStatusChanged',
       payload: true,
     })

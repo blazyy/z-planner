@@ -10,14 +10,14 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerEphemeralDispatch } from '@/hooks/Planner/Planner'
 
 type CancelButtonProps = {
   isFormEmpty: boolean
 }
 
 export const CancelButton = ({ isFormEmpty }: CancelButtonProps) => {
-  const plannerDispatch = usePlannerDispatch()!
+  const plannerDispatch = usePlannerEphemeralDispatch()!
   // If user has entered any input, show confirmation dialog on clicking cancel.
   // Else, directly remove the initializing task.
   if (isFormEmpty)

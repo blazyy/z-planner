@@ -3,11 +3,11 @@ import { useEffect } from 'react'
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { NANOID } from '@/constants/constants'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerEphemeral, usePlannerEphemeralDispatch } from '@/hooks/Planner/Planner'
 
 export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
-  const { taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlanner()
-  const dispatch = usePlannerDispatch()!
+  const { taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlannerEphemeral()
+  const dispatch = usePlannerEphemeralDispatch()!
 
   useEffect(() => {
     if (taskCardBeingInitialized) {

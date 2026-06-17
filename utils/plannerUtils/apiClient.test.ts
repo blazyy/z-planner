@@ -65,7 +65,7 @@ describe('sendMutation', () => {
     expect(dispatch).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'dataFetchedFromDatabase',
-        payload: expect.objectContaining({ hasLoaded: true }),
+        payload: expect.objectContaining({ boardOrder: [], boards: {}, columns: {} }),
       })
     )
   })

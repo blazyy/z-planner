@@ -60,23 +60,10 @@ export type BoardsType = {
   [boardId: string]: BoardInfoType
 }
 
-// isSubTaskBeingDragged - Used to hide/show drag handles on subtasks on a TaskCard Dialog. Handles should only be shown when
-// hovered over (and not actively dragging a subtask), or, when actively dragging a subtask. The only
-// way to handle this is using onDragStart and onDragEnd handlers, which are only available on the
-// DragDropContext component. This is why this state is in the parent, while it's being used way below
-// in the component tree.
-
-// taskCardBeingInitialized - Contains data of card that's being initialized. Didn't make sense to keep this in the store, since the data
-// is only changed in a few places.
-
-// dataEnteredInTaskCardBeingInitialized - Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
-// in the previous one.
-
+// PlannerType is the persisted, normalized planner data. Ephemeral UI state
+// (see EphemeralStateType) lives in a separate context + reducer so a refetch or
+// a data mutation can't churn transient UI flags, and vice versa.
 export type PlannerType = {
-  hasLoaded: boolean
-  isSubTaskBeingDragged: boolean
-  taskCardBeingInitialized: TaskCardBeingInitializedType | null
-  dataEnteredInTaskCardBeingInitialized: boolean
   boardOrder: string[]
   boards: BoardsType
   columns: ColumnsType
@@ -85,7 +72,31 @@ export type PlannerType = {
   subTasks: SubTasksType
 }
 
-// One discriminated union for every reducer action, so dispatch sites get
+// Ephemeral, never-persisted UI state. Split out of PlannerType so the data
+// reducer stays purely about normalized entities.
+//
+// hasLoaded - Gates the one-shot mount fetch and the loading skeleton/spinner: false until
+// the initial planner data resolves, then true for the lifetime of the provider.
+//
+// isSubTaskBeingDragged - Used to hide/show drag handles on subtasks on a TaskCard Dialog. Handles should only be shown when
+// hovered over (and not actively dragging a subtask), or, when actively dragging a subtask. The only
+// way to handle this is using onDragStart and onDragEnd handlers, which are only available on the
+// DragDropContext component. This is why this state is in the parent, while it's being used way below
+// in the component tree.
+//
+// taskCardBeingInitialized - Contains data of card that's being initialized. Didn't make sense to keep this in the store, since the data
+// is only changed in a few places.
+//
+// dataEnteredInTaskCardBeingInitialized - Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
+// in the previous one.
+export type EphemeralStateType = {
+  hasLoaded: boolean
+  isSubTaskBeingDragged: boolean
+  taskCardBeingInitialized: TaskCardBeingInitializedType | null
+  dataEnteredInTaskCardBeingInitialized: boolean
+}
+
+// One discriminated union for every DATA reducer action, so dispatch sites get
 // compile-time payload checking and the reducer switch can be exhaustive.
 export type PlannerAction =
   | { type: 'dataFetchedFromDatabase'; payload: PlannerType }
@@ -112,10 +123,6 @@ export type PlannerAction =
         destColumnTaskCardIds: string[]
       }
     }
-  | { type: 'taskCardInitializationCancelled'; payload?: null }
-  | { type: 'newTaskCardInitialized'; payload: TaskCardBeingInitializedType }
-  | { type: 'taskCardBeingInitializedHighlightStatusChange'; payload: boolean }
-  | { type: 'dataEnteredInTaskCardBeingInitializedStatusChanged'; payload: boolean }
   | {
       type: 'newTaskCardAdded'
       payload: { columnId: string; newTaskCardDetails: TaskCardInfoType; updatedTaskCards: string[] }
@@ -124,7 +131,6 @@ export type PlannerAction =
   | { type: 'taskCardTitleChanged'; payload: { taskCardId: string; newTitle: string } }
   | { type: 'taskCardContentChanged'; payload: { taskCardId: string; newContent: string } }
   | { type: 'taskCardDeleted'; payload: { columnId: string; taskCardId: string } }
-  | { type: 'subTaskDragStatusChanged'; payload: boolean }
   | { type: 'subTasksReordered'; payload: { taskCardId: string; reorderedSubTasks: string[] } }
   | { type: 'subTasksCheckedStatusChanged'; payload: { subTaskId: string; isChecked: boolean } }
   | { type: 'subTaskTitleChanged'; payload: { subTaskId: string; newTitle: string } }
@@ -142,3 +148,16 @@ export type PlannerAction =
   | { type: 'categoryDeleted'; payload: { boardId: string; categoryId: string } }
 
 export type PlannerDispatchContextType = Dispatch<PlannerAction>
+
+// Discriminated union for every EPHEMERAL UI action, dispatched against the
+// ephemeral reducer/context. Kept separate from PlannerAction so a data
+// mutation can't carry a UI flag and vice versa.
+export type EphemeralAction =
+  | { type: 'dataLoaded' }
+  | { type: 'subTaskDragStatusChanged'; payload: boolean }
+  | { type: 'newTaskCardInitialized'; payload: TaskCardBeingInitializedType }
+  | { type: 'taskCardInitializationCancelled'; payload?: null }
+  | { type: 'taskCardBeingInitializedHighlightStatusChange'; payload: boolean }
+  | { type: 'dataEnteredInTaskCardBeingInitializedStatusChanged'; payload: boolean }
+
+export type EphemeralDispatchContextType = Dispatch<EphemeralAction>

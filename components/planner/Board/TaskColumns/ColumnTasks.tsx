@@ -2,7 +2,7 @@ import { Droppable } from '@hello-pangea/dnd'
 import { memo } from 'react'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlanner, usePlannerEphemeral } from '@/hooks/Planner/Planner'
 import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
 import { cn } from '@/lib/utils'
 
@@ -11,7 +11,8 @@ import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/Initializi
 import { TaskCard } from './TaskCard/TaskCard'
 
 export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { boardId: string; columnId: string }) {
-  const { boards, columns, taskCards, taskCardBeingInitialized } = usePlanner()
+  const { boards, columns, taskCards } = usePlanner()
+  const { taskCardBeingInitialized } = usePlannerEphemeral()
   const { searchQuery, selectedCategories } = usePlannerFilters()
   const categoriesInBoard = boards[boardId].categories
   const columnInfo = columns[columnId]

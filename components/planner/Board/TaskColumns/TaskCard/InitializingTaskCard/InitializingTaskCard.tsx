@@ -10,7 +10,12 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import {
+  usePlanner,
+  usePlannerDispatch,
+  usePlannerEphemeral,
+  usePlannerEphemeralDispatch,
+} from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { addNewCardToColumn } from '@/utils/plannerUtils/cardUtils/addNewCardToColumn'
 
@@ -31,7 +36,9 @@ const formSchema = z.object({
 
 export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {
   const dispatch = usePlannerDispatch()
-  const { columns, taskCardBeingInitialized } = usePlanner()
+  const ephemeralDispatch = usePlannerEphemeralDispatch()
+  const { columns } = usePlanner()
+  const { taskCardBeingInitialized } = usePlannerEphemeral()
   const [selectedCategory, setSelectedCategory] = useState(UNASSIGNED_CATEGORY_ID)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,19 +56,19 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
   // per keystroke.
   useEffect(() => {
     const subscription = form.watch((value) => {
-      dispatch({
+      ephemeralDispatch({
         type: 'taskCardBeingInitializedHighlightStatusChange',
         payload: false,
       })
       const dataEntered = value.taskCardTitle !== '' || value.taskCardDesc !== ''
       setIsFormEmpty(!dataEntered)
-      dispatch({
+      ephemeralDispatch({
         type: 'dataEnteredInTaskCardBeingInitializedStatusChanged',
         payload: dataEntered,
       })
     })
     return () => subscription.unsubscribe()
-  }, [form, dispatch])
+  }, [form, ephemeralDispatch])
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const newTaskCardDetails = {
@@ -71,6 +78,10 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
       content: values.taskCardDesc,
     }
     addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch)
+    // newTaskCardAdded used to clear the init scratch state inside the data
+    // reducer; that state now lives on the ephemeral side, so clear it here.
+    ephemeralDispatch({ type: 'taskCardInitializationCancelled' })
+    ephemeralDispatch({ type: 'dataEnteredInTaskCardBeingInitializedStatusChanged', payload: false })
     toast.success('Task added.')
   }
 

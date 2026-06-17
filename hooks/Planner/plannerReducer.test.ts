@@ -6,10 +6,6 @@ import { plannerReducer } from './plannerReducer'
 import { PlannerType } from './types'
 
 const baseState = (): PlannerType => ({
-  hasLoaded: true,
-  isSubTaskBeingDragged: false,
-  taskCardBeingInitialized: null,
-  dataEnteredInTaskCardBeingInitialized: false,
   boardOrder: ['board1'],
   boards: {
     board1: { id: 'board1', name: 'Work', columns: ['col1', 'col2'], categories: [UNASSIGNED_CATEGORY_ID, 'cat1'] },
@@ -125,13 +121,8 @@ describe('plannerReducer', () => {
     expect(next.columns.col2.taskCards).toEqual(['card1', 'card3'])
   })
 
-  it('adds a new task card and clears the initialization state', () => {
-    const start = {
-      ...baseState(),
-      taskCardBeingInitialized: { taskCardId: 'card4', columnId: 'col1', isHighlighted: false },
-      dataEnteredInTaskCardBeingInitialized: true,
-    }
-    const next = plannerReducer(start, {
+  it('adds a new task card to its column and the map', () => {
+    const next = plannerReducer(baseState(), {
       type: 'newTaskCardAdded',
       payload: {
         columnId: 'col1',
@@ -148,8 +139,6 @@ describe('plannerReducer', () => {
     })
     expect(next.columns.col1.taskCards).toEqual(['card4', 'card1', 'card2'])
     expect(next.taskCards.card4.title).toBe('Four')
-    expect(next.taskCardBeingInitialized).toBeNull()
-    expect(next.dataEnteredInTaskCardBeingInitialized).toBe(false)
   })
 
   it('checking a card marks it completed and moves it to the bottom of its column', () => {

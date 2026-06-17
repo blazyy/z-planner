@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlanner, usePlannerDispatch, usePlannerEphemeral } from '@/hooks/Planner/Planner'
 import { SubTaskInfoType } from '@/hooks/Planner/types'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 import changeSubTaskTitle from '@/utils/plannerUtils/subTaskUtils/changeSubTaskTitle'
@@ -20,7 +20,8 @@ type EditableSubTaskProps = {
 }
 
 export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
-  const { isSubTaskBeingDragged, taskCards, subTasks } = usePlanner()
+  const { taskCards, subTasks } = usePlanner()
+  const { isSubTaskBeingDragged } = usePlannerEphemeral()
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = usePlannerDispatch()!
   return (

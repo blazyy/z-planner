@@ -4,10 +4,10 @@ import { ManageBoardsCard } from '@/components/planner/Settings/ManageBoardsCard
 import { ManageCategoriesCard } from '@/components/planner/Settings/ManageCategoriesCard/ManageCategoriesCard'
 import { ManageColumnsCard } from '@/components/planner/Settings/ManageColumnsCard/ManageColumnsCard'
 import { Separator } from '@/components/ui/separator'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerEphemeral } from '@/hooks/Planner/Planner'
 
 export default function SettingsPage() {
-  const { hasLoaded } = usePlanner()
+  const { hasLoaded } = usePlannerEphemeral()
   if (!hasLoaded) {
     return <LoadingSpinner />
   }
