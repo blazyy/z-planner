@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { usePlanner } from '@/hooks/Planner/Planner'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFilters, usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
-import { FiPlusCircle } from 'react-icons/fi'
+import { PlusCircle } from 'lucide-react'
 import { badgeClassNamesWithoutHover } from '../TaskColumns/TaskCard/utils'
 
 const getTaskCardBelongingToCategoryCount = (taskCards: TaskCardInfoType[], category: string) =>
@@ -29,7 +29,7 @@ export const CategoryFilter = ({ selectedBoard }: { selectedBoard: string }) => 
       <PopoverTrigger asChild>
         <Button variant='outline' className='border-dashed'>
           <div className='flex items-center gap-2'>
-            <FiPlusCircle className='w-4 h-4' />
+            <PlusCircle className='w-4 h-4' />
             <span>Filter</span>
             {selectedCategories.length > 0 && (
               <>
