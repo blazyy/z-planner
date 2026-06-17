@@ -6,6 +6,7 @@ import { usePlanner } from '@/hooks/Planner/Planner'
 import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
 import { cn } from '@/lib/utils'
 
+import { ColumnEmptyState } from './ColumnEmptyState'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 import { TaskCard } from './TaskCard/TaskCard'
 
@@ -18,6 +19,21 @@ export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { bo
   // index can't be mapped back to the right position in the canonical array. Dragging is disabled
   // instead; filtering then mapping keeps Draggable indices consecutive, which the dnd library requires.
   const isFilterActive = searchQuery !== '' || selectedCategories.length > 0
+  const visibleTaskCardIds = columnInfo.taskCards
+    .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
+    .filter((taskCardId) => {
+      const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+
+      const doesTaskCardBelongToSelectedCategories =
+        selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
+
+      return doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories
+    })
+  // A card mid-creation in this column counts as content, so the empty-state stays hidden then.
+  const isInitializingHere = Boolean(taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId)
+  const isColumnEmpty = visibleTaskCardIds.length === 0 && !isInitializingHere
   return (
     <Droppable droppableId={columnInfo.id} type='card'>
       {(provided, snapshot) => (
@@ -31,32 +47,19 @@ export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { bo
             )}
             style={{ minHeight: '82vh', maxHeight: '82vh' }}
           >
-            {taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId && (
-              <InitializingTaskCard boardId={boardId} columnId={columnId} />
-            )}
-            {columnInfo.taskCards
-              .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
-              .filter((taskCardId) => {
-                const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-
-                const doesTaskCardBelongToSelectedCategories =
-                  selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
-
-                return doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories
-              })
-              .map((taskCardId, index) => (
-                <TaskCard
-                  key={taskCardId}
-                  index={index}
-                  boardId={boardId}
-                  columnId={columnId}
-                  taskCardId={taskCardId}
-                  isDragDisabled={isFilterActive}
-                />
-              ))}
+            {isInitializingHere && <InitializingTaskCard boardId={boardId} columnId={columnId} />}
+            {visibleTaskCardIds.map((taskCardId, index) => (
+              <TaskCard
+                key={taskCardId}
+                index={index}
+                boardId={boardId}
+                columnId={columnId}
+                taskCardId={taskCardId}
+                isDragDisabled={isFilterActive}
+              />
+            ))}
             {provided.placeholder}
+            {isColumnEmpty && <ColumnEmptyState isFilterActive={isFilterActive} />}
           </div>
           <ScrollBar orientation='vertical' />
         </ScrollArea>

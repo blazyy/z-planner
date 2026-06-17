@@ -4,6 +4,7 @@ import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
 
+import { EmptyBoardGuidance } from './EmptyBoardGuidance'
 import { TaskColumn } from './TaskColumn'
 import { handleOnDragEnd, handleOnDragStart } from '../../utils'
 
@@ -11,6 +12,7 @@ export const TaskColumns = ({ boardId }: { boardId: string }) => {
   const plannerContext = usePlanner()
   const { boards } = plannerContext
   const dispatch = usePlannerDispatch()
+  const hasNoColumns = boards[boardId].columns.length === 0
 
   return (
     <div className='flex flex-1'>
@@ -32,6 +34,7 @@ export const TaskColumns = ({ boardId }: { boardId: string }) => {
                   <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
                 ))}
                 {provided.placeholder}
+                {hasNoColumns && <EmptyBoardGuidance />}
                 <ScrollBar orientation='horizontal' />
               </div>
             </ScrollArea>
