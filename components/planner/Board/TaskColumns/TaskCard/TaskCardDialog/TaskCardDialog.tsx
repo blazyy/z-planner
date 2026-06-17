@@ -76,7 +76,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
           <Textarea
             placeholder='Notes...'
             value={task.content}
-            className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y'
+            className='bg-neutral-100 dark:bg-neutral-800 m-1 min-h-fit focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y'
             onChange={(event) => changeCardContent(id, event.target.value, dispatch)}
           />
         </CardContent>

@@ -15,10 +15,13 @@ export const ColumnHeader = ({ columnId, dragHandleProps }: ColumnHeaderProps) =
   const { columns } = usePlanner()
 
   return (
-    <Card {...dragHandleProps} className={cn('hover:bg-neutral-100 mb-1 transition-all cursor-pointer')}>
+    <Card
+      {...dragHandleProps}
+      className={cn('hover:bg-neutral-100 dark:hover:bg-neutral-800 mb-1 transition-all cursor-pointer')}
+    >
       <CardHeader className='p-1'>
         <div className='flex flex-row justify-between items-center gap-2 px-2'>
-          <div className='font-bold text-gray-700 text-xl'>{columns[columnId].name}</div>
+          <div className='font-bold text-gray-700 dark:text-gray-200 text-xl'>{columns[columnId].name}</div>
           <AddNewCardButton columnId={columnId} />
         </div>
       </CardHeader>

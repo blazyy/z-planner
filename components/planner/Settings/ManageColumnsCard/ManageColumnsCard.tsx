@@ -46,7 +46,7 @@ type ColumnsProps = {
 
 const Columns = ({ board, columns, setColumnBeingModified }: ColumnsProps) => {
   if (!board || board.columns.length === 0) {
-    return <span className='text-neutral-500 text-sm'>No columns yet</span>
+    return <span className='text-neutral-500 dark:text-neutral-400 text-sm'>No columns yet</span>
   }
   return (
     <div className='flex flex-row gap-2'>

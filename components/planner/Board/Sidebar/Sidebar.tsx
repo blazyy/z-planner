@@ -42,7 +42,7 @@ export const Sidebar = ({ currentPage }: { currentPage: string }) => {
                     <Github className='w-5 h-5' />
                     <span className='ml-5'>GitHub</span>
                   </div>
-                  <ExternalLink className='w-5 h-5 text-neutral-400' />
+                  <ExternalLink className='w-5 h-5 text-neutral-400 dark:text-neutral-500' />
                 </div>
               </Button>
             </a>

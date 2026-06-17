@@ -12,7 +12,7 @@ export const ProgressBar = ({ taskCardId }: ProgressBarProps) => {
   const numTotalSubTasks = subTaskObjects.length
   const progressPercent = (numCompleteSubTasks / numTotalSubTasks) * 100
   return (
-    <div className='flex gap-2 text-gray-500 items-center'>
+    <div className='flex gap-2 text-gray-500 dark:text-gray-400 items-center'>
       <span className='text-xs'>Progress</span>
       <Progress className='h-2' value={progressPercent} />
       <span className='text-xs'>

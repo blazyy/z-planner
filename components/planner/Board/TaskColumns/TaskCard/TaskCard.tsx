@@ -89,7 +89,7 @@ export const TaskCard = memo(function TaskCard({
             }
           }}
           className={cn(
-            isDragging ? 'backdrop-blur-sm bg-white/70' : '',
+            isDragging ? 'backdrop-blur-sm bg-card/70' : '',
             task.status === 'completed' ? 'opacity-50' : ''
           )}
         >

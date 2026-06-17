@@ -32,7 +32,7 @@ const Categories = ({ boardOrder, boards, categories, setDetailsOfCategoryBeingM
         return (
           <div key={boardId} className='flex flex-col gap-2 w-48'>
             <span className='text-lg'>{boards[boardId].name}</span>
-            <span className='text-neutral-500 text-sm'>0 categories</span>
+            <span className='text-neutral-500 dark:text-neutral-400 text-sm'>0 categories</span>
           </div>
         )
       }

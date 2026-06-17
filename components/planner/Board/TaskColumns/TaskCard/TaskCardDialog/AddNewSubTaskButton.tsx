@@ -26,9 +26,11 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
       <GripVertical size={12} className='invisible' />
       <PlusCircle
         size={20}
-        className={`${isHoveringOver && !isSubTaskBeingDragged ? 'text-blue-500' : 'text-gray-400'}`}
+        className={`${isHoveringOver && !isSubTaskBeingDragged ? 'text-blue-500' : 'text-gray-400 dark:text-gray-500'}`}
       />
-      <span className={`ml-2 text-sm ${isHoveringOver && !isSubTaskBeingDragged ? 'text-blue-500' : 'text-gray-400'}`}>
+      <span
+        className={`ml-2 text-sm ${isHoveringOver && !isSubTaskBeingDragged ? 'text-blue-500' : 'text-gray-400 dark:text-gray-500'}`}
+      >
         Add subtask
       </span>
     </button>

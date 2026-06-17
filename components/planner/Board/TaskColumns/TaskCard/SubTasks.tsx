@@ -26,7 +26,10 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
               }
             }}
           />
-          <label htmlFor={`subtask-check-${subTask.id}`} className='text-gray-500 text-sm cursor-pointer'>
+          <label
+            htmlFor={`subtask-check-${subTask.id}`}
+            className='text-gray-500 dark:text-gray-400 text-sm cursor-pointer'
+          >
             {subTask.title}
           </label>
         </div>

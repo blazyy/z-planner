@@ -8,7 +8,7 @@ export const ColumnEmptyState = ({ isFilterActive }: { isFilterActive: boolean }
   const Icon = isFilterActive ? SearchX : Inbox
   return (
     <div
-      className='flex flex-col flex-1 justify-center items-center gap-2 px-4 py-10 text-center text-neutral-400 select-none'
+      className='flex flex-col flex-1 justify-center items-center gap-2 px-4 py-10 text-center text-neutral-400 dark:text-neutral-500 select-none'
       role='note'
     >
       <Icon className='w-7 h-7' aria-hidden='true' />
@@ -16,7 +16,7 @@ export const ColumnEmptyState = ({ isFilterActive }: { isFilterActive: boolean }
         <p className='text-sm'>No tasks match your filters.</p>
       ) : (
         <>
-          <p className='font-medium text-neutral-500 text-sm'>No tasks yet</p>
+          <p className='font-medium text-neutral-500 dark:text-neutral-400 text-sm'>No tasks yet</p>
           <p className='text-xs'>Use the + in the column header to add your first task.</p>
         </>
       )}

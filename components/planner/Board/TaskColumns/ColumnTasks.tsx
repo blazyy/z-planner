@@ -44,7 +44,7 @@ export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { bo
             {...provided.droppableProps}
             className={cn(
               'flex flex-col transition ease grow p-1 px-2 rounded-lg',
-              snapshot.isDraggingOver ? 'bg-neutral-200' : 'bg-neutral-100'
+              snapshot.isDraggingOver ? 'bg-neutral-200 dark:bg-neutral-700' : 'bg-neutral-100 dark:bg-neutral-800'
             )}
             style={{ minHeight: '82vh', maxHeight: '82vh' }}
           >

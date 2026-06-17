@@ -33,7 +33,7 @@ export const contextMenuItemProps = {
 }
 
 export const iconProps = {
-  className: 'text-gray-500',
+  className: 'text-gray-500 dark:text-gray-400',
   size: 18,
 }
 

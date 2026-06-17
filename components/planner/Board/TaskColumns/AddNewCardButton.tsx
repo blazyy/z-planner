@@ -49,7 +49,7 @@ export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
             }
           }}
         >
-          <Plus className='text-gray-400' size='1em' />
+          <Plus className='text-gray-400 dark:text-gray-500' size='1em' />
         </TooltipTrigger>
         <TooltipContent>Add new card</TooltipContent>
       </Tooltip>
