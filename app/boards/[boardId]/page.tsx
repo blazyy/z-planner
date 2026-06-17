@@ -1,8 +1,8 @@
 'use client'
 import { notFound } from 'next/navigation'
 
-import { LoadingSpinner } from '@/components/global/LoadingSpinner'
 import { Board } from '@/components/planner/Board/Board'
+import { BoardSkeleton } from '@/components/planner/Board/BoardSkeleton'
 import { usePlanner } from '@/hooks/Planner/Planner'
 
 export default function BoardPage({ params }: { params: { boardId: string } }) {
@@ -10,7 +10,7 @@ export default function BoardPage({ params }: { params: { boardId: string } }) {
   const { boardId } = params
 
   if (!hasLoaded) {
-    return <LoadingSpinner />
+    return <BoardSkeleton />
   }
 
   if (!boards[boardId]) {
