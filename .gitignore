@@ -39,6 +39,9 @@ node_modules/
 # vercel
 .vercel
 
+# Claude Code local project dir (settings, worktrees, launch config)
+.claude/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
