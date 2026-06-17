@@ -1,9 +1,12 @@
+import { useEffect } from 'react'
+
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { flushDebouncedMutation } from '@/utils/plannerUtils/apiClient'
 import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import changeCardContent from '@/utils/plannerUtils/cardUtils/changeCardContent'
 import changeCardTitle from '@/utils/plannerUtils/cardUtils/changeCardTitle'
@@ -21,6 +24,22 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
   const dispatch = usePlannerDispatch()!
   const { taskCards, columns } = usePlanner()
   const task = taskCards[id]
+
+  /*
+   * Closing the dialog unmounts this content (Radix portals it without
+   * forceMount), so the cleanup is our close hook. Title/content edits are
+   * saved through trailing-edge debounced PATCHes keyed per card; if the user
+   * types and closes before the timer fires, that last edit's request never
+   * goes out. Flushing both keys here fires the pending PATCH immediately. The
+   * optimistic value already lives in the planner store (the dispatch ran on
+   * keystroke), so the flushed request carries the latest value.
+   */
+  useEffect(() => {
+    return () => {
+      flushDebouncedMutation(`card-title:${id}`)
+      flushDebouncedMutation(`card-content:${id}`)
+    }
+  }, [id])
 
   return (
     <DialogContent className='p-0'>

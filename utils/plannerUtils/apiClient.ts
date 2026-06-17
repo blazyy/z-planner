@@ -9,13 +9,18 @@ import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
  * the timer; when it fires, the wrapped fn runs once with the LATEST args. This
  * matches lodash's default { leading: false, trailing: true } semantics, which
  * is all the per-key debouncedSenders Map relied on.
+ *
+ * .flush() forces a pending trailing call to run immediately with the latest
+ * args (clearing the timer first so it can't double-fire), and is a no-op when
+ * nothing is pending. Used to drain in-flight keystroke saves before the editor
+ * unmounts, so the last edit isn't lost to a timer that never gets to fire.
  */
-type DebouncedFn<A extends unknown[]> = (...args: A) => void
+type DebouncedFn<A extends unknown[]> = ((...args: A) => void) & { flush: () => void }
 
 function debounce<A extends unknown[]>(fn: (...args: A) => void, waitMs: number): DebouncedFn<A> {
   let timer: ReturnType<typeof setTimeout> | undefined
   let latestArgs: A
-  return (...args: A) => {
+  const debounced = (...args: A) => {
     latestArgs = args
     if (timer !== undefined) {
       clearTimeout(timer)
@@ -25,6 +30,15 @@ function debounce<A extends unknown[]>(fn: (...args: A) => void, waitMs: number)
       fn(...latestArgs)
     }, waitMs)
   }
+  debounced.flush = () => {
+    if (timer === undefined) {
+      return
+    }
+    clearTimeout(timer)
+    timer = undefined
+    fn(...latestArgs)
+  }
+  return debounced
 }
 
 export const emptyPlannerState: PlannerType = {
@@ -110,4 +124,21 @@ export function sendDebouncedMutation(
     debouncedSenders.set(key, sender)
   }
   sender(dispatch, request)
+}
+
+/*
+ * Forces a key's pending debounced save to fire NOW instead of waiting out the
+ * trailing timer. The editor calls this on close/unmount so a final keystroke
+ * isn't dropped by a timer that never gets the chance to fire. No-op when the
+ * key has nothing pending. The wrapped sender already deletes itself from the
+ * Map when it fires (here, synchronously inside flush); the trailing delete is
+ * an idempotent safety net.
+ */
+export function flushDebouncedMutation(key: string): void {
+  const sender = debouncedSenders.get(key)
+  if (!sender) {
+    return
+  }
+  sender.flush()
+  debouncedSenders.delete(key)
 }
