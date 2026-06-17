@@ -51,6 +51,7 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
+    "use-sync-external-store": "^1.6.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
@@ -60,6 +61,7 @@
     "@types/node": "^20.19.43",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
+    "@types/use-sync-external-store": "^1.5.0",
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "10.4.16",
     "eslint": "8.50.0",
