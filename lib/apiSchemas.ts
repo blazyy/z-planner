@@ -169,3 +169,16 @@ export const subTaskReorder = z
     reorderedSubTasks: z.array(entityId),
   })
   .strict()
+
+// GET /api/planner/archived — archived-card pagination query string.
+// `limit` bounds the page size (1..100, default 20). `cursor` is the id of the
+// last card from the previous page; the route returns the next slice strictly
+// after it in the deterministic ordering (newest first; the model carries no
+// archivedAt timestamp, so ordering falls back to descending id). Coerced
+// because URLSearchParams values arrive as strings.
+export const archivedQuery = z
+  .object({
+    limit: z.coerce.number().int().min(1).max(100).default(20),
+    cursor: entityId.optional(),
+  })
+  .strict()
