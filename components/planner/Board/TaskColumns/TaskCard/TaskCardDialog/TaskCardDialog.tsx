@@ -43,7 +43,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
                 />
                 <Textarea
                   value={task.title}
-                  className='items-center p-0 border-none h-[35px] text-2xl focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+                  className='items-center p-0 border-none h-[35px] text-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y'
                   onChange={(event) => changeCardTitle(id, event.target.value, dispatch)}
                 />
               </div>
@@ -56,7 +56,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
           <Textarea
             placeholder='Notes...'
             value={task.content}
-            className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-0 focus-visible:ring-transparent resize-y'
+            className='bg-neutral-100 m-1 min-h-fit focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y'
             onChange={(event) => changeCardContent(id, event.target.value, dispatch)}
           />
         </CardContent>

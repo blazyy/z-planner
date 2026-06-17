@@ -6,7 +6,7 @@ export const TaskFilterSearchBar = () => {
   const { searchQuery } = usePlannerFilters()
   return (
     <Input
-      className='w-96 focus-visible:ring-0 focus-visible:ring-transparent'
+      className='w-96 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
       type='text'
       placeholder='Search for tasks...'
       value={searchQuery}
