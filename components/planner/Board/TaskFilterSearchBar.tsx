@@ -8,6 +8,7 @@ export const TaskFilterSearchBar = () => {
     <Input
       className='w-96 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
       type='text'
+      aria-label='Search for tasks'
       placeholder='Search for tasks...'
       value={searchQuery}
       onChange={(e) => dispatch({ type: 'searchQueryChanged', payload: { searchQuery: e.target.value } })}
