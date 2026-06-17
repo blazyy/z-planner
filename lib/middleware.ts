@@ -94,7 +94,8 @@ export function withDbConnect(handler: Handler): Handler {
 
 export function withAuth(handler: Handler): Handler {
   return async (req, context) => {
-    const { userId } = auth()
+    // Clerk v6: auth() is async and must be awaited.
+    const { userId } = await auth()
     if (!userId) {
       return jsonError(401, 'Unauthorized')
     }

@@ -3,7 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 // Mutable auth state shared with the hoisted clerk mock.
 const authState = vi.hoisted(() => ({ userId: null as string | null }))
 vi.mock('@clerk/nextjs/server', () => ({
-  auth: () => ({ userId: authState.userId }),
+  // Clerk v6: auth() is async.
+  auth: async () => ({ userId: authState.userId }),
 }))
 
 // dbConnect is a side-effecting connector; the suite only needs to observe that
