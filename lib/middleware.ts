@@ -1,4 +1,5 @@
 import dbConnect from '@/lib/dbConnect'
+import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import mongoose from 'mongoose'
 import { NextRequest, NextResponse } from 'next/server'
@@ -75,7 +76,7 @@ export function withErrorHandling(handler: Handler): Handler {
       if (error instanceof mongoose.Error.ValidationError) {
         return jsonError(400, 'Validation failed')
       }
-      console.error(`[api] ${req.method} ${req.nextUrl.pathname}:`, error)
+      logger.error({ method: req.method, path: req.nextUrl.pathname, err: error }, 'unhandled api error')
       return jsonError(500, 'Internal server error')
     }
   }
