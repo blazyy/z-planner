@@ -31,7 +31,14 @@ const baseState = (): PlannerType => ({
   },
   taskCards: {
     card1: { id: 'card1', title: 'One', category: 'cat1', content: '', status: 'created', subTasks: ['sub1'] },
-    card2: { id: 'card2', title: 'Two', category: UNASSIGNED_CATEGORY_ID, content: '', status: 'created', subTasks: [] },
+    card2: {
+      id: 'card2',
+      title: 'Two',
+      category: UNASSIGNED_CATEGORY_ID,
+      content: '',
+      status: 'created',
+      subTasks: [],
+    },
     card3: { id: 'card3', title: 'Three', category: 'cat1', content: '', status: 'created', subTasks: [] },
   },
   subTasks: {
@@ -172,7 +179,10 @@ describe('plannerReducer — immutability of source state (immer)', () => {
       { type: 'columnNameChanged', payload: { columnId: 'col1', newName: 'X' } },
       { type: 'subTaskDragStatusChanged', payload: true },
       { type: 'taskCardCheckedStatusChanged', payload: { columnId: 'col1', taskCardId: 'card1', isChecked: true } },
-      { type: 'newCategoryAdded', payload: { boardId: 'board1', newCategoryDetails: { id: 'cat2', name: 'C', color: 'red' } } },
+      {
+        type: 'newCategoryAdded',
+        payload: { boardId: 'board1', newCategoryDetails: { id: 'cat2', name: 'C', color: 'red' } },
+      },
     ] as const
 
     for (const action of actions) {

@@ -95,7 +95,11 @@ export function sendMutation(dispatch: PlannerDispatchContextType, request: () =
  */
 const debouncedSenders = new Map<string, DebouncedFn<[PlannerDispatchContextType, () => Promise<unknown>]>>()
 
-export function sendDebouncedMutation(key: string, dispatch: PlannerDispatchContextType, request: () => Promise<unknown>): void {
+export function sendDebouncedMutation(
+  key: string,
+  dispatch: PlannerDispatchContextType,
+  request: () => Promise<unknown>
+): void {
   let sender = debouncedSenders.get(key)
   if (!sender) {
     sender = debounce((latestDispatch: PlannerDispatchContextType, latestRequest: () => Promise<unknown>) => {

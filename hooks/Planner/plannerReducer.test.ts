@@ -22,7 +22,14 @@ const baseState = (): PlannerType => ({
   },
   taskCards: {
     card1: { id: 'card1', title: 'One', category: 'cat1', content: '', status: 'created', subTasks: ['sub1'] },
-    card2: { id: 'card2', title: 'Two', category: UNASSIGNED_CATEGORY_ID, content: '', status: 'created', subTasks: [] },
+    card2: {
+      id: 'card2',
+      title: 'Two',
+      category: UNASSIGNED_CATEGORY_ID,
+      content: '',
+      status: 'created',
+      subTasks: [],
+    },
     card3: { id: 'card3', title: 'Three', category: 'cat1', content: '', status: 'created', subTasks: [] },
   },
   subTasks: {
@@ -126,7 +133,14 @@ describe('plannerReducer', () => {
       type: 'newTaskCardAdded',
       payload: {
         columnId: 'col1',
-        newTaskCardDetails: { id: 'card4', title: 'Four', category: 'cat1', content: '', status: 'created', subTasks: [] },
+        newTaskCardDetails: {
+          id: 'card4',
+          title: 'Four',
+          category: 'cat1',
+          content: '',
+          status: 'created',
+          subTasks: [],
+        },
         updatedTaskCards: ['card4', 'card1', 'card2'],
       },
     })
@@ -194,7 +208,10 @@ describe('plannerReducer', () => {
     next = plannerReducer(next, { type: 'subTaskTitleChanged', payload: { subTaskId: 'sub2', newTitle: 'Step two' } })
     expect(next.subTasks.sub2.title).toBe('Step two')
 
-    next = plannerReducer(next, { type: 'subTasksCheckedStatusChanged', payload: { subTaskId: 'sub2', isChecked: true } })
+    next = plannerReducer(next, {
+      type: 'subTasksCheckedStatusChanged',
+      payload: { subTaskId: 'sub2', isChecked: true },
+    })
     expect(next.subTasks.sub2.checked).toBe(true)
 
     next = plannerReducer(next, {

@@ -40,10 +40,16 @@ describe('sendMutation — FIFO when a later request is faster', () => {
 
     // First request is slow (resolves after a 50ms timer); second is instant.
     // Without the FIFO chain, #2 would land before #1.
-    sendMutation(dispatch, () => new Promise<void>((resolve) => setTimeout(() => {
-      order.push(1)
-      resolve()
-    }, 50)))
+    sendMutation(
+      dispatch,
+      () =>
+        new Promise<void>((resolve) =>
+          setTimeout(() => {
+            order.push(1)
+            resolve()
+          }, 50)
+        )
+    )
     sendMutation(dispatch, async () => {
       order.push(2)
     })

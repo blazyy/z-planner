@@ -67,11 +67,10 @@ const Categories = ({ boardOrder, boards, categories, setDetailsOfCategoryBeingM
 
 export const ManageCategoriesCard = () => {
   const { boardOrder, boards, categories } = usePlanner()
-  const [detailsOfCategoryBeingModified, setDetailsOfCategoryBeingModified] =
-    useState<DetailsOfCategoryBeingModified>({
-      boardId: '',
-      categoryId: '',
-    })
+  const [detailsOfCategoryBeingModified, setDetailsOfCategoryBeingModified] = useState<DetailsOfCategoryBeingModified>({
+    boardId: '',
+    categoryId: '',
+  })
   const [key, setKey] = useState(0)
   const conditionToOpenDialog = Boolean(
     detailsOfCategoryBeingModified.boardId && detailsOfCategoryBeingModified.categoryId

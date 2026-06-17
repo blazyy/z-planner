@@ -2,7 +2,12 @@ import axios from 'axios'
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
-export const changeCategoryInfo = (categoryId: string, newName: string, newColor: string, dispatch: PlannerDispatchContextType) => {
+export const changeCategoryInfo = (
+  categoryId: string,
+  newName: string,
+  newColor: string,
+  dispatch: PlannerDispatchContextType
+) => {
   const categoryDetails = {
     id: categoryId,
     name: newName,

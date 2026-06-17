@@ -35,11 +35,7 @@ describe('addNewCardToColumn', () => {
     const dispatch = (a: PlannerAction) => dispatched.push(a)
     const column: ColumnInfoType = { id: 'col1', name: 'To Do', taskCards: ['card1', 'card2'] }
 
-    addNewCardToColumn(
-      column,
-      { id: 'cardNew', title: 'Title', category: 'cat1', content: 'body' },
-      dispatch
-    )
+    addNewCardToColumn(column, { id: 'cardNew', title: 'Title', category: 'cat1', content: 'body' }, dispatch)
 
     const action = dispatched[0]
     expect(action.type).toBe('newTaskCardAdded')

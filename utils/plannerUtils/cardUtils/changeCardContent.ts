@@ -2,7 +2,11 @@ import axios from 'axios'
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendDebouncedMutation } from '../apiClient'
 
-export default function changeCardContent(taskCardId: string, newContent: string, dispatch: PlannerDispatchContextType) {
+export default function changeCardContent(
+  taskCardId: string,
+  newContent: string,
+  dispatch: PlannerDispatchContextType
+) {
   dispatch({
     type: 'taskCardContentChanged',
     payload: {

@@ -21,11 +21,11 @@ npm ci
 
 Create a `.env.local` file in the project root (see `.env.example`) with the following variables:
 
-| Variable | Description |
-| --- | --- |
-| `MONGO_URI` | MongoDB connection string |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key |
-| `CLERK_SECRET_KEY` | Clerk secret key |
+| Variable                            | Description               |
+| ----------------------------------- | ------------------------- |
+| `MONGO_URI`                         | MongoDB connection string |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key     |
+| `CLERK_SECRET_KEY`                  | Clerk secret key          |
 
 ## Commands
 

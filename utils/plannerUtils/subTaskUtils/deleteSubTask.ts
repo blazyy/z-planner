@@ -3,7 +3,11 @@ import axios from 'axios'
 import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 import { sendMutation } from '../apiClient'
 
-export default function deleteSubTask(taskCard: TaskCardInfoType, subTaskId: string, dispatch: PlannerDispatchContextType) {
+export default function deleteSubTask(
+  taskCard: TaskCardInfoType,
+  subTaskId: string,
+  dispatch: PlannerDispatchContextType
+) {
   /* Moves cursor focus to subtask above using the subtask ID */
   const subTasksCopy = Array.from(taskCard.subTasks)
   const subTaskIndex = subTasksCopy.findIndex((id: string) => id === subTaskId)
