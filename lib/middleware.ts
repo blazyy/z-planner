@@ -194,14 +194,41 @@ export function withErrorHandling(handler: Handler): Handler {
 }
 
 /*
+ * Structured mutation audit log. Logs { userId, method, path, status } at info
+ * level AFTER the handler resolves, for mutating verbs only (POST/PATCH/DELETE);
+ * GETs are skipped to avoid read-traffic noise. Cheap and non-blocking — it
+ * never inspects or alters the response, so responses stay byte-identical.
+ * Thrown errors are already logged by withErrorHandling, so this only covers the
+ * resolved path. Silent under tests (the pino logger is level 'silent' when
+ * VITEST is set).
+ */
+const AUDITED_METHODS = new Set(['POST', 'PATCH', 'DELETE'])
+
+export function withAudit(handler: Handler): Handler {
+  return async (req, context) => {
+    const res = await handler(req, context)
+    if (AUDITED_METHODS.has(req.method)) {
+      logger.info(
+        { userId: req.userId, method: req.method, path: req.nextUrl.pathname, status: res.status },
+        'api mutation'
+      )
+    }
+    return res
+  }
+}
+
+/*
  * Composition order (outer -> inner):
- *   withErrorHandling( withAuth( withRateLimit( withDbConnect(h) ) ) )
+ *   withErrorHandling( withAuth( withRateLimit( withAudit( withDbConnect(h) ) ) ) )
  *
  * - withAuth before withRateLimit so the limiter keys on req.userId (per tenant)
  *   and unauthenticated traffic 401s without consuming any bucket.
  * - withRateLimit before the DB connect/handler so throttled requests are cheap
  *   (no DB work for a 429).
+ * - withAudit wraps the handler (after dbConnect would be equivalent; placing it
+ *   here means it only logs requests that passed auth + rate limiting, i.e. real
+ *   accepted mutations). It reads the resolved status without touching the body.
  */
 export function withMiddleware(handler: Handler): Handler {
-  return withErrorHandling(withAuth(withRateLimit(withDbConnect(handler))))
+  return withErrorHandling(withAuth(withRateLimit(withAudit(withDbConnect(handler)))))
 }

@@ -24,12 +24,15 @@ import {
   parseBody,
   RATE_LIMIT_CAPACITY,
   RATE_LIMIT_REFILL_PER_SEC,
+  withAudit,
   withAuth,
   withDbConnect,
   withErrorHandling,
   withMiddleware,
   withRateLimit,
 } from './middleware'
+
+import { logger } from '@/lib/logger'
 
 const makeReq = (init?: { body?: string; method?: string; url?: string }): ExtendedNextRequest =>
   new NextRequest(init?.url ?? 'http://localhost/api/planner', {
@@ -309,6 +312,51 @@ describe('withRateLimit', () => {
   })
 })
 
+describe('withAudit', () => {
+  const makeAuditReq = (method: string, userId = 'user_audit'): ExtendedNextRequest => {
+    const req = makeReq({ method })
+    req.userId = userId
+    return req
+  }
+
+  it('logs { userId, method, path, status } at info for a mutation', async () => {
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => undefined as never)
+    const handler = vi.fn(async () => NextResponse.json({ ok: true }, { status: 201 }))
+    const res = await withAudit(handler)(makeAuditReq('POST'), ctx)
+
+    expect(res.status).toBe(201)
+    expect(infoSpy).toHaveBeenCalledTimes(1)
+    expect(infoSpy).toHaveBeenCalledWith(
+      { userId: 'user_audit', method: 'POST', path: '/api/planner', status: 201 },
+      'api mutation'
+    )
+    infoSpy.mockRestore()
+  })
+
+  it.each(['PATCH', 'DELETE'])('also audits %s mutations', async (method) => {
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => undefined as never)
+    const handler = vi.fn(async () => NextResponse.json({ ok: true }))
+    await withAudit(handler)(makeAuditReq(method), ctx)
+    expect(infoSpy).toHaveBeenCalledWith(expect.objectContaining({ method, userId: 'user_audit' }), 'api mutation')
+    infoSpy.mockRestore()
+  })
+
+  it('does NOT log for a GET (reads are not audited)', async () => {
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => undefined as never)
+    const handler = vi.fn(async () => NextResponse.json({ ok: true }))
+    await withAudit(handler)(makeAuditReq('GET'), ctx)
+    expect(infoSpy).not.toHaveBeenCalled()
+    infoSpy.mockRestore()
+  })
+
+  it('returns the handler response unchanged (byte-identical)', async () => {
+    const handler = vi.fn(async () => NextResponse.json({ deep: { value: 7 } }, { status: 200 }))
+    const res = await withAudit(handler)(makeAuditReq('POST'), ctx)
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ deep: { value: 7 } })
+  })
+})
+
 describe('withMiddleware composition', () => {
   it('runs withErrorHandling(withAuth(withDbConnect(handler))): auth gate fires before dbConnect/handler', async () => {
     authState.userId = null
@@ -373,5 +421,18 @@ describe('withMiddleware composition', () => {
     // Now authenticate the same nominal flow -> a full bucket is available.
     authState.userId = 'user_after_unauth'
     expect((await wrapped(makeReq(), ctx)).status).toBe(200)
+  })
+
+  it('audits a mutation through the full chain at info level', async () => {
+    authState.userId = 'user_chain_audit'
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => undefined as never)
+    const handler = vi.fn(async () => NextResponse.json({ ok: true }, { status: 201 }))
+    const res = await withMiddleware(handler)(makeReq({ method: 'POST' }), ctx)
+    expect(res.status).toBe(201)
+    expect(infoSpy).toHaveBeenCalledWith(
+      { userId: 'user_chain_audit', method: 'POST', path: '/api/planner', status: 201 },
+      'api mutation'
+    )
+    infoSpy.mockRestore()
   })
 })
