@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { ExtendedNextRequest, withMiddleware } from '@/lib/middleware'
+import { buildStarterPlanner } from '@/lib/starterPlanner'
 import Planner from '@/models/Planner'
 
 /*
@@ -27,23 +28,17 @@ const BSON_SOFT_LIMIT = 15 * 1024 * 1024
 const BSON_AGGRESSIVE_CAP = 50
 
 export const GET = withMiddleware(async (req: ExtendedNextRequest) => {
-  const { userId } = req
+  // withAuth (in withMiddleware) 401s before this handler runs when unauthed, so
+  // userId is guaranteed present here.
+  const userId = req.userId as string
 
   // Race-proof get-or-create: the unique index on clerkUserId guarantees that
-  // concurrent first loads converge on a single document.
+  // concurrent first loads converge on a single document. A BRAND-NEW user is
+  // seeded with a starter board via $setOnInsert; existing users keep their data
+  // untouched because $setOnInsert is a no-op on update.
   const user = await Planner.findOneAndUpdate(
     { clerkUserId: userId },
-    {
-      $setOnInsert: {
-        clerkUserId: userId,
-        boardOrder: [],
-        boards: {},
-        columns: {},
-        categories: {},
-        taskCards: {},
-        subTasks: {},
-      },
-    },
+    { $setOnInsert: buildStarterPlanner(userId) },
     { upsert: true, new: true }
   ).lean()
 
