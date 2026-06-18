@@ -36,7 +36,7 @@ describe('addNewCardToColumn', () => {
     const dispatch = (a: PlannerAction) => dispatched.push(a)
     const column: ColumnInfoType = { id: 'col1', name: 'To Do', taskCards: ['card1', 'card2'] }
 
-    addNewCardToColumn(column, { id: 'cardNew', title: 'Title', category: 'cat1', content: 'body' }, dispatch)
+    addNewCardToColumn(column, { id: 'cardNew', title: 'Title', category: 'cat1', content: 'body' }, dispatch, 'board1')
 
     const action = dispatched[0]
     expect(action.type).toBe('newTaskCardAdded')
@@ -70,7 +70,7 @@ describe('moveCardWithinColumn', () => {
     }
 
     // Move card1 (index 0) to index 2.
-    moveCardWithinColumn(columns, 'col1', 'card1', 0, 2, dispatch)
+    moveCardWithinColumn(columns, 'col1', 'card1', 0, 2, dispatch, 'board1')
 
     const action = dispatched[0]
     expect(action.type).toBe('cardMovedWithinColumn')
@@ -87,7 +87,7 @@ describe('changeCardCheckedStatus', () => {
     const dispatched: PlannerAction[] = []
     const dispatch = (a: PlannerAction) => dispatched.push(a)
 
-    changeCardCheckedStatus('col1', 'card1', true, ['card1', 'card2', 'card3'], dispatch)
+    changeCardCheckedStatus('col1', 'card1', true, ['card1', 'card2', 'card3'], dispatch, 'board1')
 
     const action = dispatched[0]
     expect(action.type).toBe('taskCardCheckedStatusChanged')
@@ -102,7 +102,7 @@ describe('changeCardCheckedStatus', () => {
 
   it('when unchecked: PATCHes status created with no column reorder payload', () => {
     const dispatch = vi.fn()
-    changeCardCheckedStatus('col1', 'card1', false, ['card1', 'card2'], dispatch)
+    changeCardCheckedStatus('col1', 'card1', false, ['card1', 'card2'], dispatch, 'board1')
     expect(vi.mocked(axiosMock.patch)).toHaveBeenCalledWith('/api/planner/cards/card1', { status: 'created' })
   })
 })

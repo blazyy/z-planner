@@ -5,10 +5,11 @@ import { usePlannerDispatch, usePlannerEphemeral, usePlannerSelector } from '@/h
 import { addNewSubTaskOnButtonClick } from '@/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
 
 type AddNewSubTaskButtonProps = {
+  boardId: string
   taskCardId: string
 }
 
-export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) => {
+export const AddNewSubTaskButton = ({ boardId, taskCardId }: AddNewSubTaskButtonProps) => {
   const dispatch = usePlannerDispatch()
   const [isHoveringOver, setIsHoveringOver] = useState(false)
   const taskCard = usePlannerSelector((s) => s.taskCards[taskCardId])
@@ -21,7 +22,7 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
       className='flex items-center gap-2 mt-1 hover:cursor-pointer'
       onMouseEnter={() => setIsHoveringOver(true)}
       onMouseLeave={() => setIsHoveringOver(false)}
-      onClick={() => addNewSubTaskOnButtonClick(taskCard, dispatch)}
+      onClick={() => addNewSubTaskOnButtonClick(taskCard, dispatch, boardId)}
     >
       <GripVertical size={12} className='invisible' />
       <PlusCircle

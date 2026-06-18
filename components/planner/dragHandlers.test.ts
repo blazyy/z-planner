@@ -57,7 +57,7 @@ describe('handleOnDragEnd', () => {
   it('routes same-column card drops to moveCardWithinColumn', () => {
     const dispatch = vi.fn()
     handleOnDragEnd(drop({}), dispatch, vi.fn(), planner, 'board1')
-    expect(moveCardWithinColumn).toHaveBeenCalledWith(planner.columns, 'col1', 'card1', 0, 1, dispatch)
+    expect(moveCardWithinColumn).toHaveBeenCalledWith(planner.columns, 'col1', 'card1', 0, 1, dispatch, 'board1')
     expect(moveCardAcrossColumns).not.toHaveBeenCalled()
   })
 
@@ -70,7 +70,8 @@ describe('handleOnDragEnd', () => {
       'card1',
       result.source,
       result.destination,
-      dispatch
+      dispatch,
+      'board1'
     )
   })
 
@@ -98,7 +99,7 @@ describe('handleOnDragEnd', () => {
     )
     expect(ephemeralDispatch).toHaveBeenCalledWith({ type: 'subTaskDragStatusChanged', payload: false })
     expect(dispatch).not.toHaveBeenCalled()
-    expect(reorderSubTasks).toHaveBeenCalledWith(planner.taskCards, 'card1~sub1', 0, 1, dispatch)
+    expect(reorderSubTasks).toHaveBeenCalledWith(planner.taskCards, 'card1~sub1', 0, 1, dispatch, 'board1')
   })
 })
 
