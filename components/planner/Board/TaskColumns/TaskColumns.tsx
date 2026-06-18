@@ -11,7 +11,13 @@ import {
 
 import { EmptyBoardGuidance } from './EmptyBoardGuidance'
 import { TaskColumn } from './TaskColumn'
-import { handleOnDragEnd, handleOnDragStart } from '../../utils'
+import {
+  getDragEndAnnouncement,
+  getDragStartAnnouncement,
+  getDragUpdateAnnouncement,
+  handleOnDragEnd,
+  handleOnDragStart,
+} from '../../utils'
 
 export const TaskColumns = ({ boardId }: { boardId: string }) => {
   // Render only depends on this board's column order; the drag handler reads a
@@ -26,8 +32,21 @@ export const TaskColumns = ({ boardId }: { boardId: string }) => {
   return (
     <div className='flex flex-1'>
       <DragDropContext
-        onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, ephemeralDispatch)}
-        onDragEnd={(result) => handleOnDragEnd(result, dispatch, ephemeralDispatch, store.getState(), boardId)}
+        onDragStart={(dragStartObj, provided) => {
+          handleOnDragStart(dragStartObj, ephemeralDispatch)
+          // Override the library's generic default with a planner-aware message,
+          // emitted into dnd's built-in aria-live="assertive" region.
+          provided.announce(getDragStartAnnouncement(dragStartObj, store.getState()))
+        }}
+        onDragUpdate={(update, provided) => {
+          provided.announce(getDragUpdateAnnouncement(update, store.getState()))
+        }}
+        onDragEnd={(result, provided) => {
+          // Announce BEFORE mutating the store so name lookups still resolve and
+          // the message reflects the pre-commit positions the user navigated to.
+          provided.announce(getDragEndAnnouncement(result, store.getState()))
+          handleOnDragEnd(result, dispatch, ephemeralDispatch, store.getState(), boardId)
+        }}
       >
         {/* droppableId doesn't matter here because it won't be interacting with other droppables */}
         <Droppable droppableId='all-columns' direction='horizontal' type='column'>

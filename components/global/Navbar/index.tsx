@@ -1,14 +1,22 @@
 import { SignedIn, UserButton } from '@clerk/nextjs'
+import { ReactNode } from 'react'
 
 import { ModeToggle } from '@/components/global/ModeToggle'
 
 import { SiteLogo } from './SiteLogo'
 
-export function Navbar() {
+// sidebarToggle is an optional slot for the mobile-only hamburger button. It is
+// supplied by the boards layout (which owns the open/close state) and rendered to
+// the left of the logo; on desktop the layout passes a button that hides itself
+// at lg, so the navbar's desktop appearance is unchanged.
+export function Navbar({ sidebarToggle }: { sidebarToggle?: ReactNode }) {
   return (
     // 98% because of 1% padding (x2) on body (globals.css)
-    <div className='top-0 sticky flex justify-between items-center border-zinc-100 dark:border-zinc-800 bg-background px-3 pt-3 pb-2 border-b-2 min-w-[98%]'>
-      <SiteLogo />
+    <div className='top-0 z-40 sticky flex flex-wrap justify-between items-center gap-y-2 border-zinc-100 dark:border-zinc-800 bg-background px-3 pt-3 pb-2 border-b-2 min-w-[98%]'>
+      <div className='flex items-center gap-2'>
+        {sidebarToggle}
+        <SiteLogo />
+      </div>
       <div className='flex items-center gap-2'>
         <ModeToggle />
         <SignedIn>
