@@ -3,7 +3,7 @@ import { ReactNode, createContext, useContext, useEffect, useReducer, useRef } f
 import { useErrorBoundary } from 'react-error-boundary'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
-import { emptyPlannerData, fetchPlannerData } from '@/utils/plannerUtils/apiClient'
+import { emptyPlannerData, fetchPlannerSummary } from '@/utils/plannerUtils/apiClient'
 
 import { ephemeralReducer } from './ephemeralReducer'
 import { plannerReducer } from './plannerReducer'
@@ -104,9 +104,9 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     // Abort on unmount so a StrictMode double-mount (or quick navigation) can't
     // resolve a stale fetch over the live store.
     const controller = new AbortController()
-    fetchPlannerData(controller.signal)
+    fetchPlannerSummary(controller.signal)
       .then((payload) => {
-        store.dispatch({ type: 'dataFetchedFromDatabase', payload })
+        store.dispatch({ type: 'summaryLoaded', payload })
         ephemeralDispatch({ type: 'dataLoaded' })
       })
       .catch((error) => {

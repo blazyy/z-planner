@@ -2,7 +2,7 @@ import axios from 'axios'
 import { toast } from 'sonner'
 
 import { DEBOUNCE_TIME_MS } from '@/constants/constants'
-import { PlannerDispatchContextType, PlannerType } from '@/hooks/Planner/types'
+import { BoardDataType, PlannerDispatchContextType, PlannerSummaryType, PlannerType } from '@/hooks/Planner/types'
 
 /*
  * Minimal trailing-edge debounce, replacing lodash/debounce. Each call resets
@@ -55,6 +55,36 @@ export async function fetchPlannerData(signal?: AbortSignal): Promise<PlannerTyp
   return {
     boardOrder: data.boardOrder,
     boards: data.boards,
+    columns: data.columns,
+    categories: data.categories,
+    taskCards: data.taskCards,
+    subTasks: data.subTasks,
+  }
+}
+
+/*
+ * The light first-load fetch: board metadata only (boardOrder/boards/
+ * categories). Each board's heavy slice is fetched lazily on open via
+ * fetchBoard. Replaces the whole-doc fetchPlannerData on mount.
+ */
+export async function fetchPlannerSummary(signal?: AbortSignal): Promise<PlannerSummaryType> {
+  const { data } = await axios.get('/api/planner/summary', { signal })
+  return {
+    boardOrder: data.boardOrder,
+    boards: data.boards,
+    categories: data.categories,
+  }
+}
+
+/*
+ * One board's heavy slice (columns/cards/subtasks + that board's categories),
+ * fetched when the board is opened and merged into the store via boardDataLoaded.
+ * Also the scoped recovery path for a failed in-board mutation (see sendMutation).
+ */
+export async function fetchBoard(boardId: string, signal?: AbortSignal): Promise<BoardDataType> {
+  const { data } = await axios.get(`/api/planner/boards/${boardId}`, { signal })
+  return {
+    board: data.board,
     columns: data.columns,
     categories: data.categories,
     taskCards: data.taskCards,

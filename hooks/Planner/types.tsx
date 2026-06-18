@@ -66,6 +66,25 @@ export type BoardsType = {
 export type PlannerType = {
   boardOrder: string[]
   boards: BoardsType
+  categories: CategoriesType
+  columns: ColumnsType
+  taskCards: TaskCardsType
+  subTasks: SubTasksType
+}
+
+// The light first-load payload (GET /api/planner/summary): just the board
+// metadata the sidebar needs up front. Heavy per-board slices (columns/cards/
+// subtasks) are fetched lazily when a board is opened.
+export type PlannerSummaryType = {
+  boardOrder: string[]
+  boards: BoardsType
+  categories: CategoriesType
+}
+
+// One board's heavy slice (GET /api/planner/boards/[boardId]): the columns,
+// cards, subtasks and categories for that board, merged into the store on open.
+export type BoardDataType = {
+  board: BoardInfoType
   columns: ColumnsType
   categories: CategoriesType
   taskCards: TaskCardsType
@@ -100,6 +119,17 @@ export type EphemeralStateType = {
 // compile-time payload checking and the reducer switch can be exhaustive.
 export type PlannerAction =
   | { type: 'dataFetchedFromDatabase'; payload: PlannerType }
+  | { type: 'summaryLoaded'; payload: PlannerSummaryType }
+  | {
+      type: 'boardDataLoaded'
+      payload: {
+        boardId: string
+        columns: ColumnsType
+        categories: CategoriesType
+        taskCards: TaskCardsType
+        subTasks: SubTasksType
+      }
+    }
   | {
       type: 'newBoardAdded'
       payload: { boardId: string; boardName: string; unassignedCategoryDetails: TaskCategoryType }
