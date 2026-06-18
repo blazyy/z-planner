@@ -51,7 +51,7 @@
     "react-hook-form": "^7.47.0",
     "react-window": "^1.8.11",
     "sonner": "^1.5.0",
-    "tailwind-merge": "^1.14.0",
+    "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
     "use-sync-external-store": "^1.6.0",
     "zod": "^3.22.4"
