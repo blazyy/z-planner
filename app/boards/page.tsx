@@ -3,11 +3,11 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 import { LoadingSpinner } from '@/components/global/LoadingSpinner'
-import { usePlanner, usePlannerEphemeral } from '@/hooks/Planner/Planner'
+import { usePlannerEphemeral, usePlannerSelector } from '@/hooks/Planner/Planner'
 
 export default function PlannerPage() {
   const router = useRouter()
-  const { boardOrder } = usePlanner()
+  const boardOrder = usePlannerSelector((s) => s.boardOrder)
   const { hasLoaded } = usePlannerEphemeral()
 
   useEffect(() => {

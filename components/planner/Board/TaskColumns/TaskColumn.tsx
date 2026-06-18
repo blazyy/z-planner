@@ -1,7 +1,7 @@
 import { Draggable } from '@hello-pangea/dnd'
 import { memo } from 'react'
 
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerSelector } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 
 import { ColumnHeader } from './ColumnHeader'
@@ -14,14 +14,14 @@ type TaskColumnProps = {
 }
 
 export const TaskColumn = memo(function TaskColumn({ index, boardId, columnId }: TaskColumnProps) {
-  const { boards, columns } = usePlanner()
-  const columnInfo = columns[columnId]
+  const boardColumns = usePlannerSelector((s) => s.boards[boardId].columns)
+  const columnInfo = usePlannerSelector((s) => s.columns[columnId])
   return (
     <Draggable draggableId={columnInfo.id} index={index}>
       {(provided) => (
         // mr-2 is used instead of gap on parent div because of the dnd library. It does weird things if gap is used.
         <div
-          className={cn('flex flex-col gap-1 w-96', index < boards[boardId].columns.length - 1 && 'mr-2')}
+          className={cn('flex flex-col gap-1 w-96', index < boardColumns.length - 1 && 'mr-2')}
           {...provided.draggableProps}
           ref={provided.innerRef}
         >

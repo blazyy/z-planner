@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerSelector } from '@/hooks/Planner/Planner'
 import { TaskCardInfoType } from '@/hooks/Planner/types'
 import { usePlannerFilters, usePlannerFiltersDispatch } from '@/hooks/PlannerFilters/PlannerFilters'
 
@@ -18,7 +18,13 @@ const getTaskCardBelongingToCategoryCount = (taskCards: TaskCardInfoType[], cate
 export const CategoryFilter = ({ selectedBoard }: { selectedBoard: string }) => {
   const dispatch = usePlannerFiltersDispatch()
   const { selectedCategories } = usePlannerFilters()
-  const { categories, boards, columns, taskCards } = usePlanner()
+  // Per-slice subscriptions: the per-category counts depend on all four maps, so
+  // selecting them individually (each referentially stable) is both correct and
+  // avoids a new-object-per-render selector.
+  const categories = usePlannerSelector((s) => s.categories)
+  const boards = usePlannerSelector((s) => s.boards)
+  const columns = usePlannerSelector((s) => s.columns)
+  const taskCards = usePlannerSelector((s) => s.taskCards)
   const categoriesInSelectedBoard = boards[selectedBoard].categories
 
   const allTaskCardsUnderAllColumns = boards[selectedBoard].columns

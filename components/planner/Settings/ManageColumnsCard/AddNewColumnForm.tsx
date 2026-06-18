@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import { addNewColumn } from '@/utils/plannerUtils/columnUtils/addNewColumn'
 
 const formSchema = z.object({
@@ -21,7 +21,7 @@ type AddNewColumnFormProps = {
 }
 
 export const AddNewColumnForm = ({ boardId, closeDialog }: AddNewColumnFormProps) => {
-  const { boards } = usePlanner()
+  const board = usePlannerSelector((s) => s.boards[boardId])
   const dispatch = usePlannerDispatch()!
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -33,7 +33,7 @@ export const AddNewColumnForm = ({ boardId, closeDialog }: AddNewColumnFormProps
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const columnName = values.columnName
-    addNewColumn(boards[boardId], columnName, dispatch)
+    addNewColumn(board, columnName, dispatch)
     toast.success('Column added.')
     closeDialog()
   }

@@ -1,7 +1,7 @@
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd'
 
 import { Card, CardHeader } from '@/components/ui/card'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerSelector } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 
 import { AddNewCardButton } from './AddNewCardButton'
@@ -12,7 +12,7 @@ type ColumnHeaderProps = {
 }
 
 export const ColumnHeader = ({ columnId, dragHandleProps }: ColumnHeaderProps) => {
-  const { columns } = usePlanner()
+  const columnName = usePlannerSelector((s) => s.columns[columnId].name)
 
   return (
     <Card
@@ -21,7 +21,7 @@ export const ColumnHeader = ({ columnId, dragHandleProps }: ColumnHeaderProps) =
     >
       <CardHeader className='p-1'>
         <div className='flex flex-row justify-between items-center gap-2 px-2'>
-          <div className='font-bold text-gray-700 dark:text-gray-200 text-xl'>{columns[columnId].name}</div>
+          <div className='font-bold text-gray-700 dark:text-gray-200 text-xl'>{columnName}</div>
           <AddNewCardButton columnId={columnId} />
         </div>
       </CardHeader>

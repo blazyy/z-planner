@@ -2,7 +2,7 @@ import { Droppable } from '@hello-pangea/dnd'
 import { memo } from 'react'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { usePlanner, usePlannerEphemeral } from '@/hooks/Planner/Planner'
+import { usePlannerEphemeral, usePlannerSelector } from '@/hooks/Planner/Planner'
 import { usePlannerFilters } from '@/hooks/PlannerFilters/PlannerFilters'
 import { cn } from '@/lib/utils'
 
@@ -11,11 +11,15 @@ import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/Initializi
 import { TaskCard } from './TaskCard/TaskCard'
 
 export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { boardId: string; columnId: string }) {
-  const { boards, columns, taskCards } = usePlanner()
+  // Per-slice subscriptions: this column re-renders when its own column entry
+  // (card order) changes or when card title/category used by the filter change,
+  // but not when an unrelated column mutates. taskCards is read as a whole map
+  // because the filter inspects title/category of each visible card.
+  const categoriesInBoard = usePlannerSelector((s) => s.boards[boardId].categories)
+  const columnInfo = usePlannerSelector((s) => s.columns[columnId])
+  const taskCards = usePlannerSelector((s) => s.taskCards)
   const { taskCardBeingInitialized } = usePlannerEphemeral()
   const { searchQuery, selectedCategories } = usePlannerFilters()
-  const categoriesInBoard = boards[boardId].categories
-  const columnInfo = columns[columnId]
   // While a filter is active the rendered list diverges from the canonical column order, so a drop
   // index can't be mapped back to the right position in the canonical array. Dragging is disabled
   // instead; filtering then mapping keeps Draggable indices consecutive, which the dnd library requires.

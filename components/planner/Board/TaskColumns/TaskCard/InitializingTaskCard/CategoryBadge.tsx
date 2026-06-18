@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerSelector } from '@/hooks/Planner/Planner'
 
 import { badgeClassNames } from '../utils'
 
@@ -24,8 +24,8 @@ type CategoryBadgeProps = {
 }
 
 export const CategoryBadge = ({ boardId, selectedCategory, setSelectedCategory }: CategoryBadgeProps) => {
-  const { boards, categories } = usePlanner()
-  const categoriesInBoard = boards[boardId].categories
+  const categoriesInBoard = usePlannerSelector((s) => s.boards[boardId].categories)
+  const categories = usePlannerSelector((s) => s.categories)
 
   return (
     <DropdownMenu>

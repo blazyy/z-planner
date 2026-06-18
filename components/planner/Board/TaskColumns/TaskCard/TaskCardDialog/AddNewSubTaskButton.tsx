@@ -1,7 +1,7 @@
 import { GripVertical, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
-import { usePlanner, usePlannerDispatch, usePlannerEphemeral } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerEphemeral, usePlannerSelector } from '@/hooks/Planner/Planner'
 import { addNewSubTaskOnButtonClick } from '@/utils/plannerUtils/subTaskUtils/addNewSubTaskToCard'
 
 type AddNewSubTaskButtonProps = {
@@ -11,7 +11,7 @@ type AddNewSubTaskButtonProps = {
 export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) => {
   const dispatch = usePlannerDispatch()
   const [isHoveringOver, setIsHoveringOver] = useState(false)
-  const { taskCards } = usePlanner()
+  const taskCard = usePlannerSelector((s) => s.taskCards[taskCardId])
   const { isSubTaskBeingDragged } = usePlannerEphemeral()
 
   return (
@@ -21,7 +21,7 @@ export const AddNewSubTaskButton = ({ taskCardId }: AddNewSubTaskButtonProps) =>
       className='flex items-center gap-2 mt-1 hover:cursor-pointer'
       onMouseEnter={() => setIsHoveringOver(true)}
       onMouseLeave={() => setIsHoveringOver(false)}
-      onClick={() => addNewSubTaskOnButtonClick(taskCards[taskCardId], dispatch)}
+      onClick={() => addNewSubTaskOnButtonClick(taskCard, dispatch)}
     >
       <GripVertical size={12} className='invisible' />
       <PlusCircle

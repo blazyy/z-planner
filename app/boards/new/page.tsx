@@ -4,10 +4,10 @@ import { useEffect } from 'react'
 
 import { AddNewBoardForm } from '@/components/planner/Settings/ManageBoardsCard/AddNewBoardForm'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { usePlanner, usePlannerEphemeral } from '@/hooks/Planner/Planner'
+import { usePlannerEphemeral, usePlannerSelector } from '@/hooks/Planner/Planner'
 
 export default function AddBoardCallout() {
-  const { boardOrder } = usePlanner()
+  const boardOrder = usePlannerSelector((s) => s.boardOrder)
   const { hasLoaded } = usePlannerEphemeral()
   const router = useRouter()
 

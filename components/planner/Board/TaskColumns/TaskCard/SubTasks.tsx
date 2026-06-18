@@ -1,5 +1,5 @@
 import { Checkbox } from '@/components/ui/checkbox'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 
 type SubTasksProps = {
@@ -8,9 +8,11 @@ type SubTasksProps = {
 
 export const SubTasks = ({ taskCardId }: SubTasksProps) => {
   const dispatch = usePlannerDispatch()
-  const { taskCards, subTasks } = usePlanner()
-  const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
-  const isEditable = !(taskCards[taskCardId].status === 'completed')
+  const subTaskIds = usePlannerSelector((s) => s.taskCards[taskCardId].subTasks)
+  const status = usePlannerSelector((s) => s.taskCards[taskCardId].status)
+  const subTasks = usePlannerSelector((s) => s.subTasks)
+  const subTasksUnderTaskCard = subTaskIds.map((subTaskId) => subTasks[subTaskId])
+  const isEditable = !(status === 'completed')
   return (
     <div className='flex flex-col gap-0.5'>
       {subTasksUnderTaskCard.map((subTask, index) => (

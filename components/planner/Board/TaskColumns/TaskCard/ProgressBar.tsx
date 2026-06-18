@@ -1,13 +1,14 @@
 import { Progress } from '@/components/ui/progress'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerSelector } from '@/hooks/Planner/Planner'
 
 type ProgressBarProps = {
   taskCardId: string
 }
 
 export const ProgressBar = ({ taskCardId }: ProgressBarProps) => {
-  const { subTasks, taskCards } = usePlanner()
-  const subTaskObjects = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
+  const subTaskIds = usePlannerSelector((s) => s.taskCards[taskCardId].subTasks)
+  const subTasks = usePlannerSelector((s) => s.subTasks)
+  const subTaskObjects = subTaskIds.map((subTaskId) => subTasks[subTaskId])
   const numCompleteSubTasks = subTaskObjects.filter((subTask) => subTask.checked).length
   const numTotalSubTasks = subTaskObjects.length
   const progressPercent = (numCompleteSubTasks / numTotalSubTasks) * 100

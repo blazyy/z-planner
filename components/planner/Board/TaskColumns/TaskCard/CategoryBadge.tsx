@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import changeCardCategory from '@/utils/plannerUtils/cardUtils/changeCardCategory'
 
 import { badgeClassNames, badgeClassNamesWithoutHover } from './utils'
@@ -17,9 +17,12 @@ type CategoryBadgeProps = {
 
 export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
   const dispatch = usePlannerDispatch()!
-  const { boards, taskCards, categories } = usePlanner()
-  const categoryInfo = categories[taskCards[taskCardId].category]
-  const categoriesInBoard = boards[boardId].categories
+  // categoryId is a primitive (stable), so this badge re-renders only when this
+  // card's category, this board's category list, or the categories map changes.
+  const categoryId = usePlannerSelector((s) => s.taskCards[taskCardId].category)
+  const categoriesInBoard = usePlannerSelector((s) => s.boards[boardId].categories)
+  const categories = usePlannerSelector((s) => s.categories)
+  const categoryInfo = categories[categoryId]
 
   return (
     <DropdownMenu>
@@ -27,17 +30,17 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
         <Badge className={badgeClassNames[categoryInfo.color]}>{categoryInfo.name}</Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
-        {categoriesInBoard.map((categoryId) => (
+        {categoriesInBoard.map((categoryItemId) => (
           <DropdownMenuCheckboxItem
-            key={categoryId}
-            checked={taskCards[taskCardId].category === categoryId}
+            key={categoryItemId}
+            checked={categoryId === categoryItemId}
             onClick={(event) => {
               event.preventDefault()
-              changeCardCategory(taskCardId, categoryId, dispatch)
+              changeCardCategory(taskCardId, categoryItemId, dispatch)
             }}
           >
-            <Badge variant='defaultNoHover' className={badgeClassNamesWithoutHover[categories[categoryId].color]}>
-              {categories[categoryId].name}
+            <Badge variant='defaultNoHover' className={badgeClassNamesWithoutHover[categories[categoryItemId].color]}>
+              {categories[categoryItemId].name}
             </Badge>
           </DropdownMenuCheckboxItem>
         ))}
