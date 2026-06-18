@@ -35,7 +35,7 @@ const ColumnSkeleton = ({ cardCount }: { cardCount: number }) => (
 
 export const BoardSkeleton = () => {
   return (
-    <div className='flex flex-col gap-2 w-5/6' aria-busy='true' aria-label='Loading board'>
+    <div className='flex flex-col gap-2 w-5/6' role='status' aria-busy='true' aria-label='Loading board'>
       {/* Filter toolbar placeholder */}
       <div className='flex justify-start items-center gap-2 w-full'>
         <Skeleton className='w-64 h-10' />
