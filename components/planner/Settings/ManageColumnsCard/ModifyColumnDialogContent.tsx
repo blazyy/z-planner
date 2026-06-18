@@ -71,7 +71,7 @@ export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: 
           <div className='flex justify-between mt-5'>
             <ManageItemAlertDialog
               onCloseParentDialog={onCloseDialog}
-              isDeleteButtonDisabled={columns[columnId].taskCards.length > 0}
+              isDeleteButtonDisabled={column.taskCards.length > 0}
               deleteButtonDisabledTooltipContent='A column with tasks cannot be deleted.'
               onClickDelete={() => {
                 deleteColumn(boardId, columnId, dispatch)
