@@ -4,7 +4,12 @@ import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 
 import { sendMutation } from '../apiClient'
 
-export default function changeColumnName(columnId: string, newName: string, dispatch: PlannerDispatchContextType) {
+export default function changeColumnName(
+  columnId: string,
+  newName: string,
+  dispatch: PlannerDispatchContextType,
+  boardId: string
+) {
   dispatch({
     type: 'columnNameChanged',
     payload: {
@@ -12,5 +17,5 @@ export default function changeColumnName(columnId: string, newName: string, disp
       newName,
     },
   })
-  sendMutation(dispatch, () => axios.patch(`/api/planner/columns/${columnId}`, { newName }))
+  sendMutation(dispatch, () => axios.patch(`/api/planner/columns/${columnId}`, { newName }), boardId)
 }

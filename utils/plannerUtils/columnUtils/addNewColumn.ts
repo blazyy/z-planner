@@ -23,10 +23,13 @@ export const addNewColumn = (board: BoardInfoType, newColumnName: string, dispat
       updatedColumns,
     },
   })
-  sendMutation(dispatch, () =>
-    axios.post(`/api/planner/boards/${board.id}/columns`, {
-      newColumnDetails,
-      updatedColumns,
-    })
+  sendMutation(
+    dispatch,
+    () =>
+      axios.post(`/api/planner/boards/${board.id}/columns`, {
+        newColumnDetails,
+        updatedColumns,
+      }),
+    board.id
   )
 }

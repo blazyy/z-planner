@@ -77,7 +77,7 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
       category: selectedCategory,
       content: values.taskCardDesc,
     }
-    addNewCardToColumn(column, newTaskCardDetails, dispatch)
+    addNewCardToColumn(column, newTaskCardDetails, dispatch, boardId)
     // newTaskCardAdded used to clear the init scratch state inside the data
     // reducer; that state now lives on the ephemeral side, so clear it here.
     ephemeralDispatch({ type: 'taskCardInitializationCancelled' })

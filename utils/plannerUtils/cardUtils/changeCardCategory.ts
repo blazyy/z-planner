@@ -7,7 +7,8 @@ import { sendMutation } from '../apiClient'
 export default function changeCardCategory(
   taskCardId: string,
   newCategoryId: string,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) {
   dispatch({
     type: 'taskCategoryChanged',
@@ -16,5 +17,5 @@ export default function changeCardCategory(
       newCategoryId,
     },
   })
-  sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}`, { category: newCategoryId }))
+  sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}`, { category: newCategoryId }), boardId)
 }

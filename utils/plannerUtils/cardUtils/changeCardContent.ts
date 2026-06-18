@@ -7,7 +7,8 @@ import { sendDebouncedMutation } from '../apiClient'
 export default function changeCardContent(
   taskCardId: string,
   newContent: string,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) {
   dispatch({
     type: 'taskCardContentChanged',
@@ -16,7 +17,10 @@ export default function changeCardContent(
       newContent,
     },
   })
-  sendDebouncedMutation(`card-content:${taskCardId}`, dispatch, () =>
-    axios.patch(`/api/planner/cards/${taskCardId}`, { content: newContent })
+  sendDebouncedMutation(
+    `card-content:${taskCardId}`,
+    dispatch,
+    () => axios.patch(`/api/planner/cards/${taskCardId}`, { content: newContent }),
+    boardId
   )
 }

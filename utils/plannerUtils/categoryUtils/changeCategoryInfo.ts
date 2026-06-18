@@ -8,7 +8,8 @@ export const changeCategoryInfo = (
   categoryId: string,
   newName: string,
   newColor: string,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) => {
   const categoryDetails = {
     id: categoryId,
@@ -21,5 +22,5 @@ export const changeCategoryInfo = (
       categoryDetails,
     },
   })
-  sendMutation(dispatch, () => axios.patch(`/api/planner/categories/${categoryId}`, { newName, newColor }))
+  sendMutation(dispatch, () => axios.patch(`/api/planner/categories/${categoryId}`, { newName, newColor }), boardId)
 }

@@ -8,7 +8,8 @@ import { sendMutation } from '../apiClient'
 export default function deleteSubTask(
   taskCard: TaskCardInfoType,
   subTaskId: string,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) {
   /* Moves cursor focus to subtask above using the subtask ID */
   const subTasksCopy = Array.from(taskCard.subTasks)
@@ -26,5 +27,5 @@ export default function deleteSubTask(
       newSubtasks,
     },
   })
-  sendMutation(dispatch, () => axios.delete(`/api/planner/cards/${taskCard.id}/subtasks/${subTaskId}`))
+  sendMutation(dispatch, () => axios.delete(`/api/planner/cards/${taskCard.id}/subtasks/${subTaskId}`), boardId)
 }

@@ -3,10 +3,11 @@ import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 
 type SubTasksProps = {
+  boardId: string
   taskCardId: string
 }
 
-export const SubTasks = ({ taskCardId }: SubTasksProps) => {
+export const SubTasks = ({ boardId, taskCardId }: SubTasksProps) => {
   const dispatch = usePlannerDispatch()
   const subTaskIds = usePlannerSelector((s) => s.taskCards[taskCardId].subTasks)
   const status = usePlannerSelector((s) => s.taskCards[taskCardId].status)
@@ -24,7 +25,7 @@ export const SubTasks = ({ taskCardId }: SubTasksProps) => {
               if (isEditable) {
                 event.preventDefault() // Neede to prevent dialog from triggering
                 const isChecked = (event.target as HTMLButtonElement).getAttribute('data-state') === 'checked'
-                changeSubTaskCheckedStatus(subTask.id, !isChecked, dispatch)
+                changeSubTaskCheckedStatus(subTask.id, !isChecked, dispatch, boardId)
               }
             }}
           />

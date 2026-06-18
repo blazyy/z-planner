@@ -12,12 +12,13 @@ import { usePlannerDispatch } from '@/hooks/Planner/Planner'
 import deleteCard from '@/utils/plannerUtils/cardUtils/deleteCard'
 
 type ContextMenuWrapperProps = {
+  boardId: string
   columnId: string
   taskCardId: string
   children: React.ReactNode
 }
 
-export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMenuWrapperProps) => {
+export const ContextMenuWrapper = ({ boardId, columnId, taskCardId, children }: ContextMenuWrapperProps) => {
   const dispatch = usePlannerDispatch()
   return (
     <AlertDialog>
@@ -32,7 +33,7 @@ export const ContextMenuWrapper = ({ columnId, taskCardId, children }: ContextMe
           <AlertDialogAction
             variant='destructive'
             onClick={() => {
-              deleteCard(columnId, taskCardId, dispatch)
+              deleteCard(columnId, taskCardId, dispatch, boardId)
             }}
           >
             Delete

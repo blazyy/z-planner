@@ -11,7 +11,8 @@ export default function moveCardAcrossColumns(
   draggedCardId: string,
   source: DraggableLocation,
   destination: DraggableLocation,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) {
   const sourceColumnId = source.droppableId
   const sourceColumn = columns[sourceColumnId]
@@ -32,12 +33,15 @@ export default function moveCardAcrossColumns(
       destColumnTaskCardIds,
     },
   })
-  sendMutation(dispatch, () =>
-    axios.patch(`/api/planner/cards/${draggedCardId}/move`, {
-      sourceColumnId,
-      destColumnId,
-      sourceColumnTaskCardIds,
-      destColumnTaskCardIds,
-    })
+  sendMutation(
+    dispatch,
+    () =>
+      axios.patch(`/api/planner/cards/${draggedCardId}/move`, {
+        sourceColumnId,
+        destColumnId,
+        sourceColumnTaskCardIds,
+        destColumnTaskCardIds,
+      }),
+    boardId
   )
 }

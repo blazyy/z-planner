@@ -4,7 +4,12 @@ import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 
 import { sendDebouncedMutation } from '../apiClient'
 
-export default function changeCardTitle(taskCardId: string, newTitle: string, dispatch: PlannerDispatchContextType) {
+export default function changeCardTitle(
+  taskCardId: string,
+  newTitle: string,
+  dispatch: PlannerDispatchContextType,
+  boardId: string
+) {
   dispatch({
     type: 'taskCardTitleChanged',
     payload: {
@@ -12,7 +17,10 @@ export default function changeCardTitle(taskCardId: string, newTitle: string, di
       newTitle,
     },
   })
-  sendDebouncedMutation(`card-title:${taskCardId}`, dispatch, () =>
-    axios.patch(`/api/planner/cards/${taskCardId}`, { title: newTitle })
+  sendDebouncedMutation(
+    `card-title:${taskCardId}`,
+    dispatch,
+    () => axios.patch(`/api/planner/cards/${taskCardId}`, { title: newTitle }),
+    boardId
   )
 }

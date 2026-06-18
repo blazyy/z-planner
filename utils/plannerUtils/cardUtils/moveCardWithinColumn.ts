@@ -11,7 +11,8 @@ export default function moveCardWithinColumn(
   cardId: string,
   sourceIndex: number,
   destIndex: number,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) {
   const startingColumn = columns[columnId]
   const reorderedCardIds = Array.from(startingColumn.taskCards) // Copy of taskCards
@@ -25,5 +26,9 @@ export default function moveCardWithinColumn(
       reorderedCardIds,
     },
   })
-  sendMutation(dispatch, () => axios.patch(`/api/planner/columns/${columnId}/cards/reorder`, { reorderedCardIds }))
+  sendMutation(
+    dispatch,
+    () => axios.patch(`/api/planner/columns/${columnId}/cards/reorder`, { reorderedCardIds }),
+    boardId
+  )
 }

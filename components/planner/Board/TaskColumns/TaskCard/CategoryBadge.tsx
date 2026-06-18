@@ -36,7 +36,7 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
             checked={categoryId === categoryItemId}
             onClick={(event) => {
               event.preventDefault()
-              changeCardCategory(taskCardId, categoryItemId, dispatch)
+              changeCardCategory(taskCardId, categoryItemId, dispatch, boardId)
             }}
           >
             <Badge variant='defaultNoHover' className={badgeClassNamesWithoutHover[categories[categoryItemId].color]}>

@@ -98,15 +98,28 @@ export async function fetchBoard(boardId: string, signal?: AbortSignal): Promise
  * in-flight request and resurrect stale order.
  *
  * The UI updates optimistically before the request is sent. If a request
- * fails, the store has diverged from the server, so recovery is: surface an
- * error toast, then re-hydrate the store from the server once the queue
- * drains. Convergent and simple, at the cost of discarding whatever optimistic
- * edits were still in flight behind the failure.
+ * fails, the store has diverged from the server, so recovery re-hydrates from
+ * the server once the queue drains, after a single error toast.
+ *
+ * SCOPE (mutation-1): when the failed mutation names the board it operated on
+ * (boardId), recovery re-hydrates ONLY that board's slice via fetchBoard +
+ * boardDataLoaded, so an error in one board can't blow away other boards'
+ * unsaved-but-still-pending edits or force a whole-doc round-trip. Board-level
+ * ops (create/delete/reorder boards) pass no boardId and fall back to the
+ * whole-doc re-hydrate (fetchPlannerData + dataFetchedFromDatabase) as before.
+ *
+ * The single-toast / single-refetch debounce is unchanged: the first failure
+ * to schedule recovery wins and its boardId (or whole-doc fallback) is what
+ * runs; further failures queued behind it collapse into that one recovery.
  */
 let writeChain: Promise<unknown> = Promise.resolve()
 let refetchScheduled = false
 
-export function sendMutation(dispatch: PlannerDispatchContextType, request: () => Promise<unknown>): void {
+export function sendMutation(
+  dispatch: PlannerDispatchContextType,
+  request: () => Promise<unknown>,
+  boardId?: string
+): void {
   writeChain = writeChain.then(request).catch((error) => {
     console.error('Mutation failed:', error)
     if (refetchScheduled) {
@@ -117,8 +130,24 @@ export function sendMutation(dispatch: PlannerDispatchContextType, request: () =
     writeChain = writeChain.then(async () => {
       refetchScheduled = false
       try {
-        const payload = await fetchPlannerData()
-        dispatch({ type: 'dataFetchedFromDatabase', payload })
+        if (boardId !== undefined) {
+          // Scoped recovery: re-hydrate only the affected board.
+          const data = await fetchBoard(boardId)
+          dispatch({
+            type: 'boardDataLoaded',
+            payload: {
+              boardId,
+              columns: data.columns,
+              categories: data.categories,
+              taskCards: data.taskCards,
+              subTasks: data.subTasks,
+            },
+          })
+        } else {
+          // Board-level op: re-hydrate the whole doc.
+          const payload = await fetchPlannerData()
+          dispatch({ type: 'dataFetchedFromDatabase', payload })
+        }
       } catch {
         toast.error('Could not reach the server. Recent changes may not be saved.')
       }
@@ -132,22 +161,33 @@ export function sendMutation(dispatch: PlannerDispatchContextType, request: () =
  * editing card A's title and then clicking into card B within 500ms silently
  * cancelled A's save forever.
  */
-const debouncedSenders = new Map<string, DebouncedFn<[PlannerDispatchContextType, () => Promise<unknown>]>>()
+const debouncedSenders = new Map<
+  string,
+  DebouncedFn<[PlannerDispatchContextType, () => Promise<unknown>, string | undefined]>
+>()
 
 export function sendDebouncedMutation(
   key: string,
   dispatch: PlannerDispatchContextType,
-  request: () => Promise<unknown>
+  request: () => Promise<unknown>,
+  boardId?: string
 ): void {
   let sender = debouncedSenders.get(key)
   if (!sender) {
-    sender = debounce((latestDispatch: PlannerDispatchContextType, latestRequest: () => Promise<unknown>) => {
-      debouncedSenders.delete(key)
-      sendMutation(latestDispatch, latestRequest)
-    }, DEBOUNCE_TIME_MS)
+    sender = debounce(
+      (
+        latestDispatch: PlannerDispatchContextType,
+        latestRequest: () => Promise<unknown>,
+        latestBoardId: string | undefined
+      ) => {
+        debouncedSenders.delete(key)
+        sendMutation(latestDispatch, latestRequest, latestBoardId)
+      },
+      DEBOUNCE_TIME_MS
+    )
     debouncedSenders.set(key, sender)
   }
-  sender(dispatch, request)
+  sender(dispatch, request, boardId)
 }
 
 /*

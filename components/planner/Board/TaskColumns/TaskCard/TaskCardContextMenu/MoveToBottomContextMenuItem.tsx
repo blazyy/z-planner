@@ -9,7 +9,7 @@ import { ContextMenuItemContext } from './TaskCardContextMenu'
 
 export const MoveToBottomContextMenuItem = () => {
   const dispatch = usePlannerDispatch()
-  const { columnId, taskCardId, iconProps, contextMenuItemProps } = useContext(ContextMenuItemContext)!
+  const { boardId, columnId, taskCardId, iconProps, contextMenuItemProps } = useContext(ContextMenuItemContext)!
   // Subscribe to just this column. moveCardWithinColumn only reads columns[columnId],
   // so reconstructing a single-entry map preserves its behavior without a wide subscription.
   const column = usePlannerSelector((s) => s.columns[columnId])
@@ -19,7 +19,9 @@ export const MoveToBottomContextMenuItem = () => {
     <ContextMenuItem disabled={index === lastIndex}>
       <div
         {...contextMenuItemProps}
-        onClick={() => moveCardWithinColumn({ [columnId]: column }, columnId, taskCardId, index, lastIndex, dispatch)}
+        onClick={() =>
+          moveCardWithinColumn({ [columnId]: column }, columnId, taskCardId, index, lastIndex, dispatch, boardId)
+        }
       >
         <ArrowBigDown {...iconProps} />
         <span>Move to bottom</span>

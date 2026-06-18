@@ -9,7 +9,8 @@ export default function changeCardCheckedStatus(
   taskCardId: string,
   isChecked: boolean,
   columnTaskCardIds: string[],
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) {
   dispatch({
     type: 'taskCardCheckedStatusChanged',
@@ -25,14 +26,17 @@ export default function changeCardCheckedStatus(
     // that here so the new order persists instead of diverging on reload.
     const taskCardOrder = columnTaskCardIds.filter((id) => id !== taskCardId)
     taskCardOrder.push(taskCardId)
-    sendMutation(dispatch, () =>
-      axios.patch(`/api/planner/cards/${taskCardId}`, {
-        status: 'completed',
-        columnId,
-        taskCardOrder,
-      })
+    sendMutation(
+      dispatch,
+      () =>
+        axios.patch(`/api/planner/cards/${taskCardId}`, {
+          status: 'completed',
+          columnId,
+          taskCardOrder,
+        }),
+      boardId
     )
   } else {
-    sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}`, { status: 'created' }))
+    sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}`, { status: 'created' }), boardId)
   }
 }
