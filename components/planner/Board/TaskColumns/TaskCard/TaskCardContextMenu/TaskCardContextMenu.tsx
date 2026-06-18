@@ -8,6 +8,7 @@ import { MoveToBottomContextMenuItem } from './MoveToBottomContextMenuItem'
 import { MoveToTopContextMenuItem } from './MoveToTopContextMenuItem'
 
 type TaskCardContextMenuProps = {
+  boardId: string
   columnId: string
   taskCardId: string
 }
@@ -22,6 +23,7 @@ export type ContextMenuItemPropsType = {
 }
 
 type ContentMenuItemContextType = {
+  boardId: string
   columnId: string
   taskCardId: string
   iconProps: IconPropsType
@@ -39,10 +41,10 @@ export const iconProps = {
 
 export const ContextMenuItemContext = createContext<ContentMenuItemContextType | null>(null)
 
-export const TaskCardContextMenu = ({ columnId, taskCardId }: TaskCardContextMenuProps) => {
+export const TaskCardContextMenu = ({ boardId, columnId, taskCardId }: TaskCardContextMenuProps) => {
   return (
-    <ContextMenuWrapper columnId={columnId} taskCardId={taskCardId}>
-      <ContextMenuItemContext.Provider value={{ columnId, taskCardId, iconProps, contextMenuItemProps }}>
+    <ContextMenuWrapper boardId={boardId} columnId={columnId} taskCardId={taskCardId}>
+      <ContextMenuItemContext.Provider value={{ boardId, columnId, taskCardId, iconProps, contextMenuItemProps }}>
         <ContextMenuContent className='w-48'>
           {/* The delete functionality is in the ContextMenuWrapper since it connects to a confirmation alert dialog */}
           <DeleteCardContextMenuItem />

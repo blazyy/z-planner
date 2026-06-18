@@ -10,7 +10,8 @@ export const reorderSubTasks = (
   draggableId: string,
   sourceIndex: number,
   destIndex: number,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) => {
   const [taskCardId, subTaskId] = draggableId.split('~')
   const reorderedSubTasks = Array.from(taskCards[taskCardId].subTasks)
@@ -23,5 +24,9 @@ export const reorderSubTasks = (
       reorderedSubTasks,
     },
   })
-  sendMutation(dispatch, () => axios.patch(`/api/planner/cards/${taskCardId}/subtasks/move`, { reorderedSubTasks }))
+  sendMutation(
+    dispatch,
+    () => axios.patch(`/api/planner/cards/${taskCardId}/subtasks/move`, { reorderedSubTasks }),
+    boardId
+  )
 }

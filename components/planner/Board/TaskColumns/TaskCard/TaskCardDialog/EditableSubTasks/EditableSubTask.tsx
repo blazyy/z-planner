@@ -14,12 +14,20 @@ import { handleKeyDownOnSubTask } from './utils'
 type EditableSubTaskProps = {
   index: number
   provided: DraggableProvided
+  boardId: string
   taskCardId: string
   subTask: SubTaskInfoType
   isBeingDragged: boolean
 }
 
-export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
+export const EditableSubTask = ({
+  index,
+  provided,
+  boardId,
+  taskCardId,
+  subTask,
+  isBeingDragged,
+}: EditableSubTaskProps) => {
   // Subscribe to only this card. handleKeyDownOnSubTask reads taskCards[taskCardId]
   // (for arrow-key focus and Enter/Backspace) and never reads the subTasks map, so
   // a single-entry map + empty subTasks preserves behavior without a wide subscription.
@@ -49,7 +57,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
       <Checkbox
         id={`${index}`}
         checked={subTask.checked}
-        onCheckedChange={(isChecked) => changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch)}
+        onCheckedChange={(isChecked) => changeSubTaskCheckedStatus(subTask.id, Boolean(isChecked), dispatch, boardId)}
       />
       <Input
         // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: a freshly-created sub-task input auto-focuses so the user can type the title immediately.
@@ -59,9 +67,9 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         value={subTask.title}
         className='my-1 px-1 border-none h-1 text-gray-500 dark:text-gray-400 text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
         onKeyDown={(event) =>
-          handleKeyDownOnSubTask({ [taskCardId]: taskCard }, {}, taskCardId, subTask, event, dispatch)
+          handleKeyDownOnSubTask({ [taskCardId]: taskCard }, {}, taskCardId, subTask, event, dispatch, boardId)
         }
-        onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch)}
+        onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch, boardId)}
       />
     </div>
   )

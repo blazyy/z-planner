@@ -9,6 +9,39 @@ export const plannerReducer = produce((draft: Draft<PlannerType>, action: Planne
     case 'dataFetchedFromDatabase': {
       return action.payload
     }
+    case 'summaryLoaded': {
+      // The light first-load payload: replace the board metadata (boardOrder +
+      // boards) and merge in its categories, leaving the heavy per-board slices
+      // (columns/taskCards/subTasks) untouched so any already-loaded board
+      // survives a summary refresh. Each board's heavy slice arrives later via
+      // boardDataLoaded.
+      const { boardOrder, boards, categories } = action.payload
+      draft.boardOrder = boardOrder
+      draft.boards = boards
+      for (const categoryId in categories) {
+        draft.categories[categoryId] = categories[categoryId]
+      }
+      break
+    }
+    case 'boardDataLoaded': {
+      // One board's heavy slice, merged into the store on open. Board metadata
+      // already came from summaryLoaded; here we fold in that board's columns,
+      // cards, subtasks and categories without disturbing other boards' data.
+      const { columns, categories, taskCards, subTasks } = action.payload
+      for (const columnId in columns) {
+        draft.columns[columnId] = columns[columnId]
+      }
+      for (const categoryId in categories) {
+        draft.categories[categoryId] = categories[categoryId]
+      }
+      for (const taskCardId in taskCards) {
+        draft.taskCards[taskCardId] = taskCards[taskCardId]
+      }
+      for (const subTaskId in subTasks) {
+        draft.subTasks[subTaskId] = subTasks[subTaskId]
+      }
+      break
+    }
     case 'newBoardAdded': {
       const { boardId, boardName, unassignedCategoryDetails } = action.payload
       draft.boardOrder.push(boardId)

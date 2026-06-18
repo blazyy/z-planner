@@ -10,7 +10,8 @@ const addNewSubTask = (
   taskCardId: string,
   newSubTaskId: string,
   newSubTasksOrder: string[],
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) => {
   const newSubTaskDetails = {
     id: newSubTaskId,
@@ -25,29 +26,37 @@ const addNewSubTask = (
       newSubTasksOrder,
     },
   })
-  sendMutation(dispatch, () =>
-    axios.post(`/api/planner/cards/${taskCardId}/subtasks`, {
-      newSubTaskDetails,
-      newSubTasksOrder,
-    })
+  sendMutation(
+    dispatch,
+    () =>
+      axios.post(`/api/planner/cards/${taskCardId}/subtasks`, {
+        newSubTaskDetails,
+        newSubTasksOrder,
+      }),
+    boardId
   )
 }
 
 export const addNewSubTaskToCardOnEnterKeydown = (
   taskCard: TaskCardInfoType,
   existingSubTaskId: string,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) => {
   const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
   const subTaskIndex = newSubTasksOrder.findIndex((id: string) => id === existingSubTaskId)
   newSubTasksOrder.splice(subTaskIndex + 1, 0, newSubTaskId)
-  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch)
+  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch, boardId)
 }
 
-export const addNewSubTaskOnButtonClick = (taskCard: TaskCardInfoType, dispatch: PlannerDispatchContextType) => {
+export const addNewSubTaskOnButtonClick = (
+  taskCard: TaskCardInfoType,
+  dispatch: PlannerDispatchContextType,
+  boardId: string
+) => {
   const newSubTaskId = NANOID()
   const newSubTasksOrder = Array.from(taskCard.subTasks)
   newSubTasksOrder.push(newSubTaskId)
-  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch)
+  addNewSubTask(taskCard.id, newSubTaskId, newSubTasksOrder, dispatch, boardId)
 }

@@ -33,7 +33,7 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, ephemeralDispat
   }
 
   if (type === 'subtask') {
-    return reorderSubTasks(taskCards, draggableId, source.index, destination.index, dispatch)
+    return reorderSubTasks(taskCards, draggableId, source.index, destination.index, dispatch, boardId)
   }
 
   if (type === 'column') {
@@ -42,11 +42,19 @@ export const handleOnDragEnd: OnDragEndFunc = (result, dispatch, ephemeralDispat
 
   // Moving a card within the same column
   if (columns[source.droppableId] === columns[destination.droppableId]) {
-    return moveCardWithinColumn(columns, source.droppableId, draggableId, source.index, destination.index, dispatch)
+    return moveCardWithinColumn(
+      columns,
+      source.droppableId,
+      draggableId,
+      source.index,
+      destination.index,
+      dispatch,
+      boardId
+    )
   }
 
   // Moving cards between columns
-  moveCardAcrossColumns(columns, draggableId, source, destination, dispatch)
+  moveCardAcrossColumns(columns, draggableId, source, destination, dispatch, boardId)
 }
 
 type OnDragStartFunction = (dragStartObj: DragStart, ephemeralDispatch: EphemeralDispatchContextType) => void

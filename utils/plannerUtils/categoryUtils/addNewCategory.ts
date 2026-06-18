@@ -20,5 +20,5 @@ export const addNewCategory = (
       newCategoryDetails,
     },
   })
-  sendMutation(dispatch, () => axios.post(`/api/planner/boards/${boardId}/categories`, { newCategoryDetails }))
+  sendMutation(dispatch, () => axios.post(`/api/planner/boards/${boardId}/categories`, { newCategoryDetails }), boardId)
 }

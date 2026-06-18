@@ -23,5 +23,9 @@ export const changeColumnOrder = (
       newColumnOrder,
     },
   })
-  sendMutation(dispatch, () => axios.patch(`/api/planner/boards/${boardId}/columns/reorder`, { newColumnOrder }))
+  sendMutation(
+    dispatch,
+    () => axios.patch(`/api/planner/boards/${boardId}/columns/reorder`, { newColumnOrder }),
+    boardId
+  )
 }

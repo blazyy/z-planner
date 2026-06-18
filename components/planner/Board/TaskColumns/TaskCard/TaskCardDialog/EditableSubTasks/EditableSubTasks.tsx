@@ -8,10 +8,11 @@ import { AddNewSubTaskButton } from '../AddNewSubTaskButton'
 import { EditableSubTask } from './EditableSubTask'
 
 type EditableSubTasksProps = {
+  boardId: string
   taskCardId: string
 }
 
-export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
+export const EditableSubTasks = ({ boardId, taskCardId }: EditableSubTasksProps) => {
   const subTaskIds = usePlannerSelector((s) => s.taskCards[taskCardId].subTasks)
   const subTasks = usePlannerSelector((s) => s.subTasks)
   const subTasksUnderTaskCard = subTaskIds.map((subTaskId) => subTasks[subTaskId])
@@ -48,6 +49,7 @@ export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
                     <EditableSubTask
                       index={index}
                       provided={provided}
+                      boardId={boardId}
                       taskCardId={taskCardId}
                       subTask={subTask}
                       isBeingDragged={true}
@@ -58,6 +60,7 @@ export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
                   <EditableSubTask
                     index={index}
                     provided={provided}
+                    boardId={boardId}
                     taskCardId={taskCardId}
                     subTask={subTask}
                     isBeingDragged={false}
@@ -67,7 +70,7 @@ export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
             </Draggable>
           ))}
           {provided.placeholder}
-          <AddNewSubTaskButton taskCardId={taskCardId} />
+          <AddNewSubTaskButton boardId={boardId} taskCardId={taskCardId} />
         </div>
       )}
     </Droppable>

@@ -12,5 +12,5 @@ export default function deleteColumn(boardId: string, columnId: string, dispatch
       columnId,
     },
   })
-  sendMutation(dispatch, () => axios.delete(`/api/planner/boards/${boardId}/columns/${columnId}`))
+  sendMutation(dispatch, () => axios.delete(`/api/planner/boards/${boardId}/columns/${columnId}`), boardId)
 }

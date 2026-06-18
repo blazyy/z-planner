@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { usePlannerSelector } from '@/hooks/Planner/Planner'
+import { useEnsureBoardLoaded, usePlannerSelector } from '@/hooks/Planner/Planner'
 import { BoardInfoType, BoardsType, ColumnsType } from '@/hooks/Planner/types'
 
 import { ManageItemCardDialogWrapper } from '../ManageItemCardDialogWrapper'
@@ -41,12 +41,18 @@ const BoardSelector = ({ boardOrder, boards, selectedBoard, setSelectedBoard }: 
 type ColumnsProps = {
   board: BoardInfoType | undefined
   columns: ColumnsType
+  isLoaded: boolean
   setColumnBeingModified: Dispatch<SetStateAction<string>>
 }
 
-const Columns = ({ board, columns, setColumnBeingModified }: ColumnsProps) => {
+const Columns = ({ board, columns, isLoaded, setColumnBeingModified }: ColumnsProps) => {
   if (!board || board.columns.length === 0) {
     return <span className='text-neutral-500 dark:text-neutral-400 text-sm'>No columns yet</span>
+  }
+  // The board has columns per its metadata, but the heavy column slice is loaded
+  // lazily; until it arrives the column entries (names) aren't in the store.
+  if (!isLoaded) {
+    return <span className='text-neutral-500 dark:text-neutral-400 text-sm'>Loading columns...</span>
   }
   return (
     <div className='flex flex-row gap-2'>
@@ -79,6 +85,9 @@ export const ManageColumnsCard = () => {
   // The selected board can be deleted from the boards card above; fall back to
   // the first board so we never index `boards` with a stale id.
   const activeBoardId = boards[selectedBoard] ? selectedBoard : boardOrder[0]
+  // Settings can be opened without ever visiting the board, so its column slice
+  // may not be loaded. Trigger the lazy fetch for whichever board is selected.
+  const isActiveBoardLoaded = useEnsureBoardLoaded(activeBoardId)
 
   const onCloseDialog = () => {
     setColumnBeingModified('')
@@ -98,7 +107,12 @@ export const ManageColumnsCard = () => {
           selectedBoard={activeBoardId}
           setSelectedBoard={setSelectedBoard}
         />
-        <Columns board={boards[activeBoardId]} columns={columns} setColumnBeingModified={setColumnBeingModified} />
+        <Columns
+          board={boards[activeBoardId]}
+          columns={columns}
+          isLoaded={isActiveBoardLoaded}
+          setColumnBeingModified={setColumnBeingModified}
+        />
         <AddNewColumnButton boardId={activeBoardId} />
         {columnBeingModified && (
           <ModifyColumnDialogContent

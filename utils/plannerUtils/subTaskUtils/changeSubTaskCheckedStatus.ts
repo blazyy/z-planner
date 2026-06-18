@@ -7,7 +7,8 @@ import { sendMutation } from '../apiClient'
 export default function changeSubTaskCheckedStatus(
   subTaskId: string,
   isChecked: boolean,
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) {
   dispatch({
     type: 'subTasksCheckedStatusChanged',
@@ -16,5 +17,5 @@ export default function changeSubTaskCheckedStatus(
       isChecked,
     },
   })
-  sendMutation(dispatch, () => axios.patch(`/api/planner/subtasks/${subTaskId}`, { checked: isChecked }))
+  sendMutation(dispatch, () => axios.patch(`/api/planner/subtasks/${subTaskId}`, { checked: isChecked }), boardId)
 }

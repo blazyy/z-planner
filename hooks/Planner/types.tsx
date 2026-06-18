@@ -66,6 +66,25 @@ export type BoardsType = {
 export type PlannerType = {
   boardOrder: string[]
   boards: BoardsType
+  categories: CategoriesType
+  columns: ColumnsType
+  taskCards: TaskCardsType
+  subTasks: SubTasksType
+}
+
+// The light first-load payload (GET /api/planner/summary): just the board
+// metadata the sidebar needs up front. Heavy per-board slices (columns/cards/
+// subtasks) are fetched lazily when a board is opened.
+export type PlannerSummaryType = {
+  boardOrder: string[]
+  boards: BoardsType
+  categories: CategoriesType
+}
+
+// One board's heavy slice (GET /api/planner/boards/[boardId]): the columns,
+// cards, subtasks and categories for that board, merged into the store on open.
+export type BoardDataType = {
+  board: BoardInfoType
   columns: ColumnsType
   categories: CategoriesType
   taskCards: TaskCardsType
@@ -89,17 +108,36 @@ export type PlannerType = {
 //
 // dataEnteredInTaskCardBeingInitialized - Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
 // in the previous one.
+//
+// loadedBoardIds - The set of board ids whose heavy slice (columns/cards/
+// subtasks) has been fetched and merged into the store. Used to gate the
+// per-board lazy load: a board page shows the skeleton until its id is here,
+// and the mount effect skips re-fetching a board already loaded. A record (id
+// -> true) rather than a Set so it stays a plain serializable value the immer
+// reducer can update structurally.
 export type EphemeralStateType = {
   hasLoaded: boolean
   isSubTaskBeingDragged: boolean
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   dataEnteredInTaskCardBeingInitialized: boolean
+  loadedBoardIds: Record<string, true>
 }
 
 // One discriminated union for every DATA reducer action, so dispatch sites get
 // compile-time payload checking and the reducer switch can be exhaustive.
 export type PlannerAction =
   | { type: 'dataFetchedFromDatabase'; payload: PlannerType }
+  | { type: 'summaryLoaded'; payload: PlannerSummaryType }
+  | {
+      type: 'boardDataLoaded'
+      payload: {
+        boardId: string
+        columns: ColumnsType
+        categories: CategoriesType
+        taskCards: TaskCardsType
+        subTasks: SubTasksType
+      }
+    }
   | {
       type: 'newBoardAdded'
       payload: { boardId: string; boardName: string; unassignedCategoryDetails: TaskCategoryType }
@@ -154,6 +192,7 @@ export type PlannerDispatchContextType = Dispatch<PlannerAction>
 // mutation can't carry a UI flag and vice versa.
 export type EphemeralAction =
   | { type: 'dataLoaded' }
+  | { type: 'boardLoaded'; payload: { boardId: string } }
   | { type: 'subTaskDragStatusChanged'; payload: boolean }
   | { type: 'newTaskCardInitialized'; payload: TaskCardBeingInitializedType }
   | { type: 'taskCardInitializationCancelled'; payload?: null }

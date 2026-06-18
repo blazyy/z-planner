@@ -42,7 +42,7 @@ const TaskCardWrapper = ({ index, boardId, columnId, taskCardId, isDragDisabled,
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1 w-full'>
           <Dialog>
             <ContextMenu>
-              <TaskCardContextMenu columnId={columnId} taskCardId={taskCardId} />
+              <TaskCardContextMenu boardId={boardId} columnId={columnId} taskCardId={taskCardId} />
               <ContextMenuTrigger>
                 {/* Dialog is the one that shows when you click on a card. This allows you to edit a card's information*/}
                 <DialogTrigger asChild>{children(snapshot.isDragging)}</DialogTrigger>
@@ -102,7 +102,7 @@ export const TaskCard = memo(function TaskCard({
           </CardHeader>
           {task.subTasks.length > 0 && (
             <CardContent className='flex flex-col gap-2 px-4'>
-              <SubTasks taskCardId={task.id} />
+              <SubTasks boardId={boardId} taskCardId={task.id} />
               <ProgressBar taskCardId={taskCardId} />
             </CardContent>
           )}
@@ -120,7 +120,7 @@ export const TaskCard = memo(function TaskCard({
                   } else {
                     toast.info('Task marked as incomplete.')
                   }
-                  changeCardCheckedStatus(columnId, taskCardId, !isChecked, column.taskCards, dispatch)
+                  changeCardCheckedStatus(columnId, taskCardId, !isChecked, column.taskCards, dispatch, boardId)
                 }}
               />
             </div>

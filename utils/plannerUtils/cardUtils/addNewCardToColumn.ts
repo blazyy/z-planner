@@ -13,7 +13,8 @@ export const addNewCardToColumn = (
     category: string
     content: string
   },
-  dispatch: PlannerDispatchContextType
+  dispatch: PlannerDispatchContextType,
+  boardId: string
 ) => {
   const newTaskCardDetails: TaskCardInfoType = {
     id: cardDetails.id,
@@ -33,10 +34,13 @@ export const addNewCardToColumn = (
       updatedTaskCards,
     },
   })
-  sendMutation(dispatch, () =>
-    axios.post(`/api/planner/columns/${column.id}/cards`, {
-      newTaskCardDetails,
-      updatedTaskCards,
-    })
+  sendMutation(
+    dispatch,
+    () =>
+      axios.post(`/api/planner/columns/${column.id}/cards`, {
+        newTaskCardDetails,
+        updatedTaskCards,
+      }),
+    boardId
   )
 }

@@ -4,7 +4,12 @@ import { PlannerDispatchContextType } from '@/hooks/Planner/types'
 
 import { sendMutation } from '../apiClient'
 
-export default function deleteCard(columnId: string, taskCardId: string, dispatch: PlannerDispatchContextType) {
+export default function deleteCard(
+  columnId: string,
+  taskCardId: string,
+  dispatch: PlannerDispatchContextType,
+  boardId: string
+) {
   dispatch({
     type: 'taskCardDeleted',
     payload: {
@@ -12,5 +17,5 @@ export default function deleteCard(columnId: string, taskCardId: string, dispatc
       taskCardId,
     },
   })
-  sendMutation(dispatch, () => axios.delete(`/api/planner/columns/${columnId}/cards/${taskCardId}`))
+  sendMutation(dispatch, () => axios.delete(`/api/planner/columns/${columnId}/cards/${taskCardId}`), boardId)
 }

@@ -12,5 +12,5 @@ export default function deleteCategory(boardId: string, categoryId: string, disp
       categoryId,
     },
   })
-  sendMutation(dispatch, () => axios.delete(`/api/planner/boards/${boardId}/categories/${categoryId}`))
+  sendMutation(dispatch, () => axios.delete(`/api/planner/boards/${boardId}/categories/${categoryId}`), boardId)
 }

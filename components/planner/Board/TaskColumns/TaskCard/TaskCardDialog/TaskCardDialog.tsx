@@ -60,13 +60,13 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
                   className='w-5 h-5'
                   checked={task.status === 'completed'}
                   onCheckedChange={(isChecked) =>
-                    changeCardCheckedStatus(columnId, id, Boolean(isChecked), column.taskCards, dispatch)
+                    changeCardCheckedStatus(columnId, id, Boolean(isChecked), column.taskCards, dispatch, boardId)
                   }
                 />
                 <Textarea
                   value={task.title}
                   className='items-center p-0 border-none h-[35px] text-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y'
-                  onChange={(event) => changeCardTitle(id, event.target.value, dispatch)}
+                  onChange={(event) => changeCardTitle(id, event.target.value, dispatch, boardId)}
                 />
               </div>
             </div>
@@ -79,7 +79,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
             placeholder='Notes...'
             value={task.content}
             className='bg-neutral-100 dark:bg-neutral-800 m-1 min-h-fit focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y'
-            onChange={(event) => changeCardContent(id, event.target.value, dispatch)}
+            onChange={(event) => changeCardContent(id, event.target.value, dispatch, boardId)}
           />
         </CardContent>
         <CardFooter className='flex justify-between'></CardFooter>

@@ -42,6 +42,102 @@ describe('plannerReducer', () => {
     expect(next).toEqual(incoming)
   })
 
+  describe('summaryLoaded (lazy first load)', () => {
+    it('replaces board metadata and merges categories, leaving heavy slices intact', () => {
+      // Start from empty (the real first-load condition) and apply a summary.
+      const empty: PlannerType = {
+        boardOrder: [],
+        boards: {},
+        categories: {},
+        columns: {},
+        taskCards: {},
+        subTasks: {},
+      }
+      const next = plannerReducer(empty, {
+        type: 'summaryLoaded',
+        payload: {
+          boardOrder: ['board1', 'board2'],
+          boards: {
+            board1: { id: 'board1', name: 'Work', columns: ['col1'], categories: [UNASSIGNED_CATEGORY_ID] },
+            board2: { id: 'board2', name: 'Home', columns: [], categories: [UNASSIGNED_CATEGORY_ID] },
+          },
+          categories: {
+            [UNASSIGNED_CATEGORY_ID]: { id: UNASSIGNED_CATEGORY_ID, name: 'Unassigned', color: 'slate' },
+          },
+        },
+      })
+      expect(next.boardOrder).toEqual(['board1', 'board2'])
+      expect(Object.keys(next.boards)).toEqual(['board1', 'board2'])
+      expect(next.categories[UNASSIGNED_CATEGORY_ID]).toEqual({
+        id: UNASSIGNED_CATEGORY_ID,
+        name: 'Unassigned',
+        color: 'slate',
+      })
+      // Heavy slices were not provided, so they stay empty (not clobbered with undefined).
+      expect(next.columns).toEqual({})
+      expect(next.taskCards).toEqual({})
+      expect(next.subTasks).toEqual({})
+    })
+
+    it('does not wipe an already-loaded board s heavy slices on a summary refresh', () => {
+      // baseState has col1/col2 + cards loaded. A summary refresh must preserve them.
+      const next = plannerReducer(baseState(), {
+        type: 'summaryLoaded',
+        payload: {
+          boardOrder: ['board1'],
+          boards: {
+            board1: { id: 'board1', name: 'Renamed', columns: ['col1', 'col2'], categories: [UNASSIGNED_CATEGORY_ID] },
+          },
+          categories: {
+            [UNASSIGNED_CATEGORY_ID]: { id: UNASSIGNED_CATEGORY_ID, name: 'Unassigned', color: 'slate' },
+          },
+        },
+      })
+      expect(next.boards.board1.name).toBe('Renamed')
+      // Columns/cards previously loaded are still present.
+      expect(Object.keys(next.columns)).toEqual(['col1', 'col2'])
+      expect(next.taskCards.card1).toBeTruthy()
+    })
+  })
+
+  describe('boardDataLoaded (lazy per-board open)', () => {
+    it('merges one board s columns/cards/subtasks/categories without disturbing other boards', () => {
+      // Summary already populated board metadata; columns/cards are empty until open.
+      const summaryOnly: PlannerType = {
+        boardOrder: ['board1'],
+        boards: {
+          board1: { id: 'board1', name: 'Work', columns: ['col1'], categories: [UNASSIGNED_CATEGORY_ID] },
+        },
+        categories: {
+          [UNASSIGNED_CATEGORY_ID]: { id: UNASSIGNED_CATEGORY_ID, name: 'Unassigned', color: 'slate' },
+        },
+        columns: {},
+        taskCards: {},
+        subTasks: {},
+      }
+      const next = plannerReducer(summaryOnly, {
+        type: 'boardDataLoaded',
+        payload: {
+          boardId: 'board1',
+          columns: { col1: { id: 'col1', name: 'To Do', taskCards: ['card1'] } },
+          categories: { cat1: { id: 'cat1', name: 'Deep work', color: 'blue' } },
+          taskCards: {
+            card1: { id: 'card1', title: 'One', category: 'cat1', content: '', status: 'created', subTasks: ['sub1'] },
+          },
+          subTasks: { sub1: { id: 'sub1', title: 'Step one', checked: false } },
+        },
+      })
+      expect(next.columns.col1).toEqual({ id: 'col1', name: 'To Do', taskCards: ['card1'] })
+      expect(next.taskCards.card1.title).toBe('One')
+      expect(next.subTasks.sub1.title).toBe('Step one')
+      // Pre-existing unassigned category survives; new board category is merged in.
+      expect(next.categories[UNASSIGNED_CATEGORY_ID]).toBeTruthy()
+      expect(next.categories.cat1).toEqual({ id: 'cat1', name: 'Deep work', color: 'blue' })
+      // Board metadata untouched.
+      expect(next.boards.board1.columns).toEqual(['col1'])
+    })
+  })
+
   it('adds a board with its unassigned category', () => {
     const next = plannerReducer(baseState(), {
       type: 'newBoardAdded',
