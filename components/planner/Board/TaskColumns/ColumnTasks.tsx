@@ -1,5 +1,5 @@
 import { Droppable } from '@hello-pangea/dnd'
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { usePlannerEphemeral, usePlannerSelector } from '@/hooks/Planner/Planner'
@@ -24,18 +24,26 @@ export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { bo
   // index can't be mapped back to the right position in the canonical array. Dragging is disabled
   // instead; filtering then mapping keeps Draggable indices consecutive, which the dnd library requires.
   const isFilterActive = searchQuery !== '' || selectedCategories.length > 0
-  const visibleTaskCardIds = columnInfo.taskCards
-    .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
-    .filter((taskCardId) => {
-      const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
+  // Recompute the visible list only when an input it reads actually changes
+  // (this column's card order, the board's category set, the cards map, or the
+  // active filter), not on every unrelated re-render. Output identity is stable
+  // across no-op renders, which also keeps the .map below from rebuilding rows.
+  const visibleTaskCardIds = useMemo(
+    () =>
+      columnInfo.taskCards
+        .filter((cardId) => categoriesInBoard.includes(taskCards[cardId].category))
+        .filter((taskCardId) => {
+          const doesTaskCardContentMatchSearchQuery = taskCards[taskCardId].title
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
 
-      const doesTaskCardBelongToSelectedCategories =
-        selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
+          const doesTaskCardBelongToSelectedCategories =
+            selectedCategories.length === 0 || selectedCategories.includes(taskCards[taskCardId].category)
 
-      return doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories
-    })
+          return doesTaskCardContentMatchSearchQuery && doesTaskCardBelongToSelectedCategories
+        }),
+    [columnInfo.taskCards, categoriesInBoard, taskCards, searchQuery, selectedCategories]
+  )
   // A card mid-creation in this column counts as content, so the empty-state stays hidden then.
   const isInitializingHere = Boolean(taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId)
   const isColumnEmpty = visibleTaskCardIds.length === 0 && !isInitializingHere
