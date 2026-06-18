@@ -15,6 +15,7 @@ const baseState = (): EphemeralStateType => ({
   isSubTaskBeingDragged: false,
   taskCardBeingInitialized: null,
   dataEnteredInTaskCardBeingInitialized: false,
+  loadedBoardIds: {},
 })
 
 describe('ephemeralReducer — load gate', () => {
@@ -24,6 +25,23 @@ describe('ephemeralReducer — load gate', () => {
     expect(next.isSubTaskBeingDragged).toBe(false)
     expect(next.taskCardBeingInitialized).toBeNull()
     expect(next.dataEnteredInTaskCardBeingInitialized).toBe(false)
+    expect(next.loadedBoardIds).toEqual({})
+  })
+})
+
+describe('ephemeralReducer — per-board lazy-load tracking', () => {
+  it('boardLoaded marks a board id loaded without touching others', () => {
+    const next = ephemeralReducer(baseState(), { type: 'boardLoaded', payload: { boardId: 'board1' } })
+    expect(next.loadedBoardIds).toEqual({ board1: true })
+
+    const next2 = ephemeralReducer(next, { type: 'boardLoaded', payload: { boardId: 'board2' } })
+    expect(next2.loadedBoardIds).toEqual({ board1: true, board2: true })
+  })
+
+  it('boardLoaded is idempotent for an already-loaded board', () => {
+    const once = ephemeralReducer(baseState(), { type: 'boardLoaded', payload: { boardId: 'board1' } })
+    const twice = ephemeralReducer(once, { type: 'boardLoaded', payload: { boardId: 'board1' } })
+    expect(twice.loadedBoardIds).toEqual({ board1: true })
   })
 })
 

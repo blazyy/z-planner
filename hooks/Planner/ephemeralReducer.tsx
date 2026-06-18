@@ -8,6 +8,12 @@ export const ephemeralReducer = produce((draft: Draft<EphemeralStateType>, actio
       draft.hasLoaded = true
       break
     }
+    case 'boardLoaded': {
+      // Mark a board's heavy slice as loaded so its page can stop showing the
+      // skeleton and the mount effect won't re-fetch it.
+      draft.loadedBoardIds[action.payload.boardId] = true
+      break
+    }
     case 'subTaskDragStatusChanged': {
       draft.isSubTaskBeingDragged = action.payload
       break

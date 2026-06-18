@@ -3,7 +3,7 @@ import { ReactNode, createContext, useContext, useEffect, useReducer, useRef } f
 import { useErrorBoundary } from 'react-error-boundary'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
-import { emptyPlannerData, fetchPlannerSummary } from '@/utils/plannerUtils/apiClient'
+import { emptyPlannerData, fetchBoard, fetchPlannerSummary } from '@/utils/plannerUtils/apiClient'
 
 import { ephemeralReducer } from './ephemeralReducer'
 import { plannerReducer } from './plannerReducer'
@@ -15,6 +15,7 @@ const initialEphemeralState: EphemeralStateType = {
   isSubTaskBeingDragged: false,
   taskCardBeingInitialized: null,
   dataEnteredInTaskCardBeingInitialized: false,
+  loadedBoardIds: {},
 }
 
 /*
@@ -83,6 +84,59 @@ export const usePlannerEphemeral = () => {
 
 export const usePlannerEphemeralDispatch = () => {
   return useContext(PlannerEphemeralDispatchContext)
+}
+
+/*
+ * Lazy per-board load. On mount (or boardId change) fetches the board's heavy
+ * slice if it hasn't been loaded yet, merges it via boardDataLoaded, and marks
+ * the board loaded in ephemeral state. Returns whether the board's slice is now
+ * present so the caller (the board page) can keep showing the skeleton until
+ * then — preserving the old "skeleton, then board" behavior while the upfront
+ * whole-doc fetch is gone.
+ *
+ * Idempotent: a board already in loadedBoardIds skips the fetch. The request is
+ * aborted on unmount/boardId change so a stale board's slice can't land over a
+ * newer one (StrictMode double-mount / quick navigation safe).
+ */
+export function useEnsureBoardLoaded(boardId: string): boolean {
+  const { showBoundary } = useErrorBoundary()
+  const store = usePlannerStore()
+  const ephemeral = usePlannerEphemeral()
+  const ephemeralDispatch = usePlannerEphemeralDispatch()
+  const isLoaded = Boolean(ephemeral.loadedBoardIds[boardId])
+  // Only the summary tells us a board exists; fetching a board absent from it
+  // would 404 -> error boundary. The page routes non-existent boards to
+  // notFound() instead, so we simply never trigger the fetch for them.
+  const boardExists = usePlannerSelector((s) => Boolean(s.boards[boardId]))
+
+  useEffect(() => {
+    if (isLoaded || !boardExists) {
+      return
+    }
+    const controller = new AbortController()
+    fetchBoard(boardId, controller.signal)
+      .then((data) => {
+        store.dispatch({
+          type: 'boardDataLoaded',
+          payload: {
+            boardId,
+            columns: data.columns,
+            categories: data.categories,
+            taskCards: data.taskCards,
+            subTasks: data.subTasks,
+          },
+        })
+        ephemeralDispatch({ type: 'boardLoaded', payload: { boardId } })
+      })
+      .catch((error) => {
+        if (!axios.isCancel(error)) {
+          showBoundary(error)
+        }
+      })
+    return () => controller.abort()
+  }, [boardId, isLoaded, boardExists, store, ephemeralDispatch, showBoundary])
+
+  return isLoaded
 }
 
 export const PlannerProvider = ({ children }: { children: ReactNode }) => {

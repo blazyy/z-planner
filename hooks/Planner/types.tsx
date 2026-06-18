@@ -108,11 +108,19 @@ export type BoardDataType = {
 //
 // dataEnteredInTaskCardBeingInitialized - Used when a new task card is added when a previously added one is still being edited- we don't want to lose the information
 // in the previous one.
+//
+// loadedBoardIds - The set of board ids whose heavy slice (columns/cards/
+// subtasks) has been fetched and merged into the store. Used to gate the
+// per-board lazy load: a board page shows the skeleton until its id is here,
+// and the mount effect skips re-fetching a board already loaded. A record (id
+// -> true) rather than a Set so it stays a plain serializable value the immer
+// reducer can update structurally.
 export type EphemeralStateType = {
   hasLoaded: boolean
   isSubTaskBeingDragged: boolean
   taskCardBeingInitialized: TaskCardBeingInitializedType | null
   dataEnteredInTaskCardBeingInitialized: boolean
+  loadedBoardIds: Record<string, true>
 }
 
 // One discriminated union for every DATA reducer action, so dispatch sites get
@@ -184,6 +192,7 @@ export type PlannerDispatchContextType = Dispatch<PlannerAction>
 // mutation can't carry a UI flag and vice versa.
 export type EphemeralAction =
   | { type: 'dataLoaded' }
+  | { type: 'boardLoaded'; payload: { boardId: string } }
   | { type: 'subTaskDragStatusChanged'; payload: boolean }
   | { type: 'newTaskCardInitialized'; payload: TaskCardBeingInitializedType }
   | { type: 'taskCardInitializationCancelled'; payload?: null }
