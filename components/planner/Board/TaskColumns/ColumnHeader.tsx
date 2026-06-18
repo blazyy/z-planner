@@ -1,4 +1,5 @@
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd'
+import { memo } from 'react'
 
 import { Card, CardHeader } from '@/components/ui/card'
 import { usePlannerSelector } from '@/hooks/Planner/Planner'
@@ -11,7 +12,10 @@ type ColumnHeaderProps = {
   dragHandleProps: DraggableProvidedDragHandleProps | null
 }
 
-export const ColumnHeader = ({ columnId, dragHandleProps }: ColumnHeaderProps) => {
+// Pure presentational header: reads only its own column name slice. memo so an
+// unrelated store mutation (another column/card) doesn't re-render it. Props are
+// columnId (stable string) and dragHandleProps (stable per dnd render pass).
+export const ColumnHeader = memo(function ColumnHeader({ columnId, dragHandleProps }: ColumnHeaderProps) {
   const columnName = usePlannerSelector((s) => s.columns[columnId].name)
 
   return (
@@ -27,4 +31,4 @@ export const ColumnHeader = ({ columnId, dragHandleProps }: ColumnHeaderProps) =
       </CardHeader>
     </Card>
   )
-}
+})

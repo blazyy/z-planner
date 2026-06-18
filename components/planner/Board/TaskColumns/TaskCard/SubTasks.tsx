@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 import { Checkbox } from '@/components/ui/checkbox'
 import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
@@ -7,7 +9,9 @@ type SubTasksProps = {
   taskCardId: string
 }
 
-export const SubTasks = ({ boardId, taskCardId }: SubTasksProps) => {
+// Both props are stable strings; memo so it re-renders only when this card's
+// subtask list / status or the subTasks map changes.
+export const SubTasks = memo(function SubTasks({ boardId, taskCardId }: SubTasksProps) {
   const dispatch = usePlannerDispatch()
   const subTaskIds = usePlannerSelector((s) => s.taskCards[taskCardId].subTasks)
   const status = usePlannerSelector((s) => s.taskCards[taskCardId].status)
@@ -39,4 +43,4 @@ export const SubTasks = ({ boardId, taskCardId }: SubTasksProps) => {
       ))}
     </div>
   )
-}
+})
