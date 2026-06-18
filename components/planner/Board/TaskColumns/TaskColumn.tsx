@@ -21,7 +21,10 @@ export const TaskColumn = memo(function TaskColumn({ index, boardId, columnId }:
       {(provided) => (
         // mr-2 is used instead of gap on parent div because of the dnd library. It does weird things if gap is used.
         <div
-          className={cn('flex flex-col gap-1 w-96', index < boardColumns.length - 1 && 'mr-2')}
+          className={cn(
+            'flex flex-col gap-1 w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-96',
+            index < boardColumns.length - 1 && 'mr-2'
+          )}
           {...provided.draggableProps}
           ref={provided.innerRef}
         >

@@ -5,7 +5,7 @@ import { ResetButton } from './ResetButton'
 
 export const FilterToolbar = ({ boardId }: { boardId: string }) => {
   return (
-    <div className='flex justify-start items-center gap-2 w-full'>
+    <div className='flex flex-wrap lg:flex-nowrap justify-start items-center gap-2 w-full'>
       <TaskFilterSearchBar />
       <CategoryFilter selectedBoard={boardId} />
       <ResetButton />
