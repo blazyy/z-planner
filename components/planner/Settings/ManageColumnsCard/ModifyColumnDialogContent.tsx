@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import changeColumnName from '@/utils/plannerUtils/columnUtils/changeColumnName'
 import deleteColumn from '@/utils/plannerUtils/columnUtils/deleteColumn'
 
@@ -26,14 +26,14 @@ const formSchema = z.object({
 })
 
 export const ModifyColumnDialogContent = ({ onCloseDialog, boardId, columnId }: ModifyBoardDialogContentProps) => {
-  const { columns } = usePlanner()
+  const column = usePlannerSelector((s) => s.columns[columnId])
   const dispatch = usePlannerDispatch()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      columnName: columns[columnId].name,
+      columnName: column.name,
     },
   })
 

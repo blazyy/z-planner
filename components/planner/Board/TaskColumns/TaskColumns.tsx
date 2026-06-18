@@ -2,24 +2,32 @@
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { usePlanner, usePlannerDispatch, usePlannerEphemeralDispatch } from '@/hooks/Planner/Planner'
+import {
+  usePlannerDispatch,
+  usePlannerEphemeralDispatch,
+  usePlannerSelector,
+  usePlannerStore,
+} from '@/hooks/Planner/Planner'
 
 import { EmptyBoardGuidance } from './EmptyBoardGuidance'
 import { TaskColumn } from './TaskColumn'
 import { handleOnDragEnd, handleOnDragStart } from '../../utils'
 
 export const TaskColumns = ({ boardId }: { boardId: string }) => {
-  const plannerContext = usePlanner()
-  const { boards } = plannerContext
+  // Render only depends on this board's column order; the drag handler reads a
+  // fresh whole-state snapshot via store.getState() at drop time, so it doesn't
+  // need a whole-state subscription (which would re-render on every mutation).
+  const boardColumns = usePlannerSelector((s) => s.boards[boardId].columns)
+  const store = usePlannerStore()
   const dispatch = usePlannerDispatch()
   const ephemeralDispatch = usePlannerEphemeralDispatch()
-  const hasNoColumns = boards[boardId].columns.length === 0
+  const hasNoColumns = boardColumns.length === 0
 
   return (
     <div className='flex flex-1'>
       <DragDropContext
         onDragStart={(dragStartObj) => handleOnDragStart(dragStartObj, ephemeralDispatch)}
-        onDragEnd={(result) => handleOnDragEnd(result, dispatch, ephemeralDispatch, plannerContext, boardId)}
+        onDragEnd={(result) => handleOnDragEnd(result, dispatch, ephemeralDispatch, store.getState(), boardId)}
       >
         {/* droppableId doesn't matter here because it won't be interacting with other droppables */}
         <Droppable droppableId='all-columns' direction='horizontal' type='column'>
@@ -31,7 +39,7 @@ export const TaskColumns = ({ boardId }: { boardId: string }) => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {boards[boardId].columns.map((columnId: string, index: number) => (
+                {boardColumns.map((columnId: string, index: number) => (
                   <TaskColumn key={columnId} index={index} boardId={boardId} columnId={columnId} />
                 ))}
                 {provided.placeholder}

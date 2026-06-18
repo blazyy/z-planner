@@ -2,12 +2,13 @@
 import { ExternalLink, Github, Settings } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { usePlanner, usePlannerEphemeral } from '@/hooks/Planner/Planner'
+import { usePlannerEphemeral, usePlannerSelector } from '@/hooks/Planner/Planner'
 
 import { SidebarButton } from './SidebarButton'
 
 export const Sidebar = ({ currentPage }: { currentPage: string }) => {
-  const { boardOrder, boards } = usePlanner()
+  const boardOrder = usePlannerSelector((s) => s.boardOrder)
+  const boards = usePlannerSelector((s) => s.boards)
   const { hasLoaded } = usePlannerEphemeral()
   if (!hasLoaded || boardOrder.length === 0) {
     return <></>

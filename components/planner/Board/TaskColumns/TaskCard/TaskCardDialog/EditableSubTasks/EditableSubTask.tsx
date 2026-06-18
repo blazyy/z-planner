@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { usePlanner, usePlannerDispatch, usePlannerEphemeral } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerEphemeral, usePlannerSelector } from '@/hooks/Planner/Planner'
 import { SubTaskInfoType } from '@/hooks/Planner/types'
 import changeSubTaskCheckedStatus from '@/utils/plannerUtils/subTaskUtils/changeSubTaskCheckedStatus'
 import changeSubTaskTitle from '@/utils/plannerUtils/subTaskUtils/changeSubTaskTitle'
@@ -20,7 +20,10 @@ type EditableSubTaskProps = {
 }
 
 export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingDragged }: EditableSubTaskProps) => {
-  const { taskCards, subTasks } = usePlanner()
+  // Subscribe to only this card. handleKeyDownOnSubTask reads taskCards[taskCardId]
+  // (for arrow-key focus and Enter/Backspace) and never reads the subTasks map, so
+  // a single-entry map + empty subTasks preserves behavior without a wide subscription.
+  const taskCard = usePlannerSelector((s) => s.taskCards[taskCardId])
   const { isSubTaskBeingDragged } = usePlannerEphemeral()
   const [showDragHandle, setShowDragHandle] = useState(isSubTaskBeingDragged)
   const dispatch = usePlannerDispatch()!
@@ -55,7 +58,7 @@ export const EditableSubTask = ({ index, provided, taskCardId, subTask, isBeingD
         type='text'
         value={subTask.title}
         className='my-1 px-1 border-none h-1 text-gray-500 dark:text-gray-400 text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-        onKeyDown={(event) => handleKeyDownOnSubTask(taskCards, subTasks, taskCardId, subTask, event, dispatch)}
+        onKeyDown={(event) => handleKeyDownOnSubTask({ [taskCardId]: taskCard }, {}, taskCardId, subTask, event, dispatch)}
         onChange={(event) => changeSubTaskTitle(subTask.id, event.target.value, dispatch)}
       />
     </div>

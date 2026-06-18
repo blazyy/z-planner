@@ -2,7 +2,7 @@ import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerSelector } from '@/hooks/Planner/Planner'
 
 import { AddNewSubTaskButton } from '../AddNewSubTaskButton'
 import { EditableSubTask } from './EditableSubTask'
@@ -12,8 +12,9 @@ type EditableSubTasksProps = {
 }
 
 export const EditableSubTasks = ({ taskCardId }: EditableSubTasksProps) => {
-  const { taskCards, subTasks } = usePlanner()
-  const subTasksUnderTaskCard = taskCards[taskCardId].subTasks.map((subTaskId) => subTasks[subTaskId])
+  const subTaskIds = usePlannerSelector((s) => s.taskCards[taskCardId].subTasks)
+  const subTasks = usePlannerSelector((s) => s.subTasks)
+  const subTasksUnderTaskCard = subTaskIds.map((subTaskId) => subTasks[subTaskId])
 
   // The createPortal is used to create a new portal for the sub tasks whenever they're being dragged.
   // The Dialog component was messing with how the drag and drop functionality of react-pangea-dnd was working.

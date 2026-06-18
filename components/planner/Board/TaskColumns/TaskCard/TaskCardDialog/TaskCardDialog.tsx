@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import { flushDebouncedMutation } from '@/utils/plannerUtils/apiClient'
 import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 import changeCardContent from '@/utils/plannerUtils/cardUtils/changeCardContent'
@@ -22,8 +22,10 @@ type TaskCardDialogProps = {
 
 export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) => {
   const dispatch = usePlannerDispatch()!
-  const { taskCards, columns } = usePlanner()
-  const task = taskCards[id]
+  // Subscribe to just this card + its column so an edit to another card never
+  // re-renders this dialog.
+  const task = usePlannerSelector((s) => s.taskCards[id])
+  const column = usePlannerSelector((s) => s.columns[columnId])
 
   /*
    * Closing the dialog unmounts this content (Radix portals it without
@@ -58,7 +60,7 @@ export const TaskCardDialog = ({ boardId, columnId, id }: TaskCardDialogProps) =
                   className='w-5 h-5'
                   checked={task.status === 'completed'}
                   onCheckedChange={(isChecked) =>
-                    changeCardCheckedStatus(columnId, id, Boolean(isChecked), columns[columnId].taskCards, dispatch)
+                    changeCardCheckedStatus(columnId, id, Boolean(isChecked), column.taskCards, dispatch)
                   }
                 />
                 <Textarea

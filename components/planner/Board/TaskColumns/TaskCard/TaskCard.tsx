@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Checkbox } from '@/components/ui/checkbox'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import { usePlanner, usePlannerDispatch } from '@/hooks/Planner/Planner'
+import { usePlannerDispatch, usePlannerSelector } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import changeCardCheckedStatus from '@/utils/plannerUtils/cardUtils/changeCardCheckedStatus'
 
@@ -64,8 +64,10 @@ export const TaskCard = memo(function TaskCard({
   isDragDisabled,
 }: TaskCardProps) {
   const dispatch = usePlannerDispatch()
-  const { taskCards, columns } = usePlanner()
-  const task = taskCards[taskCardId]
+  // Subscribe to just THIS card and THIS column, so mutating another card or
+  // column never re-renders this one (TaskCard is memoized).
+  const task = usePlannerSelector((s) => s.taskCards[taskCardId])
+  const column = usePlannerSelector((s) => s.columns[columnId])
 
   return (
     <TaskCardWrapper
@@ -118,7 +120,7 @@ export const TaskCard = memo(function TaskCard({
                   } else {
                     toast.info('Task marked as incomplete.')
                   }
-                  changeCardCheckedStatus(columnId, taskCardId, !isChecked, columns[columnId].taskCards, dispatch)
+                  changeCardCheckedStatus(columnId, taskCardId, !isChecked, column.taskCards, dispatch)
                 }}
               />
             </div>

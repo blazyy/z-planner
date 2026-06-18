@@ -11,10 +11,10 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { UNASSIGNED_CATEGORY_ID } from '@/constants/constants'
 import {
-  usePlanner,
   usePlannerDispatch,
   usePlannerEphemeral,
   usePlannerEphemeralDispatch,
+  usePlannerSelector,
 } from '@/hooks/Planner/Planner'
 import { cn } from '@/lib/utils'
 import { addNewCardToColumn } from '@/utils/plannerUtils/cardUtils/addNewCardToColumn'
@@ -37,7 +37,7 @@ const formSchema = z.object({
 export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCardProps) => {
   const dispatch = usePlannerDispatch()
   const ephemeralDispatch = usePlannerEphemeralDispatch()
-  const { columns } = usePlanner()
+  const column = usePlannerSelector((s) => s.columns[columnId])
   const { taskCardBeingInitialized } = usePlannerEphemeral()
   const [selectedCategory, setSelectedCategory] = useState(UNASSIGNED_CATEGORY_ID)
 
@@ -77,7 +77,7 @@ export const InitializingTaskCard = ({ boardId, columnId }: InitializingTaskCard
       category: selectedCategory,
       content: values.taskCardDesc,
     }
-    addNewCardToColumn(columns[columnId], newTaskCardDetails, dispatch)
+    addNewCardToColumn(column, newTaskCardDetails, dispatch)
     // newTaskCardAdded used to clear the init scratch state inside the data
     // reducer; that state now lives on the ephemeral side, so clear it here.
     ephemeralDispatch({ type: 'taskCardInitializationCancelled' })

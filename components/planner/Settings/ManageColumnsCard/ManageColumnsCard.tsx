@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { usePlanner } from '@/hooks/Planner/Planner'
+import { usePlannerSelector } from '@/hooks/Planner/Planner'
 import { BoardInfoType, BoardsType, ColumnsType } from '@/hooks/Planner/types'
 
 import { ManageItemCardDialogWrapper } from '../ManageItemCardDialogWrapper'
@@ -69,7 +69,9 @@ const Columns = ({ board, columns, setColumnBeingModified }: ColumnsProps) => {
 }
 
 export const ManageColumnsCard = () => {
-  const { boardOrder, boards, columns } = usePlanner()
+  const boardOrder = usePlannerSelector((s) => s.boardOrder)
+  const boards = usePlannerSelector((s) => s.boards)
+  const columns = usePlannerSelector((s) => s.columns)
   const [selectedBoard, setSelectedBoard] = useState(boardOrder[0])
   const [columnBeingModified, setColumnBeingModified] = useState('')
   const [key, setKey] = useState(0)
