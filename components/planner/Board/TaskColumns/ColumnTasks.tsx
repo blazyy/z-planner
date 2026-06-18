@@ -9,6 +9,8 @@ import { cn } from '@/lib/utils'
 import { ColumnEmptyState } from './ColumnEmptyState'
 import { InitializingTaskCard } from './TaskCard/InitializingTaskCard/InitializingTaskCard'
 import { TaskCard } from './TaskCard/TaskCard'
+import { VIRTUALIZE_COLUMNS } from './virtualizationConfig'
+import { VirtualizedColumnTasks } from './VirtualizedColumnTasks'
 
 export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { boardId: string; columnId: string }) {
   // Per-slice subscriptions: this column re-renders when its own column entry
@@ -47,6 +49,27 @@ export const ColumnTasks = memo(function ColumnTasks({ boardId, columnId }: { bo
   // A card mid-creation in this column counts as content, so the empty-state stays hidden then.
   const isInitializingHere = Boolean(taskCardBeingInitialized && taskCardBeingInitialized.columnId === columnId)
   const isColumnEmpty = visibleTaskCardIds.length === 0 && !isInitializingHere
+  // perf-6: when the (default-off) virtualization flag is on, render the card
+  // list through react-window instead. The derived inputs above (visible ids,
+  // initializing/empty flags, filter state) are computed identically and handed
+  // to the windowed renderer, so only the LIST RENDERING differs. The flag-off
+  // branch below is byte-for-byte today's behavior.
+  if (VIRTUALIZE_COLUMNS) {
+    return (
+      <ScrollArea>
+        <VirtualizedColumnTasks
+          boardId={boardId}
+          columnId={columnId}
+          droppableId={columnInfo.id}
+          visibleTaskCardIds={visibleTaskCardIds}
+          isFilterActive={isFilterActive}
+          isInitializingHere={isInitializingHere}
+          isColumnEmpty={isColumnEmpty}
+        />
+        <ScrollBar orientation='vertical' />
+      </ScrollArea>
+    )
+  }
   return (
     <Droppable droppableId={columnInfo.id} type='card'>
       {(provided, snapshot) => (
