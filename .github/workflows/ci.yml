@@ -15,7 +15,7 @@ jobs:
       CLERK_SECRET_KEY: sk_test_ci_dummy
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           # Matches the npm major the lockfile was written with; npm 10 (node 20)
           # rejects this lockfile's optional-dep layout.
