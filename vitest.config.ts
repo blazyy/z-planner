@@ -29,5 +29,28 @@ export default defineConfig({
     // First run of the route harness downloads a mongod binary (~150MB) inside
     // beforeAll(startMemoryMongo); the default 10s hook timeout is too tight.
     hookTimeout: 120000,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text-summary', 'text', 'html'],
+      // Cover our own code; exclude vendored shadcn primitives (untested
+      // boilerplate), tests/helpers, type decls, config, and design docs.
+      include: ['app/**', 'components/**', 'hooks/**', 'lib/**', 'utils/**', 'constants/**', 'middleware.ts'],
+      exclude: [
+        '**/*.test.{ts,tsx}',
+        'test/**',
+        'components/ui/**',
+        '**/*.d.ts',
+        'app/**/layout.tsx',
+        'app/**/loading.tsx',
+      ],
+      // Thresholds set just under measured coverage: a regression guard, not a
+      // bar to clear. Drops below these fail CI.
+      thresholds: {
+        lines: 44,
+        functions: 29,
+        statements: 43,
+        branches: 39,
+      },
+    },
   },
 })
