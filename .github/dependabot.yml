@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    # Group low-risk updates into single PRs to cut review noise.
+    groups:
+      dev-dependencies:
+        dependency-type: development
+      production-minor-patch:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Next 15/16 is a deliberate, out-of-band migration (App Router + async
+      # request APIs); Clerk majors are tied to the Next major. Don't let
+      # dependabot propose them automatically - they're handled as planned work.
+      - dependency-name: next
+        update-types: [version-update:semver-major]
+      - dependency-name: '@clerk/*'
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
