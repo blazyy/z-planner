@@ -50,8 +50,17 @@ export const EditableSubTask = ({
       }}
     >
       {/* focus-visible keeps the handle reachable by keyboard (dnd's dragHandleProps
-          make it focusable) without changing the mouse hover behavior */}
-      <div {...provided.dragHandleProps} className={showDragHandle ? 'visible' : 'invisible focus-visible:visible'}>
+          make it focusable) without changing the mouse hover behavior. role/labels
+          announce it as a draggable to screen readers; focus-visible ring makes the
+          keyboard focus state visible while the handle itself becomes visible. */}
+      <div
+        {...provided.dragHandleProps}
+        aria-roledescription='Draggable subtask handle'
+        aria-label={`Reorder subtask ${subTask.title}. Press space or enter to start dragging.`}
+        className={`rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ring-offset-background ${
+          showDragHandle ? 'visible' : 'invisible focus-visible:visible'
+        }`}
+      >
         <GripVertical size={14} />
       </div>
       <Checkbox

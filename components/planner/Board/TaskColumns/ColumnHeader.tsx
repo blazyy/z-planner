@@ -21,7 +21,12 @@ export const ColumnHeader = memo(function ColumnHeader({ columnId, dragHandlePro
   return (
     <Card
       {...dragHandleProps}
-      className={cn('hover:bg-neutral-100 dark:hover:bg-neutral-800 mb-1 transition-all cursor-pointer')}
+      aria-roledescription='Draggable column'
+      aria-label={`Column ${columnName}. Press space or enter to start dragging.`}
+      className={cn(
+        'hover:bg-neutral-100 dark:hover:bg-neutral-800 mb-1 transition-all cursor-pointer',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background'
+      )}
     >
       <CardHeader className='p-1'>
         <div className='flex flex-row justify-between items-center gap-2 px-2'>

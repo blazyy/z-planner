@@ -56,7 +56,13 @@ const TaskCardWrapper = ({ index, boardId, columnId, taskCardId, isDragDisabled,
   return (
     <Draggable draggableId={taskCardId} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
-        <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1 w-full'>
+        <div
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+          aria-roledescription='Draggable task card'
+          className='my-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background w-full'
+        >
           <Dialog
             open={isOpen}
             onOpenChange={(nextOpen) => {
