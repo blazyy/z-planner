@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -15,7 +17,9 @@ type CategoryBadgeProps = {
   taskCardId: string
 }
 
-export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
+// Props are both stable strings; memo so it re-renders only when this card's
+// category / the board's category list / the categories map changes.
+export const CategoryBadge = memo(function CategoryBadge({ boardId, taskCardId }: CategoryBadgeProps) {
   const dispatch = usePlannerDispatch()!
   // categoryId is a primitive (stable), so this badge re-renders only when this
   // card's category, this board's category list, or the categories map changes.
@@ -47,4 +51,4 @@ export const CategoryBadge = ({ boardId, taskCardId }: CategoryBadgeProps) => {
       </DropdownMenuContent>
     </DropdownMenu>
   )
-}
+})

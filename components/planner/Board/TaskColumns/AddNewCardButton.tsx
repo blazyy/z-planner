@@ -1,11 +1,13 @@
 import { Plus } from 'lucide-react'
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { NANOID } from '@/constants/constants'
 import { usePlannerEphemeral, usePlannerEphemeralDispatch } from '@/hooks/Planner/Planner'
 
-export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
+// Sole prop is columnId (stable string); memo so it doesn't re-render with its
+// parent column header on unrelated changes.
+export const AddNewCardButton = memo(function AddNewCardButton({ columnId }: { columnId: string }) {
   const { taskCardBeingInitialized, dataEnteredInTaskCardBeingInitialized } = usePlannerEphemeral()
   const dispatch = usePlannerEphemeralDispatch()!
 
@@ -55,4 +57,4 @@ export const AddNewCardButton = ({ columnId }: { columnId: string }) => {
       </Tooltip>
     </TooltipProvider>
   )
-}
+})

@@ -1,5 +1,6 @@
 import { Draggable } from '@hello-pangea/dnd'
-import { memo } from 'react'
+import dynamic from 'next/dynamic'
+import { memo, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,7 +15,14 @@ import { CategoryBadge } from './CategoryBadge'
 import { ProgressBar } from './ProgressBar'
 import { SubTasks } from './SubTasks'
 import { TaskCardContextMenu } from './TaskCardContextMenu/TaskCardContextMenu'
-import { TaskCardDialog } from './TaskCardDialog/TaskCardDialog'
+
+// The edit dialog (+ its EditableSubTasks/Textarea subtree) is heavy and only
+// needed once a card is opened. Code-split it out of the board bundle: the chunk
+// is fetched on first open instead of shipping with every board load. ssr:false
+// because it only renders client-side behind a click.
+const TaskCardDialog = dynamic(() => import('./TaskCardDialog/TaskCardDialog').then((m) => m.TaskCardDialog), {
+  ssr: false,
+})
 
 type TaskCardProps = {
   index: number
@@ -36,11 +44,28 @@ type TaskCardWrapperProps = {
 // children is a render function so that snapshot.isDragging (only available inside the Draggable
 // render prop) can be delivered to the card markup without going through global state.
 const TaskCardWrapper = ({ index, boardId, columnId, taskCardId, isDragDisabled, children }: TaskCardWrapperProps) => {
+  // Dialog is now CONTROLLED only so we can latch "has this card ever been
+  // opened". The code-split TaskCardDialog enters the React tree (and its chunk
+  // is fetched) the first time the card opens, never before, keeping it out of
+  // the initial board bundle. Once it has mounted, Radix's own controlled
+  // open/close drives the DialogContent mount/unmount (so the close ANIMATION is
+  // preserved and TaskCardDialog's flush-on-close cleanup still runs on close).
+  // hasOpened never resets, so a re-open uses the already-loaded chunk.
+  const [isOpen, setIsOpen] = useState(false)
+  const [hasOpened, setHasOpened] = useState(false)
   return (
     <Draggable draggableId={taskCardId} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='my-1 w-full'>
-          <Dialog>
+          <Dialog
+            open={isOpen}
+            onOpenChange={(nextOpen) => {
+              if (nextOpen) {
+                setHasOpened(true)
+              }
+              setIsOpen(nextOpen)
+            }}
+          >
             <ContextMenu>
               <TaskCardContextMenu boardId={boardId} columnId={columnId} taskCardId={taskCardId} />
               <ContextMenuTrigger>
@@ -48,7 +73,7 @@ const TaskCardWrapper = ({ index, boardId, columnId, taskCardId, isDragDisabled,
                 <DialogTrigger asChild>{children(snapshot.isDragging)}</DialogTrigger>
               </ContextMenuTrigger>
             </ContextMenu>
-            <TaskCardDialog boardId={boardId} columnId={columnId} id={taskCardId} />
+            {hasOpened && <TaskCardDialog boardId={boardId} columnId={columnId} id={taskCardId} />}
           </Dialog>
         </div>
       )}

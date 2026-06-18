@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 import { Progress } from '@/components/ui/progress'
 import { usePlannerSelector } from '@/hooks/Planner/Planner'
 
@@ -5,7 +7,9 @@ type ProgressBarProps = {
   taskCardId: string
 }
 
-export const ProgressBar = ({ taskCardId }: ProgressBarProps) => {
+// Sole prop is a stable string; memo so it re-renders only when this card's
+// subtask list or the subTasks map changes.
+export const ProgressBar = memo(function ProgressBar({ taskCardId }: ProgressBarProps) {
   const subTaskIds = usePlannerSelector((s) => s.taskCards[taskCardId].subTasks)
   const subTasks = usePlannerSelector((s) => s.subTasks)
   const subTaskObjects = subTaskIds.map((subTaskId) => subTasks[subTaskId])
@@ -21,4 +25,4 @@ export const ProgressBar = ({ taskCardId }: ProgressBarProps) => {
       </span>
     </div>
   )
-}
+})

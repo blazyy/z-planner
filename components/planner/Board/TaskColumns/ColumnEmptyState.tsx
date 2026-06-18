@@ -1,10 +1,12 @@
 import { Inbox, SearchX } from 'lucide-react'
+import { memo } from 'react'
 
 // Gentle empty-state shown inside a column when it renders zero cards. Additive:
 // it only appears when the column is empty, and sits alongside the dnd placeholder
 // without affecting drop targets. Copy adapts to whether a filter is hiding cards
-// vs the column genuinely having no tasks yet.
-export const ColumnEmptyState = ({ isFilterActive }: { isFilterActive: boolean }) => {
+// vs the column genuinely having no tasks yet. Pure (sole prop isFilterActive is
+// a boolean), so memo keeps it out of unrelated re-renders.
+export const ColumnEmptyState = memo(function ColumnEmptyState({ isFilterActive }: { isFilterActive: boolean }) {
   const Icon = isFilterActive ? SearchX : Inbox
   return (
     <div
@@ -22,4 +24,4 @@ export const ColumnEmptyState = ({ isFilterActive }: { isFilterActive: boolean }
       )}
     </div>
   )
-}
+})
